@@ -173,6 +173,87 @@ export function usePosts() {
     }
   };
 
+  const getComments = async (postId) => {
+    try {
+      const { data, error } = await supabase
+        .from('post_comments')
+        .select(`
+          id,
+          content,
+          created_at,
+          user_id,
+          profiles (full_name, avatar_url)
+        `)
+        .eq('post_id', postId)
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+      return data || [];
+    } catch (err) {
+      console.error('Error fetching comments:', err);
+      return [];
+    }
+  };
+
+  const addComment = async (postId, content) => {
+    if (!user) throw new Error('Debes iniciar sesión para comentar.');
+    try {
+      const { data, error } = await supabase
+        .from('post_comments')
+        .insert({
+          post_id: postId,
+          user_id: user.id,
+          content
+        })
+        .select(`
+          id,
+          content,
+          created_at,
+          user_id,
+          profiles (full_name, avatar_url)
+        `)
+        .single();
+      
+      if (error) throw error;
+
+      // Update local posts state (comments_count + 1)
+      setPosts(currentPosts => currentPosts.map(post => {
+        if (post.id === postId) {
+          return { ...post, comments_count: (post.comments_count || 0) + 1 };
+        }
+        return post;
+      }));
+
+      return data;
+    } catch (err) {
+      console.error('Error adding comment:', err);
+      throw err;
+    }
+  };
+
+  const deleteComment = async (commentId, postId) => {
+    if (!user) throw new Error('Debes iniciar sesión.');
+    try {
+      const { error } = await supabase
+        .from('post_comments')
+        .delete()
+        .match({ id: commentId, user_id: user.id });
+
+      if (error) throw error;
+
+      // Update local posts state (comments_count - 1)
+      setPosts(currentPosts => currentPosts.map(post => {
+        if (post.id === postId) {
+          return { ...post, comments_count: Math.max(0, (post.comments_count || 0) - 1) };
+        }
+        return post;
+      }));
+    } catch (err) {
+      console.error('Error deleting comment:', err);
+      throw err;
+    }
+  };
+
   return {
     posts,
     loading,
@@ -181,6 +262,9 @@ export function usePosts() {
     createPost,
     likePost,
     unlikePost,
-    checkLiked
+    checkLiked,
+    getComments,
+    addComment,
+    deleteComment
   };
 }
