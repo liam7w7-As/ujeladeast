@@ -1,0 +1,339 @@
+<!DOCTYPE html><html class="dark" lang="es"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Estudios Bíblicos | UJELADEA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#8b1534",
+                        "surface-variant": "#353437",
+                        "tertiary-fixed": "#ffd9de",
+                        "surface-container": "#201f22",
+                        "secondary-container": "#785d00",
+                        "inverse-surface": "#e5e1e4",
+                        "on-error": "#690005",
+                        "tertiary-fixed-dim": "#ffb2bd",
+                        "surface-border": "#27272a",
+                        "outline-variant": "#574143",
+                        "surface-container-highest": "#353437",
+                        "on-secondary-fixed": "#241a00",
+                        "surface-dim": "#131315",
+                        "outline": "#a68a8c",
+                        "surface-container-high": "#2a2a2c",
+                        "secondary-fixed-dim": "#e6c364",
+                        "inverse-primary": "#ab304a",
+                        "secondary-fixed": "#ffe08f",
+                        "inverse-on-surface": "#313032",
+                        "primary-container": "#8f1937",
+                        "on-primary": "#670021",
+                        "on-tertiary": "#630926",
+                        "background": "#131315",
+                        "on-secondary-container": "#fdd977",
+                        "primary": "#ffb2ba",
+                        "surface-bright": "#39393b",
+                        "surface": "#131315",
+                        "on-secondary": "#3d2e00",
+                        "on-primary-container": "#ff9eaa",
+                        "surface-tint": "#ffb2ba",
+                        "on-secondary-fixed-variant": "#584400",
+                        "secondary": "#e6c364",
+                        "on-error-container": "#ffdad6",
+                        "error": "#ffb4ab",
+                        "tertiary": "#ffb2bd",
+                        "on-tertiary-fixed": "#400014",
+                        "on-tertiary-container": "#ff9eae",
+                        "on-surface-variant": "#debfc1",
+                        "surface-container-lowest": "#0e0e10",
+                        "primary-fixed-dim": "#ffb2ba",
+                        "glow-crimson": "rgba(143, 25, 55, 0.15)",
+                        "tertiary-container": "#86263f",
+                        "on-primary-fixed": "#400011",
+                        "primary-fixed": "#ffd9dc",
+                        "error-container": "#93000a",
+                        "surface-container-low": "#1c1b1d",
+                        "on-background": "#e5e1e4",
+                        "on-tertiary-fixed-variant": "#81233b",
+                        "on-surface": "#e5e1e4",
+                        "glass-bg": "rgba(18, 18, 21, 0.7)"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "gutter": "24px",
+                        "unit": "4px",
+                        "container-max": "1280px",
+                        "section-gap": "120px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["sora"],
+                        "body-lg": ["inter"],
+                        "headline-xl-mobile": ["sora"],
+                        "display-lg": ["sora"],
+                        "body-md": ["inter"],
+                        "headline-md": ["sora"],
+                        "label-sm": ["jetbrainsMono"],
+                        "headline-xl": ["sora"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-xl-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "display-lg": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Sora:wght@600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body { background-color: #131315; color: #e5e1e4; overflow-x: hidden; }
+        .glass-panel { background: rgba(24, 24, 27, 0.6); backdrop-filter: blur(12px); border: 1px solid #27272a; }
+        .bg-gradient-radial { background: radial-gradient(circle at center, rgba(143, 25, 55, 0.15) 0%, rgba(19, 19, 21, 0) 70%); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="font-body-md text-body-md bg-background text-on-surface antialiased min-h-screen flex flex-col relative font-display-lg">
+<!-- Atmospheric Glow -->
+<div class="fixed inset-0 pointer-events-none z-[-1] bg-gradient-radial opacity-70 mix-blend-screen"></div>
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 backdrop-blur-xl bg-glass-bg border-b border-surface-border shadow-none transition-all duration-300 ease-in-out">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-gutter h-20 max-w-container-max mx-auto">
+<a class="font-display-lg-mobile text-display-lg-mobile md:font-headline-xl md:text-headline-xl font-extrabold text-primary tracking-tight" href="#">UJELADEA</a>
+<div class="hidden md:flex space-x-8">
+<a class="text-on-surface-variant hover:text-on-surface transition-colors hover:bg-white/5 px-3 py-2 rounded-md" href="#">Feed</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors hover:bg-white/5 px-3 py-2 rounded-md" href="#">Hymnal</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 px-3 py-2" href="#">Bible Studies</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors hover:bg-white/5 px-3 py-2 rounded-md" href="#">Societies</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors hover:bg-white/5 px-3 py-2 rounded-md" href="#">Resources</a>
+</div>
+<div class="flex items-center space-x-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-white/5">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button class="flex items-center justify-center w-10 h-10 rounded-full glass-panel overflow-hidden border border-surface-border hover:border-primary transition-colors">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A close-up portrait of a thoughtful young person in soft, moody lighting. The image should fit the high-fidelity, deep obsidian canvas aesthetic with subtle warm lighting accents, reflecting a modern, spiritual devotion theme in a dark mode tech context. High resolution, professional photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjHWwvCt8XhR1wlVgpiDDnZLQyjrhrFh-ZG7mEGvxPGZ327HwBDq0oTrhCTS8hOo23QDtm2Wt52ZSbbMcId38k9kUepdeAltQlrgrEOfXyV5aS8JsVxQxNCGb9naEbYE3fLykPI1kZ5Dw3PULvU17kwtCAkJbZTecktyUK6GS9TFkx5MgqGRoTRfkLvSUJ3FD9pM5EL24ECzTW5tzzJpHDenYK0B4yzZ5jFXtaBx7vlK9ZaVuj8A4MgAoPVVXK5j8fRvFm8JYgl9Y">
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-32 pb-section-gap px-margin-mobile md:px-gutter max-w-container-max mx-auto w-full relative z-10">
+<!-- Header Section -->
+<header class="mb-16 text-center md:text-left">
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-on-surface mb-4 font-display-lg">Estudios Bíblicos</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl font-headline-md">Crece en el conocimiento de la Palabra</p>
+</header>
+<!-- Featured Study -->
+<section class="mb-section-gap relative group">
+<div class="absolute -inset-1 bg-gradient-to-r from-primary-container to-surface-container-high rounded-xl blur opacity-25 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+<div class="glass-panel rounded-xl overflow-hidden relative flex flex-col md:flex-row min-h-[400px]">
+<div class="md:w-1/2 relative bg-surface-container">
+<img alt="Featured Study Cover" class="w-full h-full object-cover mix-blend-luminosity opacity-80" data-alt="An open, ancient-looking book with pages slightly curled, resting on a dark wooden surface. Soft, ethereal light streams from above, illuminating the text in a sea of shadow. The scene is imbued with a sense of sacred mystery, utilizing deep crimsons and warm golds against an obsidian background, fitting a modern digital dark mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuArmn8QVOvt6aaQnQ_YcKZDdfzAMwVgJVytPdie194kRYjhVxmY_aooJaD1ZGlLGLSRJN6mG_h3w7Wu6uUK8K0TUtxpmyTt9dUdagTHXHzllweoY-or86ZZHant026TGpHR4dc0rRG4IA6_WW4QDkD6fQxYV9iT7WlzpTlbebWcV5XHk7oyNDVMDMPn4UNq3t7mbSL27kzIM1SfrqnBK1Yn52V3Aa1yy3l2eAmksUODp09vBsMzvqn33XBgMVdhb3qliwxhYy889Co">
+<div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-surface to-transparent opacity-90 md:opacity-100"></div>
+</div>
+<div class="md:w-1/2 p-8 md:p-12 flex flex-col justify-center relative z-10">
+<span class="inline-block px-3 py-1 border border-primary-container text-primary font-label-sm text-label-sm rounded-full mb-6 w-fit bg-surface-container-low">NUEVA SERIE</span>
+<h2 class="font-headline-xl-mobile text-headline-xl-mobile md:font-headline-xl md:text-headline-xl text-on-surface mb-4 leading-tight font-headline-xl">El Sermón del Monte</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8 line-clamp-3 font-headline-md">Una exploración profunda de las enseñanzas centrales de Jesús. Descubre cómo los principios del Reino desafían nuestra cultura y nos llaman a una vida de radical devoción y amor genuino.</p>
+<button class="bg-primary-container text-white px-8 py-4 rounded-lg font-bold hover:bg-inverse-primary hover:shadow-[0_0_15px_rgba(201,168,76,0.3)] transition-all flex items-center justify-center space-x-2 w-fit">
+<span class="">Ver estudio</span>
+<span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Series Section -->
+<section class="mb-section-gap">
+<div class="flex justify-between items-end mb-8">
+<h3 class="font-headline-md text-headline-md text-on-surface">Series</h3>
+<div class="flex space-x-2">
+<button class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors hover:border-primary">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors hover:border-primary">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="flex overflow-x-auto hide-scrollbar space-x-6 pb-4 snap-x">
+<!-- Series Card 1 -->
+<div class="snap-start shrink-0 w-72 glass-panel rounded-lg overflow-hidden group cursor-pointer hover:border-primary/50 transition-colors">
+<div class="h-40 relative overflow-hidden">
+<img alt="Series Cover" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 mix-blend-luminosity opacity-70" data-alt="A vast, starry night sky above a dark, silhouetted mountain range. The sky is deep navy and black, with a faint, warm radial glow emerging from behind the peaks, symbolizing dawn or divine presence. The style is moody, high-contrast, and aligns with a premium dark mode interface featuring crimson and gold undertones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuASz234Fk2yBfAnPQIlu_Yijtkx6ZVUK4tziOg2JKgCET-32OF2Nmgz-Zxzfe8HgfLeeIFereWRzRrA4u5L9s6zBGT0IS6XgRanoEJyBKWPvGpFId_leK46EEDcyYUeomAq9NDToeyQJGbvHVAyY2OxBSY3NIjmhKa-5BvN4QnpARftzhKbb15l-IXDHfHcgCPbgZBZbYAhB3agewiseRmp4TK901pls08yhWQwjL8jvHiD8rIiCx1CGgWlVjGEPh-mv78XJ7ZLXHA">
+<div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent"></div>
+</div>
+<div class="p-6 relative">
+<h4 class="font-headline-md text-headline-md text-on-surface mb-2 truncate">Génesis</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center">
+<span class="material-symbols-outlined text-[16px] mr-2" data-icon="library_books">library_books</span>
+                            12 Episodios
+                        </p>
+</div>
+</div>
+<!-- Series Card 2 -->
+<div class="snap-start shrink-0 w-72 glass-panel rounded-lg overflow-hidden group cursor-pointer hover:border-primary/50 transition-colors">
+<div class="h-40 relative overflow-hidden bg-surface-container">
+<div class="absolute inset-0 flex items-center justify-center text-surface-variant">
+<span class="material-symbols-outlined text-6xl" data-icon="water_drop">water_drop</span>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent"></div>
+</div>
+<div class="p-6 relative">
+<h4 class="font-headline-md text-headline-md text-on-surface mb-2 truncate">El Evangelio de Juan</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center">
+<span class="material-symbols-outlined text-[16px] mr-2" data-icon="library_books">library_books</span>
+                            8 Episodios
+                        </p>
+</div>
+</div>
+<!-- Series Card 3 -->
+<div class="snap-start shrink-0 w-72 glass-panel rounded-lg overflow-hidden group cursor-pointer hover:border-primary/50 transition-colors">
+<div class="h-40 relative overflow-hidden bg-surface-container">
+<div class="absolute inset-0 flex items-center justify-center text-surface-variant">
+<span class="material-symbols-outlined text-6xl" data-icon="history_edu">history_edu</span>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent"></div>
+</div>
+<div class="p-6 relative">
+<h4 class="font-headline-md text-headline-md text-on-surface mb-2 truncate">Cartas de Pablo</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center">
+<span class="material-symbols-outlined text-[16px] mr-2" data-icon="library_books">library_books</span>
+                            15 Episodios
+                        </p>
+</div>
+</div>
+</div>
+</section>
+<!-- All Studies List -->
+<section>
+<div class="flex justify-between items-end mb-8 border-b border-surface-border pb-4">
+<h3 class="font-headline-md text-headline-md text-on-surface">Todos los estudios</h3>
+<div class="relative">
+<select class="appearance-none bg-surface-container-low border border-surface-border text-on-surface-variant font-label-sm text-label-sm py-2 pl-4 pr-10 rounded-md focus:border-secondary focus:ring-1 focus:ring-secondary/50 outline-none">
+<option>Más recientes</option>
+<option>Más antiguos</option>
+<option>A-Z</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<!-- List Item 1 -->
+<div class="glass-panel rounded-lg p-6 flex flex-col md:flex-row md:items-center justify-between hover:bg-white/5 transition-colors group">
+<div class="flex-grow pr-4">
+<h4 class="font-headline-md text-headline-md text-on-surface mb-1 group-hover:text-primary transition-colors">La Fe que Mueve Montañas</h4>
+<div class="flex flex-wrap items-center gap-4 mt-2">
+<span class="inline-flex items-center text-on-surface-variant font-label-sm text-label-sm border border-surface-border px-2 py-1 rounded bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="menu_book">menu_book</span>
+                                Hebreos 11
+                            </span>
+<span class="text-on-surface-variant font-label-sm text-label-sm flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="person">person</span>
+                                Pr. Samuel Torres
+                            </span>
+<span class="text-surface-variant font-label-sm text-label-sm flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="calendar_today">calendar_today</span>
+                                12 Oct 2023
+                            </span>
+</div>
+</div>
+<div class="mt-4 md:mt-0 flex shrink-0">
+<button class="flex items-center justify-center w-10 h-10 rounded-full border border-surface-border text-on-surface-variant hover:text-secondary hover:border-secondary hover:bg-secondary/10 transition-colors" title="Descargar PDF">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+</div>
+</div>
+<!-- List Item 2 -->
+<div class="glass-panel rounded-lg p-6 flex flex-col md:flex-row md:items-center justify-between hover:bg-white/5 transition-colors group">
+<div class="flex-grow pr-4">
+<h4 class="font-headline-md text-headline-md text-on-surface mb-1 group-hover:text-primary transition-colors">Gracia Inmerecida</h4>
+<div class="flex flex-wrap items-center gap-4 mt-2">
+<span class="inline-flex items-center text-on-surface-variant font-label-sm text-label-sm border border-surface-border px-2 py-1 rounded bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="menu_book">menu_book</span>
+                                Efesios 2:8-9
+                            </span>
+<span class="text-on-surface-variant font-label-sm text-label-sm flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="person">person</span>
+                                Ana Rodríguez
+                            </span>
+<span class="text-surface-variant font-label-sm text-label-sm flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="calendar_today">calendar_today</span>
+                                05 Oct 2023
+                            </span>
+</div>
+</div>
+<div class="mt-4 md:mt-0 flex shrink-0">
+<button class="flex items-center justify-center w-10 h-10 rounded-full border border-surface-border text-on-surface-variant hover:text-secondary hover:border-secondary hover:bg-secondary/10 transition-colors" title="Descargar PDF">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+</div>
+</div>
+<!-- List Item 3 -->
+<div class="glass-panel rounded-lg p-6 flex flex-col md:flex-row md:items-center justify-between hover:bg-white/5 transition-colors group">
+<div class="flex-grow pr-4">
+<h4 class="font-headline-md text-headline-md text-on-surface mb-1 group-hover:text-primary transition-colors">El Fruto del Espíritu</h4>
+<div class="flex flex-wrap items-center gap-4 mt-2">
+<span class="inline-flex items-center text-on-surface-variant font-label-sm text-label-sm border border-surface-border px-2 py-1 rounded bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="menu_book">menu_book</span>
+                                Gálatas 5:22-23
+                            </span>
+<span class="text-on-surface-variant font-label-sm text-label-sm flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="person">person</span>
+                                Pr. Samuel Torres
+                            </span>
+<span class="text-surface-variant font-label-sm text-label-sm flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="calendar_today">calendar_today</span>
+                                28 Sep 2023
+                            </span>
+</div>
+</div>
+<div class="mt-4 md:mt-0 flex shrink-0">
+<button class="flex items-center justify-center w-10 h-10 rounded-full border border-surface-border text-on-surface-variant hover:text-secondary hover:border-secondary hover:bg-secondary/10 transition-colors" title="Descargar PDF">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+</div>
+</div>
+</div>
+<div class="mt-8 text-center">
+<button class="border border-surface-border text-on-surface px-6 py-3 rounded-md hover:bg-white/5 transition-colors font-label-sm text-label-sm">
+                    Cargar Más
+                </button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-section-gap bg-surface-container-lowest border-t border-surface-border bg-gradient-to-t from-glow-crimson to-transparent opacity-100 hover:opacity-80 transition-opacity mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-gutter max-w-container-max mx-auto">
+<div class="mb-6 md:mb-0 text-center md:text-left">
+<span class="font-headline-md text-headline-md text-primary block mb-2">UJELADEA</span>
+<p class="font-body-md text-body-md text-on-surface-variant">© 2024 UJELADEA. Faithful in Service.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Us</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">About</a>
+</div>
+</div>
+</footer>
+
+
+</body></html>

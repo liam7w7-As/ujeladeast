@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UJELADEA - Panel de Administración</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#8b1534",
+                        "surface-variant": "#353437",
+                        "tertiary-fixed": "#ffd9de",
+                        "surface-container": "#201f22",
+                        "secondary-container": "#785d00",
+                        "inverse-surface": "#e5e1e4",
+                        "on-error": "#690005",
+                        "tertiary-fixed-dim": "#ffb2bd",
+                        "surface-border": "#27272a",
+                        "outline-variant": "#574143",
+                        "surface-container-highest": "#353437",
+                        "on-secondary-fixed": "#241a00",
+                        "surface-dim": "#131315",
+                        "outline": "#a68a8c",
+                        "surface-container-high": "#2a2a2c",
+                        "secondary-fixed-dim": "#e6c364",
+                        "inverse-primary": "#ab304a",
+                        "secondary-fixed": "#ffe08f",
+                        "inverse-on-surface": "#313032",
+                        "primary-container": "#8f1937",
+                        "on-primary": "#670021",
+                        "on-tertiary": "#630926",
+                        "background": "#131315",
+                        "on-secondary-container": "#fdd977",
+                        "primary": "#ffb2ba",
+                        "surface-bright": "#39393b",
+                        "surface": "#131315",
+                        "on-secondary": "#3d2e00",
+                        "on-primary-container": "#ff9eaa",
+                        "surface-tint": "#ffb2ba",
+                        "on-secondary-fixed-variant": "#584400",
+                        "secondary": "#e6c364",
+                        "on-error-container": "#ffdad6",
+                        "error": "#ffb4ab",
+                        "tertiary": "#ffb2bd",
+                        "on-tertiary-fixed": "#400014",
+                        "on-tertiary-container": "#ff9eae",
+                        "on-surface-variant": "#debfc1",
+                        "surface-container-lowest": "#0e0e10",
+                        "primary-fixed-dim": "#ffb2ba",
+                        "glow-crimson": "rgba(143, 25, 55, 0.15)",
+                        "tertiary-container": "#86263f",
+                        "on-primary-fixed": "#400011",
+                        "primary-fixed": "#ffd9dc",
+                        "error-container": "#93000a",
+                        "surface-container-low": "#1c1b1d",
+                        "on-background": "#e5e1e4",
+                        "on-tertiary-fixed-variant": "#81233b",
+                        "on-surface": "#e5e1e4",
+                        "glass-bg": "rgba(18, 18, 21, 0.7)"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "gutter": "24px",
+                        "unit": "4px",
+                        "container-max": "1280px",
+                        "section-gap": "120px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["sora"],
+                        "body-lg": ["inter"],
+                        "headline-xl-mobile": ["sora"],
+                        "display-lg": ["sora"],
+                        "body-md": ["inter"],
+                        "headline-md": ["sora"],
+                        "label-sm": ["jetbrainsMono"],
+                        "headline-xl": ["sora"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-xl-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "display-lg": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-xl": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.01em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&amp;family=Inter:wght@400&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-sora { font-family: 'Sora', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Glassmorphism Utilities */
+        .glass-panel {
+            background: rgba(24, 24, 27, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid #27272a;
+        }
+        
+        .ambient-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(143, 25, 55, 0.15) 0%, rgba(19, 19, 21, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex flex-col overflow-x-hidden relative">
+<!-- Ambient Glow Background -->
+<div class="ambient-glow top-0 left-0 translate-x-[-20%] translate-y-[-20%]"></div>
+<div class="ambient-glow bottom-0 right-0 translate-x-[20%] translate-y-[20%]"></div>
+<!-- TopNavBar (Adapted for Admin) -->
+<nav class="bg-glass-bg dark:bg-glass-bg fixed top-0 w-full z-50 backdrop-blur-xl border-b border-surface-border shadow-none transition-all duration-300 ease-in-out">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-gutter h-20 max-w-container-max mx-auto">
+<div class="flex items-center gap-4">
+<span class="font-display-lg-mobile text-display-lg-mobile font-extrabold text-primary dark:text-primary tracking-tight">UJELADEA</span>
+<span class="font-label-sm text-label-sm bg-primary-container text-white px-2 py-1 rounded border border-outline-variant uppercase tracking-wider ml-2 hidden md:inline-block">Admin</span>
+</div>
+<!-- Hidden on mobile, search on right paradigm -->
+<div class="hidden md:flex items-center gap-6">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="bg-surface-container-high border border-surface-border rounded-full py-2 pl-10 pr-4 text-body-md font-body-md text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary/50 w-64 transition-colors" placeholder="Buscar..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+<div class="h-8 w-8 rounded-full border border-surface-border overflow-hidden cursor-pointer hover:border-primary transition-colors">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A close up portrait of a professional looking individual in a dark cinematic lighting setting. High contrast, modern corporate aesthetic. Subdued colors with a hint of warm light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXZlUubgasNNhDbeRI6ZBc0UwCDrpDyS8EBmMb0GYeeH5E7-gQzdTB606vig0lxScIQz6cuX4_mEyhLfoYsVvR6rYDJPPeVBUpwhStMMgOVHq97tEvet5BtoRXjL11M8La2TbWAgj7wWBIMAtrDUP1GsPFkMvZ59JeKvqBLPjctYAwunpDjBSV0VPU1FE3RnPHeCg9-d3LDruSaH9sq18JfZw94jYbeL27SayEGVoWfWrZ_LXfzyaGu-e-Y-i5kSS59Y3TW2-JG6w"/>
+</div>
+</div>
+</div>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-on-surface-variant">
+<span class="material-symbols-outlined text-3xl">menu</span>
+</button>
+</div>
+</nav>
+<!-- Main Layout Container -->
+<div class="flex-1 flex pt-20 max-w-container-max mx-auto w-full relative z-10">
+<!-- SideNavBar -->
+<aside class="bg-glass-bg backdrop-blur-lg h-[calc(100vh-5rem)] w-64 border-r border-surface-border shadow-none hidden lg:flex flex-col p-4 space-y-4 sticky top-20 overflow-y-auto z-40">
+<div class="mb-8 mt-4 px-2">
+<h2 class="font-headline-md text-headline-md font-bold text-primary">Admin Panel</h2>
+<p class="text-on-surface-variant text-sm mt-1">System Oversight</p>
+</div>
+<button class="w-full bg-primary-container hover:bg-primary-container/80 text-white rounded-lg py-3 px-4 font-body-md text-body-md font-semibold transition-colors flex items-center justify-center gap-2 mb-6 border border-tertiary-container shadow-[0_0_15px_rgba(143,25,55,0.3)]">
+<span class="material-symbols-outlined text-sm">add</span>
+                New Post
+            </button>
+<nav class="flex-1 space-y-2">
+<!-- Active Item -->
+<a class="bg-primary-container text-on-primary-container rounded-lg font-bold flex items-center gap-3 px-4 py-3 scale-98 active:opacity-80 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg flex items-center gap-3 px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined">edit_document</span>
+<span class="font-body-md text-body-md">Posts</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg flex items-center gap-3 px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined">music_note</span>
+<span class="font-body-md text-body-md">Himnario</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg flex items-center gap-3 px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-body-md text-body-md">Estudios</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg flex items-center gap-3 px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined">diversity_3</span>
+<span class="font-body-md text-body-md">Sociedades</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg flex items-center gap-3 px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined">folder_open</span>
+<span class="font-body-md text-body-md">Recursos</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg flex items-center gap-3 px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md text-body-md">Usuarios</span>
+</a>
+</nav>
+<div class="mt-auto pt-4 border-t border-surface-border">
+<a class="text-on-surface-variant hover:text-error hover:bg-error-container/20 rounded-lg flex items-center gap-3 px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body-md text-body-md">Log Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 p-margin-mobile md:p-gutter w-full">
+<header class="mb-10">
+<h1 class="font-headline-xl text-headline-xl font-bold text-on-surface mb-2">Resumen General</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Métricas clave y actividad reciente de la plataforma.</p>
+</header>
+<!-- Stats Row (Bento Grid Style) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+<!-- Stat Card 1 -->
+<div class="glass-panel rounded-xl p-6 relative overflow-hidden group hover:border-primary/50 transition-colors">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-6xl text-primary">edit_document</span>
+</div>
+<div class="relative z-10">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Total Posts</p>
+<h3 class="font-display-lg-mobile text-display-lg-mobile font-bold text-primary mb-1">1,248</h3>
+<p class="font-label-sm text-label-sm text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span> +12% este mes
+                        </p>
+</div>
+</div>
+<!-- Stat Card 2 -->
+<div class="glass-panel rounded-xl p-6 relative overflow-hidden group hover:border-primary/50 transition-colors">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-6xl text-primary">music_note</span>
+</div>
+<div class="relative z-10">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Himnos Activos</p>
+<h3 class="font-display-lg-mobile text-display-lg-mobile font-bold text-on-surface mb-1">450</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+                            Actualizado hoy
+                        </p>
+</div>
+</div>
+<!-- Stat Card 3 -->
+<div class="glass-panel rounded-xl p-6 relative overflow-hidden group hover:border-primary/50 transition-colors">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-6xl text-primary">group</span>
+</div>
+<div class="relative z-10">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Usuarios Registrados</p>
+<h3 class="font-display-lg-mobile text-display-lg-mobile font-bold text-on-surface mb-1">8,920</h3>
+<p class="font-label-sm text-label-sm text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span> +5% esta semana
+                        </p>
+</div>
+</div>
+<!-- Stat Card 4 -->
+<div class="glass-panel rounded-xl p-6 relative overflow-hidden group hover:border-primary/50 transition-colors">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-6xl text-primary">menu_book</span>
+</div>
+<div class="relative z-10">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Estudios Bíblicos</p>
+<h3 class="font-display-lg-mobile text-display-lg-mobile font-bold text-on-surface mb-1">112</h3>
+<p class="font-label-sm text-label-sm text-error flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">warning</span> 2 pendientes de revisión
+                        </p>
+</div>
+</div>
+</div>
+<!-- Content Area: Split Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-section-gap">
+<!-- Recent Activity Table (Spans 2 columns) -->
+<div class="lg:col-span-2 glass-panel rounded-xl overflow-hidden flex flex-col">
+<div class="p-6 border-b border-surface-border flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md font-semibold text-on-surface">Actividad Reciente</h2>
+<button class="font-label-sm text-label-sm text-primary hover:text-secondary transition-colors uppercase tracking-wider">Ver Todo</button>
+</div>
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-surface-border/50 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="p-4 font-medium">Tipo</th>
+<th class="p-4 font-medium">Título/Acción</th>
+<th class="p-4 font-medium">Autor</th>
+<th class="p-4 font-medium">Fecha</th>
+<th class="p-4 font-medium text-right">Estado</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md">
+<tr class="border-b border-surface-border/30 hover:bg-white/5 transition-colors group">
+<td class="p-4">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">edit_document</span>
+</div>
+</td>
+<td class="p-4 text-on-surface font-medium">Devocional Semanal</td>
+<td class="p-4 text-on-surface-variant">Pastor J. Pérez</td>
+<td class="p-4 text-on-surface-variant text-sm">Hace 2 horas</td>
+<td class="p-4 text-right">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#1a2e1e] text-[#4ade80] border border-[#22c55e]/30">Publicado</span>
+</td>
+</tr>
+<tr class="border-b border-surface-border/30 hover:bg-white/5 transition-colors group">
+<td class="p-4">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">group</span>
+</div>
+</td>
+<td class="p-4 text-on-surface font-medium">Nuevo Registro</td>
+<td class="p-4 text-on-surface-variant">María González</td>
+<td class="p-4 text-on-surface-variant text-sm">Hace 5 horas</td>
+<td class="p-4 text-right">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-surface-container-high text-on-surface-variant border border-surface-border">Completado</span>
+</td>
+</tr>
+<tr class="border-b border-surface-border/30 hover:bg-white/5 transition-colors group">
+<td class="p-4">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">menu_book</span>
+</div>
+</td>
+<td class="p-4 text-on-surface font-medium">Estudio: Los Salmos</td>
+<td class="p-4 text-on-surface-variant">Dr. A. Martínez</td>
+<td class="p-4 text-on-surface-variant text-sm">Ayer</td>
+<td class="p-4 text-right">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#3b2a1a] text-secondary border border-secondary/30">En Revisión</span>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="p-4">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">music_note</span>
+</div>
+</td>
+<td class="p-4 text-on-surface font-medium">Himno 45 Actualizado</td>
+<td class="p-4 text-on-surface-variant">Admin Sistema</td>
+<td class="p-4 text-on-surface-variant text-sm">12 Oct 2023</td>
+<td class="p-4 text-right">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#1a2e1e] text-[#4ade80] border border-[#22c55e]/30">Publicado</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Quick Actions & System Status -->
+<div class="flex flex-col gap-6">
+<!-- Quick Actions -->
+<div class="glass-panel rounded-xl p-6">
+<h2 class="font-headline-md text-headline-md font-semibold text-on-surface mb-6">Acciones Rápidas</h2>
+<div class="grid grid-cols-2 gap-4">
+<button class="bg-surface-container-high hover:bg-surface-bright border border-surface-border rounded-lg p-4 flex flex-col items-center justify-center gap-2 transition-colors text-on-surface">
+<span class="material-symbols-outlined text-primary">upload_file</span>
+<span class="font-label-sm text-label-sm text-center">Subir Recurso</span>
+</button>
+<button class="bg-surface-container-high hover:bg-surface-bright border border-surface-border rounded-lg p-4 flex flex-col items-center justify-center gap-2 transition-colors text-on-surface">
+<span class="material-symbols-outlined text-primary">add_alert</span>
+<span class="font-label-sm text-label-sm text-center">Crear Anuncio</span>
+</button>
+<button class="bg-surface-container-high hover:bg-surface-bright border border-surface-border rounded-lg p-4 flex flex-col items-center justify-center gap-2 transition-colors text-on-surface">
+<span class="material-symbols-outlined text-primary">manage_accounts</span>
+<span class="font-label-sm text-label-sm text-center">Gestionar Roles</span>
+</button>
+<button class="bg-surface-container-high hover:bg-surface-bright border border-surface-border rounded-lg p-4 flex flex-col items-center justify-center gap-2 transition-colors text-on-surface">
+<span class="material-symbols-outlined text-primary">settings_backup_restore</span>
+<span class="font-label-sm text-label-sm text-center">Backup DB</span>
+</button>
+</div>
+</div>
+<!-- System Status -->
+<div class="glass-panel rounded-xl p-6 flex-1">
+<h2 class="font-headline-md text-headline-md font-semibold text-on-surface mb-4">Estado del Sistema</h2>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1">
+<span class="text-on-surface-variant">Almacenamiento (75%)</span>
+<span class="text-on-surface">150GB / 200GB</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 75%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1">
+<span class="text-on-surface-variant">Carga de Servidor</span>
+<span class="text-secondary">Normal</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 30%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest w-full py-section-gap border-t border-surface-border bg-gradient-to-t from-glow-crimson to-transparent no shadows z-10 relative mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-gutter max-w-container-max mx-auto opacity-100 hover:opacity-80 transition-opacity">
+<div class="mb-4 md:mb-0 text-center md:text-left">
+<span class="font-headline-md text-headline-md text-primary font-bold">UJELADEA</span>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">© 2024 UJELADEA. Faithful in Service.</p>
+</div>
+<nav class="flex flex-wrap justify-center gap-6">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Us</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">About</a>
+</nav>
+</div>
+</footer>
+</body></html>

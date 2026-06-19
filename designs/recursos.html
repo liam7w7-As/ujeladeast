@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Recursos - UJELADEA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&amp;family=Sora:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-fixed-variant": "#8b1534",
+                      "surface-variant": "#353437",
+                      "tertiary-fixed": "#ffd9de",
+                      "surface-container": "#201f22",
+                      "secondary-container": "#785d00",
+                      "inverse-surface": "#e5e1e4",
+                      "on-error": "#690005",
+                      "tertiary-fixed-dim": "#ffb2bd",
+                      "surface-border": "#27272a",
+                      "outline-variant": "#574143",
+                      "surface-container-highest": "#353437",
+                      "on-secondary-fixed": "#241a00",
+                      "surface-dim": "#131315",
+                      "outline": "#a68a8c",
+                      "surface-container-high": "#2a2a2c",
+                      "secondary-fixed-dim": "#e6c364",
+                      "inverse-primary": "#ab304a",
+                      "secondary-fixed": "#ffe08f",
+                      "inverse-on-surface": "#313032",
+                      "primary-container": "#8f1937",
+                      "on-primary": "#670021",
+                      "on-tertiary": "#630926",
+                      "background": "#09090b",
+                      "on-secondary-container": "#fdd977",
+                      "primary": "#ffb2ba",
+                      "surface-bright": "#39393b",
+                      "surface": "#131315",
+                      "on-secondary": "#3d2e00",
+                      "on-primary-container": "#ff9eaa",
+                      "surface-tint": "#ffb2ba",
+                      "on-secondary-fixed-variant": "#584400",
+                      "secondary": "#e6c364",
+                      "on-error-container": "#ffdad6",
+                      "error": "#ffb4ab",
+                      "tertiary": "#ffb2bd",
+                      "on-tertiary-fixed": "#400014",
+                      "on-tertiary-container": "#ff9eae",
+                      "on-surface-variant": "#a1a1aa",
+                      "surface-container-lowest": "#0e0e10",
+                      "primary-fixed-dim": "#ffb2ba",
+                      "glow-crimson": "rgba(143, 25, 55, 0.15)",
+                      "tertiary-container": "#86263f",
+                      "on-primary-fixed": "#400011",
+                      "primary-fixed": "#ffd9dc",
+                      "error-container": "#93000a",
+                      "surface-container-low": "#1c1b1d",
+                      "on-background": "#e5e1e4",
+                      "on-tertiary-fixed-variant": "#81233b",
+                      "on-surface": "#ffffff",
+                      "glass-bg": "rgba(24, 24, 27, 0.4)"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "16px",
+                      "gutter": "24px",
+                      "unit": "4px",
+                      "container-max": "1280px",
+                      "section-gap": "120px"
+              },
+              "fontFamily": {
+                      "display-lg-mobile": [
+                              "Sora", "sans-serif"
+                      ],
+                      "body-lg": [
+                              "Sora", "sans-serif"
+                      ],
+                      "headline-xl-mobile": [
+                              "Sora", "sans-serif"
+                      ],
+                      "display-lg": [
+                              "Sora", "sans-serif"
+                      ],
+                      "body-md": [
+                              "Sora", "sans-serif"
+                      ],
+                      "headline-md": [
+                              "Sora", "sans-serif"
+                      ],
+                      "label-sm": [
+                              "JetBrains Mono", "monospace"
+                      ],
+                      "headline-xl": [
+                              "Sora", "sans-serif"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg-mobile": [
+                              "40px",
+                              {
+                                      "lineHeight": "48px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-xl-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg": [
+                              "64px",
+                              {
+                                      "lineHeight": "72px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-xl": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+            overflow-x: hidden;
+            font-family: 'Sora', sans-serif;
+        }
+        
+        .glow-bg {
+            background: radial-gradient(circle at top right, rgba(143, 25, 55, 0.1) 0%, transparent 40%),
+                        radial-gradient(circle at bottom left, rgba(143, 25, 55, 0.05) 0%, transparent 40%);
+        }
+        
+        .glass-card {
+            background: theme('colors.glass-bg');
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid theme('colors.surface-border');
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            border-color: #8f1937;
+            box-shadow: 0 0 20px rgba(143, 25, 55, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .nav-glass {
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        .filter-chip.active {
+            border-color: theme('colors.primary');
+            color: theme('colors.primary');
+        }
+        
+        .download-btn {
+            background-color: theme('colors.primary-container');
+            color: theme('colors.on-primary-container');
+            transition: all 0.3s ease;
+        }
+        
+        .download-btn:hover {
+            background-color: theme('colors.on-primary-fixed-variant');
+            box-shadow: 0 0 15px rgba(143, 25, 55, 0.4);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col glow-bg relative font-body-md text-body-md bg-[#09090b]">
+<!-- Ambient Background Glows -->
+<div class="fixed inset-0 pointer-events-none z-[-1] overflow-hidden">
+<div class="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] rounded-full bg-glow-crimson blur-[120px] opacity-30"></div>
+<div class="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-primary-container blur-[120px] opacity-10"></div>
+</div>
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 nav-glass border-b border-surface-border shadow-none transition-all duration-300 ease-in-out">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-gutter h-20 max-w-container-max mx-auto">
+<!-- Brand -->
+<a class="font-display-lg-mobile text-display-lg-mobile font-extrabold text-primary" href="#">
+                UJELADEA
+            </a>
+<!-- Navigation Links (Web) -->
+<nav class="hidden md:flex items-center space-x-8">
+<a class="text-on-surface-variant hover:text-white transition-colors font-label-sm text-label-sm hover:bg-white/5 px-3 py-2 rounded-DEFAULT" href="#">Feed</a>
+<a class="text-on-surface-variant hover:text-white transition-colors font-label-sm text-label-sm hover:bg-white/5 px-3 py-2 rounded-DEFAULT" href="#">Hymnal</a>
+<a class="text-on-surface-variant hover:text-white transition-colors font-label-sm text-label-sm hover:bg-white/5 px-3 py-2 rounded-DEFAULT" href="#">Bible Studies</a>
+<a class="text-on-surface-variant hover:text-white transition-colors font-label-sm text-label-sm hover:bg-white/5 px-3 py-2 rounded-DEFAULT" href="#">Societies</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-sm text-label-sm" href="#">Resources</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center space-x-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors hidden md:block">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<div class="w-10 h-10 rounded-full border border-surface-border overflow-hidden cursor-pointer hover:border-primary transition-colors">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A portrait photography of a young man with a neutral expression, illuminated by soft studio lighting against a dark gray backdrop. The lighting highlights the contours of his face and casts gentle shadows, creating a moody, professional aesthetic. The color palette features deep blacks, muted skin tones, and subtle hints of warm light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBN2rXs8zIyyFf9smTyEnTwfRAK4olr2AQmuhwS5LAB8XuFN2_OA2KYP5gSXvSG5dJd_Z3Q8dyQ7uBnoc7wGeeZlw_oymGc-bf-FcdOhwsDBT0BX_0SXrEcTZkwFU_8qZ7JpcG4vOhzSNqa40QYmYojqiCAe8HZEQdVx2x2dZD6ID8uDC7xivnnRiIMT5-cXNN6nTDeHKp8-r3PtBj7jDwoh3Jupfz4WcrX_tjGS_83xuW3uxnTQXfumcznZP6jLUO0OGOpSPzbU3k"/>
+</div>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow pt-32 pb-section-gap px-margin-mobile md:px-gutter max-w-container-max mx-auto w-full">
+<!-- Header Section -->
+<div class="mb-16 text-center md:text-left">
+<h1 class="font-display-lg text-display-lg font-extrabold text-white mb-4">Recursos</h1>
+<p class="font-body-lg text-body-lg text-gray-400 max-w-2xl">Material disponible para los jóvenes. Descarga y comparte los documentos oficiales, estudios y herramientas de UJELADEA.</p>
+</div>
+<!-- Featured Banner -->
+<section class="mb-16">
+<div class="glass-card rounded-xl overflow-hidden relative group border-[#27272a]">
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/30 z-10"></div>
+<img alt="Featured Resource" class="w-full h-full object-cover opacity-40" data-alt="A macro photography shot of an open vintage book or Bible, resting on a dark wooden table. Soft, warm golden light spills across the pages, highlighting the texture of the paper and the printed text. The background fades into a deep, out-of-focus darkness. The mood is contemplative, scholarly, and serene, fitting a premium digital aesthetic with subtle warm accents against a dark backdrop." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOQ6FDy-cyB4OKR6psi0e0od1BrNx3bgnQZjLTpd3Qn0iF4glqJfsL7PVobc7-ek8N6SyWEfxVmjv5BORoB9IjumELxS-kxLm4qC-2DEmwjzRc8hJLFXHHnugNaR20VWT-Wnipij0_L5crv4Xaf-py0UFVW-Kd_EWmTtDIr-jk5nIWuQKmU7NSSL6Rsgej1XrBV3ayWlNH-mWUU0Q1-eg4UFXuGhYeBs1VXSflYmmmvdXEYpxhQigjdel-LiGYmxvGCN7wp9q-4NE"/>
+</div>
+<div class="relative z-20 p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+<div class="max-w-xl">
+<span class="inline-block px-3 py-1 rounded-full border border-primary text-primary font-label-sm text-label-sm mb-4">DESTACADO</span>
+<h2 class="font-headline-xl text-headline-xl text-white mb-4">Manual del Líder Juvenil 2024</h2>
+<p class="text-gray-300 mb-6 font-body-md text-body-md">Guía completa para la organización y desarrollo de actividades de la sociedad de jóvenes. Incluye nuevas directrices y formatos.</p>
+<div class="flex items-center space-x-4 text-gray-400 font-label-sm text-label-sm">
+<span class="flex items-center"><span class="material-symbols-outlined text-[16px] mr-1" data-icon="picture_as_pdf">picture_as_pdf</span> PDF</span>
+<span>•</span>
+<span>4.2 MB</span>
+<span>•</span>
+<span>Actualizado: Ene 2024</span>
+</div>
+</div>
+<button class="download-btn px-6 py-3 rounded-lg font-label-sm text-label-sm flex items-center space-x-2 flex-shrink-0">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+<span>Descargar Manual</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Filters -->
+<div class="flex flex-wrap gap-3 mb-10 border-b border-surface-border pb-6">
+<button class="filter-chip active px-4 py-2 rounded-full border border-primary bg-[#18181b]/40 text-primary hover:border-primary transition-colors font-label-sm text-label-sm flex items-center">
+                Todos
+            </button>
+<button class="filter-chip px-4 py-2 rounded-full border border-surface-border bg-[#18181b]/40 text-gray-400 hover:text-white hover:border-gray-500 transition-colors font-label-sm text-label-sm flex items-center">
+<span class="material-symbols-outlined text-[16px] mr-2" data-icon="description">description</span>
+                Documentos
+            </button>
+<button class="filter-chip px-4 py-2 rounded-full border border-surface-border bg-[#18181b]/40 text-gray-400 hover:text-white hover:border-gray-500 transition-colors font-label-sm text-label-sm flex items-center">
+<span class="material-symbols-outlined text-[16px] mr-2" data-icon="assignment">assignment</span>
+                Formularios
+            </button>
+<button class="filter-chip px-4 py-2 rounded-full border border-surface-border bg-[#18181b]/40 text-gray-400 hover:text-white hover:border-gray-500 transition-colors font-label-sm text-label-sm flex items-center">
+<span class="material-symbols-outlined text-[16px] mr-2" data-icon="co_present">co_present</span>
+                Presentaciones
+            </button>
+<button class="filter-chip px-4 py-2 rounded-full border border-surface-border bg-[#18181b]/40 text-gray-400 hover:text-white hover:border-gray-500 transition-colors font-label-sm text-label-sm flex items-center">
+<span class="material-symbols-outlined text-[16px] mr-2" data-icon="smart_display">smart_display</span>
+                Videos
+            </button>
+</div>
+<!-- Resource Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="glass-card rounded-lg p-6 flex flex-col relative group">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-lg bg-[#18181b] flex items-center justify-center border border-surface-border">
+<span class="material-symbols-outlined text-gray-400 text-[24px]" data-icon="description">description</span>
+</div>
+<span class="px-2 py-1 rounded bg-[#18181b] border border-surface-border text-gray-400 font-label-sm text-label-sm text-[10px]">DOCUMENTO</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-white mb-2 line-clamp-2">Estatutos UJELADEA 2023</h3>
+<p class="text-gray-400 mb-6 font-body-md text-body-md text-sm line-clamp-2 flex-grow">Reglamento oficial y estatutos que rigen la organización a nivel nacional.</p>
+<div class="flex items-center justify-between mt-auto pt-4 border-t border-surface-border/50">
+<div class="flex flex-col text-gray-500 font-label-sm text-label-sm text-[11px]">
+<span>PDF • 1.8 MB</span>
+<span class="opacity-70">15 Oct 2023</span>
+</div>
+<button class="w-10 h-10 rounded-full bg-[#18181b] hover:bg-primary-container hover:text-on-primary-container border border-surface-border flex items-center justify-center transition-colors text-gray-300">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-card rounded-lg p-6 flex flex-col relative group">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-lg bg-[#18181b] flex items-center justify-center border border-surface-border">
+<span class="material-symbols-outlined text-gray-400 text-[24px]" data-icon="assignment">assignment</span>
+</div>
+<span class="px-2 py-1 rounded bg-[#18181b] border border-surface-border text-gray-400 font-label-sm text-label-sm text-[10px]">FORMULARIO</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-white mb-2 line-clamp-2">Reporte Mensual de Actividades</h3>
+<p class="text-gray-400 mb-6 font-body-md text-body-md text-sm line-clamp-2 flex-grow">Plantilla para el reporte de actividades de las sociedades locales al distrito.</p>
+<div class="flex items-center justify-between mt-auto pt-4 border-t border-surface-border/50">
+<div class="flex flex-col text-gray-500 font-label-sm text-label-sm text-[11px]">
+<span>DOCX • 120 KB</span>
+<span class="opacity-70">02 Mar 2024</span>
+</div>
+<button class="w-10 h-10 rounded-full bg-[#18181b] hover:bg-primary-container hover:text-on-primary-container border border-surface-border flex items-center justify-center transition-colors text-gray-300">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-card rounded-lg p-6 flex flex-col relative group">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-lg bg-[#18181b] flex items-center justify-center border border-surface-border">
+<span class="material-symbols-outlined text-primary text-[24px]" data-icon="co_present">co_present</span>
+</div>
+<span class="px-2 py-1 rounded bg-[#18181b] border border-surface-border text-primary font-label-sm text-label-sm text-[10px]">PRESENTACIÓN</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-white mb-2 line-clamp-2">Plan de Trabajo Anual</h3>
+<p class="text-gray-400 mb-6 font-body-md text-body-md text-sm line-clamp-2 flex-grow">Diapositivas presentando los objetivos y eventos principales para el año en curso.</p>
+<div class="flex items-center justify-between mt-auto pt-4 border-t border-surface-border/50">
+<div class="flex flex-col text-gray-500 font-label-sm text-label-sm text-[11px]">
+<span>PPTX • 5.4 MB</span>
+<span class="opacity-70">10 Ene 2024</span>
+</div>
+<button class="w-10 h-10 rounded-full bg-[#18181b] hover:bg-primary-container hover:text-on-primary-container border border-surface-border flex items-center justify-center transition-colors text-gray-300">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="glass-card rounded-lg p-6 flex flex-col relative group">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-lg bg-[#18181b] flex items-center justify-center border border-surface-border">
+<span class="material-symbols-outlined text-gray-400 text-[24px]" data-icon="smart_display">smart_display</span>
+</div>
+<span class="px-2 py-1 rounded bg-[#18181b] border border-surface-border text-gray-400 font-label-sm text-label-sm text-[10px]">VIDEO</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-white mb-2 line-clamp-2">Capacitación: Uso de Plataforma</h3>
+<p class="text-gray-400 mb-6 font-body-md text-body-md text-sm line-clamp-2 flex-grow">Tutorial paso a paso sobre cómo ingresar reportes en el nuevo sistema digital.</p>
+<div class="flex items-center justify-between mt-auto pt-4 border-t border-surface-border/50">
+<div class="flex flex-col text-gray-500 font-label-sm text-label-sm text-[11px]">
+<span>MP4 • 145 MB</span>
+<span class="opacity-70">28 Feb 2024</span>
+</div>
+<button class="w-10 h-10 rounded-full bg-[#18181b] hover:bg-primary-container hover:text-on-primary-container border border-surface-border flex items-center justify-center transition-colors text-gray-300">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="glass-card rounded-lg p-6 flex flex-col relative group">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 rounded-lg bg-[#18181b] flex items-center justify-center border border-surface-border">
+<span class="material-symbols-outlined text-gray-400 text-[24px]" data-icon="description">description</span>
+</div>
+<span class="px-2 py-1 rounded bg-[#18181b] border border-surface-border text-gray-400 font-label-sm text-label-sm text-[10px]">DOCUMENTO</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-white mb-2 line-clamp-2">Directorio Pastoral 2024</h3>
+<p class="text-gray-400 mb-6 font-body-md text-body-md text-sm line-clamp-2 flex-grow">Lista de contactos actualizada de pastores y líderes de distrito.</p>
+<div class="flex items-center justify-between mt-auto pt-4 border-t border-surface-border/50">
+<div class="flex flex-col text-gray-500 font-label-sm text-label-sm text-[11px]">
+<span>PDF • 800 KB</span>
+<span class="opacity-70">05 Ene 2024</span>
+</div>
+<button class="w-10 h-10 rounded-full bg-[#18181b] hover:bg-primary-container hover:text-on-primary-container border border-surface-border flex items-center justify-center transition-colors text-gray-300">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-section-gap border-t border-surface-border bg-[#09090b]">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-gutter max-w-container-max mx-auto space-y-6 md:space-y-0 opacity-100 hover:opacity-80 transition-opacity">
+<!-- Brand & Copyright -->
+<div class="flex flex-col items-center md:items-start text-center md:text-left">
+<span class="font-headline-md text-headline-md text-primary mb-2">UJELADEA</span>
+<span class="text-gray-400 font-body-md text-body-md">© 2024 UJELADEA. Faithful in Service.</span>
+</div>
+<!-- Links -->
+<nav class="flex flex-wrap justify-center gap-6 font-body-md text-body-md text-gray-400">
+<a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-primary transition-colors" href="#">Contact Us</a>
+<a class="hover:text-primary transition-colors" href="#">About</a>
+</nav>
+</div>
+</footer>
+</body></html>

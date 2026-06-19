@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UJELADEA - Sociedades</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;family=Inter:wght@400;500&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-primary-fixed-variant": "#8b1534",
+                        "surface-variant": "#353437",
+                        "tertiary-fixed": "#ffd9de",
+                        "surface-container": "#201f22",
+                        "secondary-container": "#785d00",
+                        "inverse-surface": "#e5e1e4",
+                        "on-error": "#690005",
+                        "tertiary-fixed-dim": "#ffb2bd",
+                        "surface-border": "#27272a",
+                        "outline-variant": "#574143",
+                        "surface-container-highest": "#353437",
+                        "on-secondary-fixed": "#241a00",
+                        "surface-dim": "#131315",
+                        "outline": "#a68a8c",
+                        "surface-container-high": "#2a2a2c",
+                        "secondary-fixed-dim": "#e6c364",
+                        "inverse-primary": "#ab304a",
+                        "secondary-fixed": "#ffe08f",
+                        "inverse-on-surface": "#313032",
+                        "primary-container": "#8f1937",
+                        "on-primary": "#670021",
+                        "on-tertiary": "#630926",
+                        "background": "#131315",
+                        "on-secondary-container": "#fdd977",
+                        "primary": "#ffb2ba",
+                        "surface-bright": "#39393b",
+                        "surface": "#131315",
+                        "on-secondary": "#3d2e00",
+                        "on-primary-container": "#ff9eaa",
+                        "surface-tint": "#ffb2ba",
+                        "on-secondary-fixed-variant": "#584400",
+                        "secondary": "#e6c364",
+                        "on-error-container": "#ffdad6",
+                        "error": "#ffb4ab",
+                        "tertiary": "#ffb2bd",
+                        "on-tertiary-fixed": "#400014",
+                        "on-tertiary-container": "#ff9eae",
+                        "on-surface-variant": "#debfc1",
+                        "surface-container-lowest": "#0e0e10",
+                        "primary-fixed-dim": "#ffb2ba",
+                        "glow-crimson": "rgba(143, 25, 55, 0.15)",
+                        "tertiary-container": "#86263f",
+                        "on-primary-fixed": "#400011",
+                        "primary-fixed": "#ffd9dc",
+                        "error-container": "#93000a",
+                        "surface-container-low": "#1c1b1d",
+                        "on-background": "#e5e1e4",
+                        "on-tertiary-fixed-variant": "#81233b",
+                        "on-surface": "#e5e1e4",
+                        "glass-bg": "rgba(18, 18, 21, 0.7)"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "margin-mobile": "16px",
+                        "gutter": "24px",
+                        "unit": "4px",
+                        "container-max": "1280px",
+                        "section-gap": "120px"
+                    },
+                    fontFamily: {
+                        "display-lg-mobile": ["Sora", "sans-serif"],
+                        "body-lg": ["Inter", "sans-serif"],
+                        "headline-xl-mobile": ["Sora", "sans-serif"],
+                        "display-lg": ["Sora", "sans-serif"],
+                        "body-md": ["Inter", "sans-serif"],
+                        "headline-md": ["Sora", "sans-serif"],
+                        "label-sm": ["JetBrains Mono", "monospace"],
+                        "headline-xl": ["Sora", "sans-serif"]
+                    },
+                    fontSize: {
+                        "display-lg-mobile": ["40px", { lineHeight: "48px", letterSpacing: "-0.02em", fontWeight: "800" }],
+                        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+                        "headline-xl-mobile": ["32px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "700" }],
+                        "display-lg": ["64px", { lineHeight: "72px", letterSpacing: "-0.02em", fontWeight: "800" }],
+                        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+                        "label-sm": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "500" }],
+                        "headline-xl": ["48px", { lineHeight: "56px", letterSpacing: "-0.01em", fontWeight: "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(24, 24, 27, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid #27272a;
+        }
+        .bg-glow {
+            background: radial-gradient(circle at top right, rgba(143, 25, 55, 0.15) 0%, transparent 60%),
+                        radial-gradient(circle at bottom left, rgba(230, 195, 100, 0.05) 0%, transparent 50%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col relative overflow-x-hidden">
+<!-- Ambient Glow Background -->
+<div class="fixed inset-0 pointer-events-none bg-glow z-[-1]"></div>
+<!-- TopNavBar -->
+<nav class="bg-glass-bg dark:bg-glass-bg text-primary dark:text-primary fixed top-0 w-full z-50 backdrop-blur-xl border-b border-surface-border shadow-none transition-all duration-300 ease-in-out">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-gutter h-20 max-w-container-max mx-auto">
+<!-- Brand -->
+<div class="font-display-lg-mobile text-display-lg-mobile font-extrabold text-primary dark:text-primary">
+                UJELADEA
+            </div>
+<!-- Navigation Links (Web) -->
+<div class="hidden md:flex space-x-8 items-center h-full">
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm h-full flex items-center hover:bg-white/5 dark:hover:bg-white/5 px-4" href="#">Feed</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm h-full flex items-center hover:bg-white/5 dark:hover:bg-white/5 px-4" href="#">Hymnal</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm h-full flex items-center hover:bg-white/5 dark:hover:bg-white/5 px-4" href="#">Bible Studies</a>
+<!-- Active Link -->
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-sm text-label-sm h-full flex items-center hover:bg-white/5 dark:hover:bg-white/5 px-4" href="#">Societies</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-sm text-label-sm h-full flex items-center hover:bg-white/5 dark:hover:bg-white/5 px-4" href="#">Resources</a>
+</div>
+<!-- Actions -->
+<div class="flex items-center space-x-4">
+<div class="relative hidden md:block">
+<input class="bg-surface-container border border-surface-border text-on-surface rounded-full py-2 pl-4 pr-10 focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary/50 font-body-md text-body-md transition-colors w-48" placeholder="Search..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-on-surface-variant" data-icon="search">search</span>
+</div>
+<button class="flex items-center space-x-2 text-on-surface-variant hover:text-on-surface transition-colors">
+<img alt="User Profile Avatar" class="w-8 h-8 rounded-full border border-surface-border" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhzqYI1a2UIPw4ord_aJYSOhsxirs9CJbIIqUUHqdPDKyxgvS6TZ28EgukwUTOEFg1DNEvAhhIwzJogI-EIoQ9Six8XYXdxtwp_Cikz6wurczAXxVIjzW1eJMlbD4499vccV1HYamrED130gBJSWLxoLHxCtZdOsvmeE4-FQufq7Go6IZGWav7MlgE5Qtc8qyvgX5a7Oq3jw9mcjzFkSzvxaAXekejpdPsL7-qZItEeb67hg7es1L1xnv-BRRbZlVTG1S-12gqlAg"/>
+</button>
+<button class="md:hidden text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-grow pt-28 pb-section-gap px-margin-mobile md:px-gutter max-w-container-max mx-auto w-full relative">
+<!-- Header Section -->
+<header class="mb-12">
+<h1 class="font-display-lg text-display-lg text-on-surface mb-2 tracking-tight">Sociedades</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Iglesias del distrito en El Alto</p>
+</header>
+<!-- Filters & Search -->
+<div class="flex flex-col md:flex-row gap-4 mb-12">
+<div class="relative flex-grow max-w-md">
+<input class="w-full bg-[#121214] border border-surface-border rounded-lg py-3 pl-10 pr-4 text-on-surface font-body-md focus:outline-none focus:border-secondary focus:shadow-[0_0_15px_rgba(143,25,55,0.2)] transition-all" placeholder="Buscar iglesia o pastor..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-3.5 text-on-surface-variant" data-icon="search">search</span>
+</div>
+<div class="relative w-full md:w-64">
+<select class="w-full appearance-none bg-[#121214] border border-surface-border rounded-lg py-3 pl-4 pr-10 text-on-surface font-body-md focus:outline-none focus:border-secondary transition-all cursor-pointer">
+<option value="">Todas las zonas</option>
+<option value="norte">Zona Norte</option>
+<option value="sur">Zona Sur</option>
+<option value="este">Zona Este</option>
+<option value="oeste">Zona Oeste</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3.5 text-on-surface-variant pointer-events-none" data-icon="filter_list">filter_list</span>
+</div>
+</div>
+<div class="flex flex-col lg:flex-row gap-8">
+<!-- Grid of Cards -->
+<div class="flex-grow grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 h-fit">
+<!-- Card 1 -->
+<div class="glass-card rounded-xl p-6 flex flex-col group hover:border-surface-variant transition-colors">
+<div class="w-full h-32 bg-surface-container rounded-lg mb-4 flex items-center justify-center border border-surface-border relative overflow-hidden">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant z-10" data-icon="church">church</span>
+<div class="absolute inset-0 bg-gradient-to-tr from-primary-container/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="mb-4 flex-grow">
+<span class="inline-block px-2 py-1 rounded border border-secondary text-secondary font-label-sm text-label-sm mb-2">Zona Sur</span>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1 line-clamp-1">Emanuel</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="person">person</span> Pr. Juan Carlos
+                        </p>
+</div>
+<div class="flex gap-3 mt-auto">
+<button class="flex-1 bg-primary-container hover:bg-primary-container/80 text-white font-label-sm text-label-sm py-2 rounded-lg flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(201,168,76,0.3)]">
+<span class="material-symbols-outlined text-sm" data-icon="location_on">location_on</span> Ver ubicación
+                        </button>
+<button class="px-4 border border-surface-border hover:border-secondary text-secondary font-label-sm text-label-sm rounded-lg transition-colors">
+                            Ver más
+                        </button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-card rounded-xl p-6 flex flex-col group hover:border-surface-variant transition-colors border-secondary/30 relative">
+<div class="absolute top-0 right-0 w-16 h-16 bg-glow-crimson blur-xl rounded-full"></div>
+<div class="w-full h-32 bg-surface-container rounded-lg mb-4 flex items-center justify-center border border-surface-border relative overflow-hidden">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant z-10" data-icon="church">church</span>
+</div>
+<div class="mb-4 flex-grow">
+<span class="inline-block px-2 py-1 rounded border border-surface-variant text-on-surface-variant font-label-sm text-label-sm mb-2">Zona Norte</span>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1 line-clamp-1">Betel</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="person">person</span> Pr. Luis Mamani
+                        </p>
+</div>
+<div class="flex gap-3 mt-auto">
+<button class="flex-1 bg-primary-container hover:bg-primary-container/80 text-white font-label-sm text-label-sm py-2 rounded-lg flex items-center justify-center gap-2 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="location_on">location_on</span> Ver ubicación
+                        </button>
+<button class="px-4 border border-surface-border hover:border-secondary text-secondary font-label-sm text-label-sm rounded-lg transition-colors">
+                            Ver más
+                        </button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-card rounded-xl p-6 flex flex-col group hover:border-surface-variant transition-colors">
+<div class="w-full h-32 bg-surface-container rounded-lg mb-4 flex items-center justify-center border border-surface-border relative overflow-hidden">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant z-10" data-icon="church">church</span>
+</div>
+<div class="mb-4 flex-grow">
+<span class="inline-block px-2 py-1 rounded border border-surface-variant text-on-surface-variant font-label-sm text-label-sm mb-2">Zona Este</span>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1 line-clamp-1">Sinaí</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="person">person</span> Pr. Roberto Quispe
+                        </p>
+</div>
+<div class="flex gap-3 mt-auto">
+<button class="flex-1 bg-primary-container hover:bg-primary-container/80 text-white font-label-sm text-label-sm py-2 rounded-lg flex items-center justify-center gap-2 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="location_on">location_on</span> Ver ubicación
+                        </button>
+<button class="px-4 border border-surface-border hover:border-secondary text-secondary font-label-sm text-label-sm rounded-lg transition-colors">
+                            Ver más
+                        </button>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="glass-card rounded-xl p-6 flex flex-col group hover:border-surface-variant transition-colors">
+<div class="w-full h-32 bg-surface-container rounded-lg mb-4 flex items-center justify-center border border-surface-border relative overflow-hidden">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant z-10" data-icon="church">church</span>
+</div>
+<div class="mb-4 flex-grow">
+<span class="inline-block px-2 py-1 rounded border border-surface-variant text-on-surface-variant font-label-sm text-label-sm mb-2">Zona Oeste</span>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1 line-clamp-1">Maranata</h3>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="person">person</span> Pr. David Flores
+                        </p>
+</div>
+<div class="flex gap-3 mt-auto">
+<button class="flex-1 bg-primary-container hover:bg-primary-container/80 text-white font-label-sm text-label-sm py-2 rounded-lg flex items-center justify-center gap-2 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="location_on">location_on</span> Ver ubicación
+                        </button>
+<button class="px-4 border border-surface-border hover:border-secondary text-secondary font-label-sm text-label-sm rounded-lg transition-colors">
+                            Ver más
+                        </button>
+</div>
+</div>
+</div>
+<!-- Detail Panel (Side Panel) -->
+<aside class="w-full lg:w-96 glass-card rounded-xl border border-secondary/50 p-6 flex flex-col shrink-0 relative overflow-hidden h-fit sticky top-24 hidden lg:flex">
+<div class="absolute -top-20 -right-20 w-64 h-64 bg-glow-crimson blur-3xl rounded-full z-0"></div>
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-6">
+<div>
+<span class="inline-block px-2 py-1 rounded border border-secondary text-secondary font-label-sm text-label-sm mb-2 bg-surface-container-low/50 backdrop-blur-sm">Zona Sur</span>
+<h2 class="font-headline-xl-mobile text-headline-xl-mobile text-on-surface mb-1">Emanuel</h2>
+<p class="font-body-md text-body-md text-secondary flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="person">person</span> Pr. Juan Carlos
+                            </p>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<div class="mb-8">
+<h4 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Descripción</h4>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+                            Una congregación vibrante enfocada en la juventud y el desarrollo comunitario en la Zona Sur de El Alto. Bienvenidos todos a compartir la palabra.
+                        </p>
+</div>
+<div class="mb-8">
+<h4 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-4 border-b border-surface-border pb-2">Horarios de Servicio</h4>
+<ul class="space-y-3 font-body-md text-body-md text-on-surface">
+<li class="flex justify-between items-center bg-surface-container/50 p-3 rounded-lg border border-surface-border">
+<span class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary" data-icon="wb_sunny">wb_sunny</span> Domingo</span>
+<span>09:00 - 12:00</span>
+</li>
+<li class="flex justify-between items-center bg-surface-container/50 p-3 rounded-lg border border-surface-border">
+<span class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary" data-icon="menu_book">menu_book</span> Martes</span>
+<span>19:00 - 21:00</span>
+</li>
+<li class="flex justify-between items-center bg-surface-container/50 p-3 rounded-lg border border-surface-border">
+<span class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary" data-icon="groups">groups</span> Jueves (Jóvenes)</span>
+<span>19:30 - 21:30</span>
+</li>
+</ul>
+</div>
+<div class="mt-auto pt-4 border-t border-surface-border">
+<button class="w-full bg-primary-container hover:bg-primary-container/80 text-white font-headline-md text-headline-md py-3 rounded-lg flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_20px_rgba(143,25,55,0.4)]">
+<span class="material-symbols-outlined" data-icon="map">map</span> Abrir en Mapa
+                        </button>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest text-secondary dark:text-secondary w-full py-section-gap border-t border-surface-border bg-gradient-to-t from-glow-crimson to-transparent mt-auto relative z-10">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-gutter max-w-container-max mx-auto gap-8">
+<!-- Brand -->
+<div class="font-headline-md text-headline-md text-primary flex flex-col items-center md:items-start">
+<span>UJELADEA</span>
+<span class="font-body-md text-body-md text-on-surface-variant mt-1">Faithful in Service.</span>
+</div>
+<!-- Links -->
+<div class="flex flex-wrap justify-center gap-6">
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors opacity-100 hover:opacity-80" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors opacity-100 hover:opacity-80" href="#">Terms of Service</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors opacity-100 hover:opacity-80" href="#">Contact Us</a>
+<a class="text-on-surface-variant font-body-md text-body-md hover:text-primary transition-colors opacity-100 hover:opacity-80" href="#">About</a>
+</div>
+<!-- Copyright -->
+<div class="font-label-sm text-label-sm text-on-surface-variant text-center md:text-right">
+                © 2024 UJELADEA. Faithful in Service.
+            </div>
+</div>
+</footer>
+</body></html>

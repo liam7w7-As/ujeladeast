@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es" style=""><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UJELADEA | Unidos en Cristo</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;family=Sora:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#e6c364",
+                    "primary": "#ffb2ba",
+                    "on-surface": "#e5e1e4",
+                    "glow-crimson": "rgba(143, 25, 55, 0.15)",
+                    "on-background": "#e5e1e4",
+                    "primary-container": "#8f1937",
+                    "on-tertiary-container": "#ff9eae",
+                    "surface-container-high": "#2a2a2c",
+                    "on-tertiary": "#630926",
+                    "surface-container": "#201f22",
+                    "on-tertiary-fixed-variant": "#81233b",
+                    "on-primary-fixed-variant": "#8b1534",
+                    "error": "#ffb4ab",
+                    "surface": "#0e0e10",
+                    "inverse-primary": "#ab304a",
+                    "on-tertiary-fixed": "#400014",
+                    "primary-fixed-dim": "#ffb2ba",
+                    "on-surface-variant": "#debfc1",
+                    "secondary-container": "#785d00",
+                    "secondary-fixed": "#ffe08f",
+                    "surface-container-low": "#1c1b1d",
+                    "error-container": "#93000a",
+                    "outline-variant": "#574143",
+                    "on-secondary-container": "#fdd977",
+                    "outline": "#a68a8c",
+                    "on-error-container": "#ffdad6",
+                    "surface-variant": "#353437",
+                    "surface-container-highest": "#353437",
+                    "on-primary-fixed": "#400011",
+                    "tertiary": "#ffb2bd",
+                    "surface-bright": "#39393b",
+                    "on-secondary": "#3d2e00",
+                    "surface-border": "#ffffff10",
+                    "on-secondary-fixed": "#241a00",
+                    "inverse-on-surface": "#313032",
+                    "primary-fixed": "#ffd9dc",
+                    "background": "#0e0e10",
+                    "on-primary": "#670021",
+                    "tertiary-fixed-dim": "#ffb2bd",
+                    "tertiary-container": "#86263f",
+                    "on-error": "#690005",
+                    "on-secondary-fixed-variant": "#584400",
+                    "surface-tint": "#ffb2ba",
+                    "surface-dim": "#0e0e10",
+                    "glass-bg": "rgba(14, 14, 16, 0.4)",
+                    "tertiary-fixed": "#ffd9de",
+                    "secondary-fixed-dim": "#e6c364",
+                    "surface-container-lowest": "#0e0e10",
+                    "on-primary-container": "#ff9eaa",
+                    "inverse-surface": "#e5e1e4"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "1rem",
+                    "3xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "container-max": "1280px",
+                    "unit": "4px",
+                    "margin-mobile": "16px",
+                    "section-gap": "160px"
+            },
+            "fontFamily": {
+                    "body-lg": [
+                            "inter"
+                    ],
+                    "headline-xl-mobile": [
+                            "sora"
+                    ],
+                    "display-lg-mobile": [
+                            "sora"
+                    ],
+                    "headline-md": [
+                            "sora"
+                    ],
+                    "label-sm": [
+                            "jetbrainsMono"
+                    ],
+                    "body-md": [
+                            "inter"
+                    ],
+                    "headline-xl": [
+                            "sora"
+                    ],
+                    "display-lg": [
+                            "sora"
+                    ]
+            },
+            "fontSize": {
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-xl-mobile": [
+                            "40px",
+                            {
+                                    "lineHeight": "48px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "display-lg-mobile": [
+                            "56px",
+                            {
+                                    "lineHeight": "64px",
+                                    "letterSpacing": "-0.03em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "label-sm": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-xl": [
+                            "64px",
+                            {
+                                    "lineHeight": "72px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "display-lg": [
+                            "96px",
+                            {
+                                    "lineHeight": "100px",
+                                    "letterSpacing": "-0.04em",
+                                    "fontWeight": "700"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0e0e10;
+            color: #e5e1e4;
+            font-family: 'Sora', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        .radial-glow {
+            background: radial-gradient(circle at center, rgba(143, 25, 55, 0.08) 0%, rgba(14, 14, 16, 0) 70%);
+        }
+        .radial-glow-offset {
+            background: radial-gradient(circle at top right, rgba(143, 25, 55, 0.05) 0%, rgba(14, 14, 16, 0) 60%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            border-color: rgba(143, 25, 55, 0.4);
+            background: rgba(255, 255, 255, 0.03);
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(143, 25, 55, 0.15);
+        }
+        .glass-button-outline {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+        .glass-button-outline:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.06);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        .animate-float-delayed {
+            animation: float 6s ease-in-out 1.5s infinite;
+        }
+        .animate-float-slow {
+            animation: float 8s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md min-h-screen relative overflow-x-hidden selection:bg-primary-container selection:text-white">
+<!-- Ambient Background Glows -->
+<div class="fixed inset-0 pointer-events-none z-[-1]">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[800px] radial-glow opacity-80"></div>
+<div class="absolute top-1/2 right-0 w-[800px] h-[800px] radial-glow-offset opacity-60"></div>
+</div>
+<!-- Navigation Bar Component -->
+<nav class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-6 py-3 bg-glass-bg backdrop-blur-2xl border border-surface-border shadow-2xl rounded-full mt-6 mx-auto w-max max-w-container-max transition-all duration-300">
+<div class="flex items-center gap-4 pr-6 border-r border-surface-border">
+<img alt="UJELADEA Logo" class="h-6 w-auto object-contain brightness-200" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAB4CAYAAADc36SXAAAQAElEQVR4AeydC7QdVXnHZ26CD6i2UIJJrJQitkK1Cw1JFILWggoa0oi1VrCktlJEBZK6pLaFYiva1ooXQZakrUqhVq1SWBBcSFvoA7Q3j0rRlmKrRUViEgFlaXzl3vH/H+/cnHvuzP7mnDOPvef879rfmZn9/PZv5s433+w9MxOR/kRABERABERgCAIyIENAUxEREAEREIEokgHRUSACbRFQuyIQOAEZkMB3oNQXAREQgbYIyIC0RV7tioAIiEDgBAI2IIGTl/oiIAIiEDgBGZDAd6DUFwEREIG2CMiAtEVe7YpAwASkugiQgAwIKUhEQAREQAQGJiADMjAyFRABERABESABGRBSaFrUngiIgAh0gIAMSAd2orogAiIgAm0QkAFpg7raFAERaIuA2q2QgAxIhTBVlQiIgAiMEwEZkHHa2+qrCIiACFRIoBUDsnn5igMnD13x7Ar7oaoaIqBmREAERCAj0KgBuWLps5a8e+mqa/Ymi78dHbB4x+TSVd+8bNnql2fKaCkCIiACIhAOgcYMyGWHrTx+X/yY++I43jCHJ46fGCfRB684ZPVPzcVpRQREQAREIIeAf1GNGZCJifi6OIoO7kcQx9ETph+bXNkfr20REAEREAG/CTRiQN65ZOXSKI6PLEYRr59csvLY4nSliIAIiIAI+EagEQPyuOmJvWbHF038kZlHGURgeAIqKQIiUDGBRgzI+Q9PPZok0fVO3eNonWZmOQkpUQREQAS8ItCIAWGP4+mZS7l0SbJ4kbwQFyCliYAIiIBHBEobkFF13rRn291RktziqieO47UaC3ERUpoIiIAI+EOgMQOSdnk6uShdOn6SRfHbHMlKEgEREAER8IRAowZEXogne11qBEZA6oqAnwQaNSApAnkhKQb9iIAIiEDoBBo3IPJCQj9kpL8IiIAI/IhA4wYkbbZZLyRtUj8iIAIiIALVEmjFgMgLqXYnqjYREAERaINAKwYk7ai8kBSDfkSg0wTUuU4TaM2AyAvp9HGlzomACIwBgdYMSMpWXkiKQT8iIAIiECKBVg2IvBDrkFG6CIiACPhLoFUDkmKRF5Ji0I8IiIAIhEagdQMiLyS0Q0b6isB4EFAvbQKtG5BURXkhKQb9iIAIiEBIBLwwIPJCQjpkpKsIiIAI/IiAFwYkVUVeSIqhMz/qiAiIQOcJeGNA5IV0/lhTB0VABDpGwBsDknLtgBeSJMk+iCs8Pe3rED+o9OkQV9g3RLWli6DhvRBXcPYNBS+CtBFe7eokFLoKMuWQM13l20iDrmdDrPCxKnVDY2+DjBIeReGvQu6DbIXcAHknZAPksCp0RT2PQJoOn61Cd9YBxQ+HTENcgQxd525W1Yh4oUTWU3khGQktGyZwNNpb5ZBlSPMtnFVCoXU4Cz2pRL6msjwBDS2H/CxkJWQ95M2QayBfhK6bIU/D+jiH16Pz1nmZDH8F+VoPlqLNK9gBL6R5aGpxnAjgJHsU+nsCxAqPQYazISGEg6Dkb0M+j/5dheW4hl8v2fHXlMxXazbvDIi8kFr3tyovQSCALG+EjjGkTPitMpk8y/N6GJFPQSq5reVZ3wrVQX9fhkR6F1iY4UXI/xQzV80ZvDMgaX/lhaQY9CMC/QRw0uD/7Bn98Y7tI1DmVEe6r0nPhWLboTu9LayORfiNAXrJ44AXEgMUqT4rlai+1hFrlBcyIkAV7zKBV6JzSyCDhBC9EPaPV9gfhhFZzI0uC/rIsapTBuzjq1Gu1XN49Y0PSKAwu7yQQjQdTngEfdtag3wddXYlbBiiI6fhRMMT1BBFByryEHL37r/t2P4c5AuQByFM34vlIOE4ZH4XpKrAGVO9OlaxzjpH1Y/jPxyzGqQe3u56xSAFqs7rrQGRF1L1rg6ivqk4jlfXILcG0XtDSRiBw5HlJMiggSemcwYtNET+O/v23UpsPxNyFOTJkEMhB0E4fvNi1P8hyPcgVrgAfV9tZSqZ/jq0X/UxNsgtxSI1nVPNiwoh/jchrQVvDUhKRF5IikE/IjBLgFeprts5s9lyF17M2sk0w0n8NghPms9H3P0QK1xiZQg1HcbxZOjOqc1YDBxORvmnDlyqogJeGxB5IRXtZVXTFQKuBxofRSe/DCkKXg6mw4hMQWEaEes246k4UZ6IvF0MlnF33SLjOZwXFq1wYeOtNFy6UXkhpVEpY3cJ4OT5EvTuCEhRuBkJH4e4gpfPhMCI0PCVmYH0VlfnAk7j9N0i9b+ChN+HuAI9OVd6bWneG5AmvZDaKKtiERidgHWv+8NoYjPEFV4KQ9TEYLpLh9w0GJFbkEDBojA8D/r/eGFqgAnoz0ao/XhIUfgo2GxB4i5IUViOel5VlFhnvPcGJO28vJAUg37GkwBODoeg56dBisIunGRugXweGbZBigIH019XlOhB/NsNHTj+w9tdRragki3v4S9ne/OR2WXRwroNVlRupPggDIi8kJH2sQqHT4D3uHnyL+rJ3/UkWCeaMreKeqprajWKYAA/HUXRbogrHO9KDCkNFwYroC8Fi9ywHUx4UcDED/DHISehvsYH04MwICk0eSEpBv2MJQHX4DmBvJ8/s/LXWLqmxnIwfS3y+BpcA8bUmS+95LILYk2tnhvTgiG5Bx3eASkKPJefW5RYVzwbravuSuuVF1IpTl8rexquoiYrlAt97WhZvcCCL018hiP/Z3Fy+c8sHet8WO+2bLtg6fOT6XcX6JxF/0y2MuTyXDCt8hhzeRCFKkIHjnu43qjLTzNc21dBr6fZl5Ru8rX4jZ7TK2ns8ietWju5bPWdk8tWPTK5bHVSraR13sk2Inkh6VGS89OVKLrgHFSsSsq+2dRnfrx95dLv+pxEPqCXEz0X9RKcwLwcTIeGnJGFRWF4YmFKuQSOOVR1fLEefgqgXMvzc9GrPHh+1LytO3AxsHNeTBTR06Rh6Yue2zwUa78GaSyMbEAmD1u1PpmIOYUQV0rxT1SveVrnCWkbcXxElCTOmRqAvnZyycpjq9dDNYpAswRwkv8xtOia4jmNdN6ywmJeuAFbD0OKAsdTGr/dUaRMX7z1qpMazjF9GjSzaX3PZcFYFs5t9C4/aahnzdYzig+WPLIBSSai3x2syeFzs62JOLafSF00ccHwraikCHhDgAPe/AhTkUJ8dciCp7hxovk+ClhfI9yAPD4Gy4BMwLC6rtyb79OALUJ/vmF4jaMYGXBadl6Wv82L7Il7AeqnJ98TVd/qyAYEqg3rwqHowOHoC3ZO7bC8ENT6IoiCCIROwLoF57onbs3a4WD6Og8B8eRpqcVbNVYen9PfAOViSFG4CRcB3ylI5MC6y7vkOZ1fNSwoXm00G6u2xgZqS6L4u85m4mTGma5EEfCcAK4ifx4qumYc8UT7N8iTG3AC4ltm/zs3cX+kj4PpZf53OQC9vxcBrWG/8pzL8Q+X1kXeB6c607vkLUpX+bPQDp+ZceWpJI2dGbWie0etYIDy97572arj4jh6uatMksT/4EqvOW1RzfW7qm+zbZdejjQlFRCwriJvjeOY778qKJ5GuzwUZvDxyfQyg+QcC6D+IQpfv+76ngsfCr3J6FjeuFdvEXpojQymj2xA4pnoz3o1r3OdbcVJZL4PJ56euSJq7+9bRtMu19UoGln7y+2ZWbW3n86nqDloXJUEORY2e/VovZpiwSBrzu67BnEcaMciN/CCwzJUuQVrjHSN+WTN9s9OyuLLLH8Hmao6vljPv6C+QYI19mSNXdEL+Tc0+EWIK3D8zJVeSZp1QjIb2bR7643xTMLXLNwVRck3zAIDZ0jrvCttI0nuB72XuqrAP9+W9JkRV6Z601wPcbHlUQzIY1mBQ8q4/47irSc9hKvqGyuU21vv0XAK8BaHa6CYV+B503fntQaOX0LEP0NcwZoN5CpbR5rlgTyKfo1ynPObM1UeY3zZYSkOODfxey4vNDL/lZGeJRfevpzNUGowfTbv0IuRDQhb3rhr65ZNO6fWbNq59WAs42olrXMN24gWxZeyPZfE08nFrvQG0iwDwimUw6phGRDeHx22bpXzh4A1eM7/20/jhDRlCbpkfWfCt8H0p0BnV/imK9HzNI45WWMTf2HtU6ajn87b+EjnMVK7d8lG0Jb/IX22I4599z4I0jqJjzIAaBmfopkb1KsJ+UETjXS5DZwcOMXzBUYf6Z1wgL2MWCdkNvVa/ngizzT0+H8j3efkMt5emX3KPJxkYfW19sH0YAxIIN4Hd6jlgZS5x8t68oQnjrz4LG4gA4KT1VMh1skqq5tLy/jxm+bMNx5STy/55HnT/5d8Mr2Moamnx/Nrfdb8zQVbWxfEBBCB/zPrey519IKD6dZY2kjtNn2gDqVsQN4H+2d9WY07lfmGEev1E7nuPQ7eX4V8BHI75HOQ3ZAECvwfhHHPxXLkgHvTrvnpI9ff9QqwT/j/yPGPprvKwXQarqbbndce+s/3SlkXWBhrnVcslI1WXrcOOLW2ywMWbXgewhj7yCBy4DJbz1uO8jrqpXkV9sQVGS/+Y74S+eht0PXtn0bIwT0kFwf8cx9ZnJqmfDv91c8oBDirZ/koFYxQlu+IGqF4JUWtb5Vw8Dy4iRH43+H3XNp6aPP5aL+2J9NbNCDlDrjAvA926n7+OOQM7FBrIK2oOA1BURrjv8qfHLE8gyfnlOmPst6Cak1f7q9P2wsJNDL1cmGzaQwH02nA0o2mf/A/wfd+Wc8u3A4v13r2pWnVy7R3NjJZ45fIUkvgOf68WmpGpawcC49DWN4HQVrzszmOcRkzDiL4B+P0xhcbZb5QkJ57a6snLz2Tns3c1dW5sfsjH9i/qrVBCWD/8vbkKYOWqzh/oy/i69P9PdimEcGiMPxpYYrfCW3cluwlciaOr2EvWnvrWbDutQEJ0PsgYOuDOMxzPnZo6YMKeWk8/h4FrWm8/4E8eWHuexF5iYhbizaeh6UrWCe3orZddSptPwF+XMj1T84r7wNxBT50QFNzr8DAel44FcdB44PpaPO9UMYyXvw63z8hX1ABfTsBClszy1449E5FQdT/JogrcNy19PnGVVF/mtcGJKCZV3NcsT85SyT7DOVcfM7KZhxc74I4xx+QzsFN1nlSTh29UXwFwid6I7J16MRPhRaNj2TZPoG21mcbvUvE843LJ/bG5azzKfKcaEWVJGANdt6M/TjQLLucdvlkek70XBQH02nI5iLqWMHxdAxkPeQ9EHrNfLmg1RQ9FCuPj+nWFOkHsF//cUTFuV+tY6OW26PeGpBAvY/sOPhotuJYHoQ0Xjl8Cf9Ed0DeB9kIobv5Diyvh/DjOpuR7+cgVrDen0MPxlUH9bkBbW6DvBXyKshbIHzi2bp1wOm7zOeqv0zaarRnPhw3ZJ6fLKNAQZ43DNlmUV+43+eaQt18OvmIuYj8FevJ4/xSPbE4UfEYKRony3JahizLl7dcg74U9fk+pO2BcPbff6EwvaHzsbQmZyBLtAW6j9x/njnBKAAABwNJREFUVgS5GjoU6ThK/EWoe15AO7wlZz3wZ338a16deRtgwzFO7tu85CyulsF0bw2I195HtkuKl5cjaTekbPhFZOQMlEks+Y/ye1ieDil7O4FXH3+O/K7AujmLxZWHacfh5xIIvzvwJ1hSDyyc4crZg9iZqUQix4f4kFQdMsogJk/uVer0030srNs3vEq9ta/MsJvXGgWX48RnnfSKqqCRLuLEJ+J5K6WobFE8X9Za5Qwx3k4q0nGU+DxDyAcHXdOSaUyt1+4XcemPt+rhK5QqfzeclwYkcO8jmj2ZNvnFt0vQ5v/2H1G920j/H2yXfc8OspYOvDVmeSilKxu3jDhZc4rnLxv9tt6qaxSfl3w1tqwLiVG8EFRfWeCV9Tocu9YkkMoarLgi65U0fC9XmdvdplpgdBsyWTNAeVfBNc6GKgYLXhqQwL2PdA9gh/KWET2JdLvGnw+hLcv7yJrnm0jvyzYqWPLlma9A+/SAKqhuLKvgvWnrCX/exqwEDvYVb4taz1KcAsNW1vutRK+cSjgZ5ZegLx927U0OYh38+LzVcwxly9zqNqqYl1zmNe9VenPm68HnadfERujeRy8jHPy8Mr8QcXRVsag08Cryj9FG6QMCefmwH+faVzHl9mvoDWePWG97RTYFBwFr/3H2USVXqT06WCcaDqY36UH3qJauXo5j9Rcg1uzBNLOnPxY/vvLouop1fx/q2wdxhUq9S/88kPCe+3DtLN7OonfAGUw3I6Pr2wxILh34j3Ui/sE4VlG6EDOizN1Y8pmOT2E5bOCsEba/fdgKVC6KcJXKB0Otdz9VfZVK9PyWyB6uOGQD9Gvy/MBpyldBn8NxjG7CMtgAbrxNdIbRAX4QjK/lN7KVTwa3Xcj9SYgrnAj9jnFlGCStyQPE1KtL3kdvZ7Fj74LwVQbPRvw7IHyfD69AsFo6MP8dyP1a1HUsZCgDgPI0ag+iPOen894766RnwiSXcKYV758/A2XpeQR5a8HVwRbSOHHC1SyvJj/oyjBMGvYf67UME1+pUmYCxTAqZGU4hZdX4bxaPxJ6vRFS+vsaWSUeLvkCQ04IcanGSSqu9GHTLO+Sg+nWcVe6ba8MSBfGPlzk8c9xD+QPIGsgj0NensD5moG3Y/39kC0QPrPBB6Y4zZEzZjj//Uzmh/CeMPMh2+gB9d0EYZ2cbsjZV/xewZWomUblRiz5tUl+QW0F8h0CORfCKZhIGjyg7KWQtkLhV+ygEBlg0Vjg9FUa8rONFg9AeqVXqdleQ73nQazw8Sw/l8h8MaTKcBQqOwtyNaSSfqKegyFthLmZdGj8OogVqpwYwd2TChr9GMQK6fGXFhjxxxsD0lXvw7V/sJd5An8vlhdB6FmchuXxkJMhp0M2QDZC6rpamVMPbeyAfAByPoQn1Jdh+RbItRA9ZT5HSisiMCyB7pXzxoB03fvo3qGjHomACIw7AS8MyDh6H+N+4Kn/IiAC4RPwwoDI+wj/QGqgB2pCBETAMwKtGxB5H54dEVJHBERABEoSaN2AyPsouaeUTQREQATaIlDQbqsGRN5HwV5RtAiIgAgEQKBVAyLvI4AjRCqKgAiIQAGB1gyIvI+CPaLoDhJQl0SgmwRaMyDyPrp5QKlXIiAC40OgFQMi72N8DjD1VAREoLsEWjEgA3of3aWvnomACIhAwAQaNyDyPgI+WqS6CIiACPQQaNyAyPvooa9VEfCdgPQTAQeBRg2IvA/HnlCSCIiACARGoFEDIu8jsKND6oqACIiAg0BjBmQ8vQ8HeSWJgAiIQOAEGjMg0eL4QotVMj3zh1YepYuACIiACPhBoBEDsjlacUASxetdXU6SZMub9mz/jCuP0kRABESgLAHlq59AIwbk+4fOLImj6PGu7sTTycWudKWJgAiIgAj4RaARA3Le1z/zYBQlDxV3Pblx055tdxenK0UEREAERMA3Ao0YEHY6jpLTkyh6mOvzJXlg38x3z5kfp63WCUgBERABETAINGZANu7c9q/TM985Okqia6LsL4mmZvbNrHvzrnt2Z1FaioAIiIAIhEGgMQNCHDQUm7429ZoD430HRVF8DNafo4HzSH8iIAIi0EsgmPVGDUhG5ZwHd+zdtPPf7822tRQBERABEQiPQCsGJDxM0lgEREAERKCfgAxIPxFtB09AHRABEWiGgAxIM5zVigiIgAh0joAMSOd2qTokAiIgAs0QWGhAmmlXrYiACIiACAROQAYk8B0o9UVABESgLQIyIG2RV7sisJCAYkQgKAIyIEHtLikrAiIgAv4QkAHxZ19IExEQAREIikCnDEhQ5KWsCIiACAROQAYk8B0o9UVABESgLQIyIG2RV7si0CkC6sw4EpABGce9rj6LgAiIQAUEZEAqgKgqREAERGAcCfwQAAD//2vV7tcAAAAGSURBVAMAcRb2eGFyzGAAAAAASUVORK5CYII="/>
+</div>
+<div class="hidden md:flex items-center gap-6 px-6"><a class="text-white font-medium hover:text-white/70 transition-colors duration-300 text-sm font-body-md tracking-wide" href="#">Inicio</a><a class="text-white/60 font-medium hover:text-white transition-colors duration-300 text-sm font-body-md tracking-wide" href="#">Feed</a><a class="text-white/60 font-medium hover:text-white transition-colors duration-300 text-sm font-body-md tracking-wide" href="#">Himnario</a><a class="text-white/60 font-medium hover:text-white transition-colors duration-300 text-sm font-body-md tracking-wide" href="#">Estudios</a><a class="text-white/60 font-medium hover:text-white transition-colors duration-300 text-sm font-body-md tracking-wide" href="#">Sociedades</a><a class="text-white/60 font-medium hover:text-white transition-colors duration-300 text-sm font-body-md tracking-wide" href="#">Recursos</a></div>
+<div class="flex items-center gap-4 pl-6 border-l border-surface-border">
+<button class="bg-primary-container text-white px-5 py-2 rounded-full font-body-md text-sm font-medium hover:bg-[#a61d40] hover:shadow-[0_0_20px_rgba(143,25,55,0.3)] transition-all duration-300">Unirse</button>
+</div>
+</nav>
+<main class="pt-[200px] pb-section-gap w-full max-w-container-max mx-auto px-gutter md:px-12">
+<!-- Hero Section -->
+<section class="flex flex-col items-center justify-center text-center min-h-[70vh] gap-10 relative z-10 mb-[200px]">
+<canvas class="absolute inset-0 w-full h-full z-[-1] pointer-events-auto" id="particle-canvas"></canvas>
+<div class="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-surface-border bg-white/5 backdrop-blur-md mb-2 animate-float">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse shadow-[0_0_8px_#8f1937]"></span>
+<span class="text-xs font-medium tracking-wide text-white/80">Plataforma Juvenil INELA</span>
+</div>
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-white max-w-5xl leading-tight animate-float-delayed">
+                Unidos en Cristo,<br/><span class="text-primary-container">creciendo juntos</span>
+</h1>
+<p class="font-body-lg text-body-lg text-white/60 max-w-2xl font-light animate-float-slow">
+                La plataforma digital de la juventud INELA en El Alto. Un espacio diseñado para la devoción, conexión y liderazgo espiritual en la era digital.
+            </p>
+<div class="flex flex-col sm:flex-row gap-4 mt-6 animate-float">
+<button class="bg-primary-container text-white px-8 py-3.5 rounded-full font-body-md text-base font-medium hover:bg-[#a61d40] hover:shadow-[0_0_24px_rgba(143,25,55,0.4)] transition-all duration-300 flex items-center justify-center gap-2">
+                    Explorar
+                    <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+<button class="glass-button-outline px-8 py-3.5 rounded-full font-body-md text-base font-medium transition-all duration-300 flex items-center justify-center gap-2">
+                    Conocer más
+                </button>
+</div>
+</section>
+<!-- Quiénes somos / Pilares -->
+<section class="mb-section-gap relative z-10">
+<div class="text-center mb-24">
+<h2 class="font-headline-xl-mobile text-headline-xl-mobile md:font-headline-xl md:text-headline-xl text-white mb-6 font-semibold">Nuestros Pilares</h2>
+<p class="font-body-lg text-body-lg text-white/50 max-w-2xl mx-auto font-light">Fundamentos diseñados para el desarrollo integral del joven cristiano.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="glass-card rounded-3xl p-10 flex flex-col gap-8 group">
+<div class="w-12 h-12 flex items-center justify-start">
+<span class="material-symbols-outlined text-[32px] text-[#8f1937] font-light">menu_book</span>
+</div>
+<div>
+<h3 class="font-headline-md text-xl text-white mb-4 font-semibold tracking-wide">Espiritual</h3>
+<p class="font-body-md text-sm leading-relaxed text-white/60 font-light">Fomentando un crecimiento profundo a través del estudio bíblico, devocionales y recursos teológicos curados para la juventud.</p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-card rounded-3xl p-10 flex flex-col gap-8 group">
+<div class="w-12 h-12 flex items-center justify-start">
+<span class="material-symbols-outlined text-[32px] text-[#8f1937] font-light">group</span>
+</div>
+<div>
+<h3 class="font-headline-md text-xl text-white mb-4 font-semibold tracking-wide">Social</h3>
+<p class="font-body-md text-sm leading-relaxed text-white/60 font-light">Construyendo una comunidad fuerte, conectando jóvenes de diferentes sociedades locales para fortalecer la hermandad en El Alto.</p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-card rounded-3xl p-10 flex flex-col gap-8 group">
+<div class="w-12 h-12 flex items-center justify-start">
+<span class="material-symbols-outlined text-[32px] text-[#8f1937] font-light">account_balance</span>
+</div>
+<div>
+<h3 class="font-headline-md text-xl text-white mb-4 font-semibold tracking-wide">Administrativo</h3>
+<p class="font-body-md text-sm leading-relaxed text-white/60 font-light">Herramientas modernas para la gestión de directivas, planificación de eventos y desarrollo de liderazgo juvenil efectivo.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Component -->
+<footer class="bg-transparent w-full py-24 px-gutter md:px-12 flex flex-col max-w-container-max mx-auto border-t border-surface-border mt-section-gap relative z-10"><div class="flex flex-col md:flex-row justify-between items-start w-full gap-16">
+<div class="flex flex-col gap-8">
+<div class="flex items-center gap-3">
+<img alt="UJELADEA Logo Footer" class="h-6 w-auto object-contain brightness-200 opacity-80 hover:opacity-100 transition-all duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKU9ib_14jf_8T2pkJQpslcTavUZYtrIJU7jCqjv-oe3vJxWvxutOo5vqg8ptew2yE24Gp3GfOQvjglfN2htyViI_ve6RbM2rRlUMtFQUghIp5su-m-7B3X8xn715cHEkA-WyR8tLoirEpdJqI0vtQo29MQIXBuWCJWQUpRdpuSQ7oNvC4S-3-0JeWwHETXOFj-3ZGdtQ6izHZBlujmJsI1y-O2ta0vRTIomDDtPq4TlboXlXwCzB1CuHxbYh4dQ-w4QyKeslOwDg"/>
+<span class="font-body-md text-xl font-bold tracking-tight text-white">UJELADEA</span>
+</div>
+<p class="font-body-md text-sm text-white/50 max-w-xs leading-relaxed font-light">
+      Unidos en Cristo, creciendo juntos. Parte de UJELAB y la Iglesia Nacional INELA Bolivia.
+    </p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-16">
+<div class="flex flex-col gap-5">
+<h4 class="font-body-md text-xs uppercase tracking-widest text-white/40 font-semibold mb-2">Plataforma</h4>
+<a class="font-body-md text-sm text-white/70 hover:text-white transition-colors duration-200" href="#">Inicio</a>
+<a class="font-body-md text-sm text-white/70 hover:text-white transition-colors duration-200" href="#">Feed</a>
+<a class="font-body-md text-sm text-white/70 hover:text-white transition-colors duration-200" href="#">Recursos</a>
+</div>
+<div class="flex flex-col gap-5">
+<h4 class="font-body-md text-xs uppercase tracking-widest text-white/40 font-semibold mb-2">Comunidad</h4>
+<a class="font-body-md text-sm text-white/70 hover:text-white transition-colors duration-200" href="#">Sociedades</a>
+<a class="font-body-md text-sm text-white/70 hover:text-white transition-colors duration-200" href="#">Estudios</a>
+<a class="font-body-md text-sm text-white/70 hover:text-white transition-colors duration-200" href="#">Eventos</a>
+</div>
+<div class="flex flex-col gap-5">
+<h4 class="font-body-md text-xs uppercase tracking-widest text-white/40 font-semibold mb-2">Legal</h4>
+<a class="font-body-md text-sm text-white/70 hover:text-white transition-colors duration-200" href="#">Privacidad</a>
+<a class="font-body-md text-sm text-white/70 hover:text-white transition-colors duration-200" href="#">Términos</a>
+<a class="font-body-md text-sm text-white/70 hover:text-white transition-colors duration-200" href="#">Contacto</a>
+</div>
+</div>
+</div>
+<div class="w-full border-t border-surface-border mt-24 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="font-body-md text-white/40 text-xs font-light">
+    © 2024 UJELADEA. Caminando en la luz.
+  </p>
+<div class="flex gap-6">
+<span class="material-symbols-outlined text-[20px] text-white/40 hover:text-white cursor-pointer transition-colors">share</span>
+<span class="material-symbols-outlined text-[20px] text-white/40 hover:text-white cursor-pointer transition-colors">mail</span>
+</div>
+</div></footer>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const canvas = document.getElementById('particle-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+    const mouse = { x: null, y: null, radius: 120 };
+
+    function resize() {
+        width = canvas.width = canvas.parentElement.offsetWidth;
+        height = canvas.height = canvas.parentElement.offsetHeight;
+    }
+    
+    window.addEventListener('resize', resize);
+    
+    canvas.parentElement.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+    });
+    
+    canvas.parentElement.addEventListener('mouseleave', () => {
+        mouse.x = null;
+        mouse.y = null;
+    });
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * width;
+            this.y = Math.random() * height;
+            this.size = Math.random() * 2 + 0.5;
+            this.baseX = this.x;
+            this.baseY = this.y;
+            this.density = (Math.random() * 20) + 1;
+            this.opacity = Math.random() * 0.4 + 0.1;
+            this.vx = (Math.random() - 0.5) * 0.3;
+            this.vy = (Math.random() - 0.5) * 0.3;
+        }
+        draw() {
+            ctx.fillStyle = `rgba(143, 25, 55, ${this.opacity})`;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.closePath();
+            ctx.fill();
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+
+            if (this.x > width) this.x = 0;
+            if (this.x < 0) this.x = width;
+            if (this.y > height) this.y = 0;
+            if (this.y < 0) this.y = height;
+
+            if (mouse.x != null && mouse.y != null) {
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                let forceDirectionX = dx / distance;
+                let forceDirectionY = dy / distance;
+                let maxDistance = mouse.radius;
+                let force = (maxDistance - distance) / maxDistance;
+                let directionX = forceDirectionX * force * this.density;
+                let directionY = forceDirectionY * force * this.density;
+
+                if (distance < mouse.radius) {
+                    this.x -= directionX;
+                    this.y -= directionY;
+                }
+            }
+        }
+    }
+
+    function init() {
+        resize();
+        particles = [];
+        let numParticles = Math.min((width * height) / 10000, 150);
+        for (let i = 0; i < numParticles; i++) {
+            particles.push(new Particle());
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+        }
+        requestAnimationFrame(animate);
+    }
+
+    init();
+    animate();
+});
+</script>
+</body></html>

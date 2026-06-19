@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>UJELADEA - Feed</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&amp;family=JetBrains+Mono:wght@500&amp;family=Sora:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-fixed-variant": "#8b1534",
+                      "surface-variant": "#353437",
+                      "tertiary-fixed": "#ffd9de",
+                      "surface-container": "#201f22",
+                      "secondary-container": "#785d00",
+                      "inverse-surface": "#e5e1e4",
+                      "on-error": "#690005",
+                      "tertiary-fixed-dim": "#ffb2bd",
+                      "surface-border": "#27272a",
+                      "outline-variant": "#574143",
+                      "surface-container-highest": "#353437",
+                      "on-secondary-fixed": "#241a00",
+                      "surface-dim": "#131315",
+                      "outline": "#a68a8c",
+                      "surface-container-high": "#2a2a2c",
+                      "secondary-fixed-dim": "#e6c364",
+                      "inverse-primary": "#ab304a",
+                      "secondary-fixed": "#ffe08f",
+                      "inverse-on-surface": "#313032",
+                      "primary-container": "#8f1937",
+                      "on-primary": "#670021",
+                      "on-tertiary": "#630926",
+                      "background": "#131315",
+                      "on-secondary-container": "#fdd977",
+                      "primary": "#ffb2ba",
+                      "surface-bright": "#39393b",
+                      "surface": "#131315",
+                      "on-secondary": "#3d2e00",
+                      "on-primary-container": "#ff9eaa",
+                      "surface-tint": "#ffb2ba",
+                      "on-secondary-fixed-variant": "#584400",
+                      "secondary": "#e6c364",
+                      "on-error-container": "#ffdad6",
+                      "error": "#ffb4ab",
+                      "tertiary": "#ffb2bd",
+                      "on-tertiary-fixed": "#400014",
+                      "on-tertiary-container": "#ff9eae",
+                      "on-surface-variant": "#debfc1",
+                      "surface-container-lowest": "#0e0e10",
+                      "primary-fixed-dim": "#ffb2ba",
+                      "glow-crimson": "rgba(143, 25, 55, 0.15)",
+                      "tertiary-container": "#86263f",
+                      "on-primary-fixed": "#400011",
+                      "primary-fixed": "#ffd9dc",
+                      "error-container": "#93000a",
+                      "surface-container-low": "#1c1b1d",
+                      "on-background": "#e5e1e4",
+                      "on-tertiary-fixed-variant": "#81233b",
+                      "on-surface": "#e5e1e4",
+                      "glass-bg": "rgba(18, 18, 21, 0.7)"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "16px",
+                      "gutter": "24px",
+                      "unit": "4px",
+                      "container-max": "1280px",
+                      "section-gap": "120px"
+              },
+              "fontFamily": {
+                      "display-lg-mobile": [
+                              "Sora", "sans-serif"
+                      ],
+                      "body-lg": [
+                              "Inter", "sans-serif"
+                      ],
+                      "headline-xl-mobile": [
+                              "Sora", "sans-serif"
+                      ],
+                      "display-lg": [
+                              "Sora", "sans-serif"
+                      ],
+                      "body-md": [
+                              "Inter", "sans-serif"
+                      ],
+                      "headline-md": [
+                              "Sora", "sans-serif"
+                      ],
+                      "label-sm": [
+                              "JetBrains Mono", "monospace"
+                      ],
+                      "headline-xl": [
+                              "Sora", "sans-serif"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg-mobile": [
+                              "40px",
+                              {
+                                      "lineHeight": "48px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-xl-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg": [
+                              "64px",
+                              {
+                                      "lineHeight": "72px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-xl": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: #09090b; /* Overriding slightly for darker feel requested */
+        }
+        /* Custom Scrollbar for sleek dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #131315; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272a; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #353437; 
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex flex-col relative overflow-x-hidden">
+<!-- Atmospheric Glow -->
+<div class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-[radial-gradient(circle,rgba(143,25,55,0.1)_0%,rgba(9,9,11,0)_70%)] pointer-events-none -z-10 rounded-full blur-3xl"></div>
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 backdrop-blur-xl border-b border-surface-border shadow-none transition-all duration-300 ease-in-out bg-glass-bg dark:bg-glass-bg">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-gutter h-20 max-w-container-max mx-auto">
+<div class="flex items-center gap-8">
+<a class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg font-extrabold text-primary dark:text-primary tracking-tighter" href="#">
+                    UJELADEA
+                </a>
+<div class="hidden md:flex items-center gap-6">
+<!-- Nav Links -->
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-headline-md text-headline-md transition-colors hover:bg-white/5 dark:hover:bg-white/5 rounded px-2" href="#">Feed</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-md text-body-md hover:bg-white/5 dark:hover:bg-white/5 rounded px-2 py-1" href="#">Hymnal</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-md text-body-md hover:bg-white/5 dark:hover:bg-white/5 rounded px-2 py-1" href="#">Bible Studies</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-md text-body-md hover:bg-white/5 dark:hover:bg-white/5 rounded px-2 py-1" href="#">Societies</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-md text-body-md hover:bg-white/5 dark:hover:bg-white/5 rounded px-2 py-1" href="#">Resources</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<!-- Search Icon Mobile -->
+<button class="md:hidden text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<!-- Search Input Desktop -->
+<div class="hidden md:flex relative group">
+<input class="bg-[#121214] border border-surface-border text-on-surface rounded-full py-2 pl-4 pr-10 focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary/50 focus:shadow-[0_0_15px_rgba(143,25,55,0.2)] transition-all font-body-md text-body-md w-64" placeholder="Buscar..." type="text"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-secondary" data-icon="search">search</span>
+</div>
+<button class="flex items-center gap-2 px-4 py-2 bg-glass-bg border border-surface-border rounded-full hover:bg-surface-container-high transition-colors group">
+<span class="font-label-sm text-label-sm text-on-surface group-hover:text-primary transition-colors">Profile</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-surface-border group-hover:border-primary transition-colors">
+<img alt="User Profile Avatar" class="w-full h-full object-cover opacity-80" data-alt="A close up portrait of a young hispanic man with short dark hair, wearing a dark gray turtleneck against a minimalist black background. The lighting is moody and cinematic, emphasizing a serious yet calm expression, perfectly suited for a modern tech-focused dark mode interface profile picture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBG8kqNDqzaIABSR72gYr9Yuw98a61a7SH7AoY5VDRHJXF7iohihlvNRp_pcU_6x7q9e6rizx2oeTBiycGIeIRCg_03NEvPMuhePohyYd8ACnZ3P1Lz2D1QBkCwc-SjoGbTUze68PTZgzRcdVlF38ZfpiCkZ26onmEYiXdkvrDbh0UTkA5wxg_KaariHsxNPga4Hf2JFmvppuE-MmcNpmnVwyu9EsvYE2EGLgWVJYyDMJ9Cinz7vHmE2xezskNhdVsbFPWapfIURe4"/>
+</div>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Layout -->
+<main class="flex-grow pt-[120px] pb-section-gap px-margin-mobile md:px-gutter max-w-container-max mx-auto w-full grid grid-cols-1 md:grid-cols-12 gap-8 z-10">
+<!-- Header / Title Area -->
+<header class="col-span-1 md:col-span-12 mb-8">
+<h1 class="font-headline-xl-mobile text-headline-xl-mobile md:font-headline-xl md:text-headline-xl text-on-surface mb-2 tracking-tight">Feed</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Reflexiones y publicaciones de la comunidad</p>
+</header>
+<!-- Left Sidebar: Filters -->
+<aside class="col-span-1 md:col-span-3 lg:col-span-2 hidden md:block">
+<div class="sticky top-28 bg-glass-bg border border-surface-border rounded-xl p-4 backdrop-blur-xl">
+<h3 class="font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-4">Filtros</h3>
+<nav class="flex flex-col space-y-2">
+<button class="text-left w-full px-3 py-2 bg-primary-container/20 text-primary border-l-2 border-primary font-body-md text-body-md rounded-r-lg transition-colors flex items-center justify-between group">
+<span>Todos</span>
+<span class="material-symbols-outlined text-[18px] opacity-70 group-hover:opacity-100" data-icon="all_inclusive">all_inclusive</span>
+</button>
+<button class="text-left w-full px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-white/5 border-l-2 border-transparent font-body-md text-body-md rounded-r-lg transition-colors flex items-center justify-between group">
+<span>Reflexiones</span>
+<span class="material-symbols-outlined text-[18px] opacity-50 group-hover:opacity-100" data-icon="menu_book">menu_book</span>
+</button>
+<button class="text-left w-full px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-white/5 border-l-2 border-transparent font-body-md text-body-md rounded-r-lg transition-colors flex items-center justify-between group">
+<span>Devocionales</span>
+<span class="material-symbols-outlined text-[18px] opacity-50 group-hover:opacity-100" data-icon="self_improvement">self_improvement</span>
+</button>
+<button class="text-left w-full px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-white/5 border-l-2 border-transparent font-body-md text-body-md rounded-r-lg transition-colors flex items-center justify-between group">
+<span>Anuncios</span>
+<span class="material-symbols-outlined text-[18px] opacity-50 group-hover:opacity-100" data-icon="campaign">campaign</span>
+</button>
+</nav>
+</div>
+</aside>
+<!-- Horizontal Filters (Mobile) -->
+<div class="col-span-1 md:hidden overflow-x-auto pb-4 flex gap-2 no-scrollbar">
+<button class="whitespace-nowrap px-4 py-2 bg-primary-container text-white border border-primary-container rounded-full font-label-sm text-label-sm">Todos</button>
+<button class="whitespace-nowrap px-4 py-2 bg-glass-bg text-on-surface-variant border border-surface-border rounded-full font-label-sm text-label-sm hover:border-surface-variant">Reflexiones</button>
+<button class="whitespace-nowrap px-4 py-2 bg-glass-bg text-on-surface-variant border border-surface-border rounded-full font-label-sm text-label-sm hover:border-surface-variant">Devocionales</button>
+<button class="whitespace-nowrap px-4 py-2 bg-glass-bg text-on-surface-variant border border-surface-border rounded-full font-label-sm text-label-sm hover:border-surface-variant">Anuncios</button>
+</div>
+<!-- Main Feed Area -->
+<div class="col-span-1 md:col-span-9 lg:col-span-7 flex flex-col space-y-6">
+<!-- Create Post Input Area (Optional enhancement based on design system) -->
+<div class="bg-glass-bg border border-surface-border rounded-xl p-4 md:p-6 backdrop-blur-xl hover:border-[#8f1937]/50 transition-colors cursor-text group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden border border-surface-border flex-shrink-0">
+<img alt="Tu Avatar" class="w-full h-full object-cover" data-alt="A small circular profile picture of a young man, dimly lit with a subtle red rim light against a black background, fitting the UI dark mode style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAb0J4wpIxJ7SIuUEnDMTdtmTGmd8-T0hrUiU-0f2vo0mxI6kfjS5r2NJIJJoPnCPBm6yHwBcx5vCDoGKhGC0Cckmj7jprVTOSbvuIFSoGvGOgpm_lOVIVivXroatZO32pO_Vcpd0CUpuBKM9FS_B5jXkrT_41uAyi4RQfKiEALdso-7PfuUCI7myCvqOlK2SmVyh6a67U5ARIZDGRq2iQRMOy3pnYPO9VxS194kv0ti7_0OwFvtzC3u4nmPKoJyVPGTxyrlQ-uGyQ"/>
+</div>
+<div class="flex-grow">
+<input class="w-full bg-transparent border-none text-on-surface font-body-md text-body-md focus:ring-0 placeholder:text-surface-variant cursor-text pointer-events-none group-hover:pointer-events-auto" placeholder="Comparte una reflexión..." type="text"/>
+</div>
+<button class="hidden md:flex text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-white/5">
+<span class="material-symbols-outlined" data-icon="image">image</span>
+</button>
+</div>
+</div>
+<!-- Post Card 1 -->
+<article class="bg-glass-bg border border-surface-border rounded-xl p-6 backdrop-blur-xl hover:border-primary-container transition-colors duration-300">
+<!-- Post Header -->
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full overflow-hidden border border-surface-border">
+<img alt="Avatar de Sofia" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" data-alt="A portrait of a young hispanic woman with long dark curly hair, looking softly at the camera. The background is a very dark, blurred gradient of gray and subtle crimson. The lighting is soft and cinematic, perfect for a modern minimalist UI profile picture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPw5BTEz3scf-qDF2ihx6gLs_fFeoLRA1jwNHh3Gv5BBjhSz_sootNujAXC4c80HqumoDypnCyc16y_aiHMTlVtb6GPW12EPltJJE148KomJ47IFPNxYAhr0R5NFi-4mFw7PKAlTStP7muTHbUsJDDVuqGSLLcfXFGaD0SSnXDeopi8UcupLD9kM7yNewIZ5Rg4OTq5mSP12CpkSWNf1ycArpyH1B4UEdZ6F4VuC0h06WoffM6qerqHQfUfca-qKa6S9VJ-hOr5fk"/>
+</div>
+<div>
+<h4 class="font-headline-md text-[18px] leading-tight text-on-surface">Sofía Ramírez</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1 flex items-center gap-2">
+<span>Iglesia Central</span>
+<span class="w-1 h-1 rounded-full bg-surface-variant"></span>
+<span>Hace 2 horas</span>
+</p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<!-- Post Content -->
+<div class="mb-6">
+<p class="font-body-md text-body-md text-on-surface leading-relaxed whitespace-pre-wrap">La luz resplandece en las tinieblas, y las tinieblas no prevalecieron contra ella. Juan 1:5. 
+
+A veces sentimos que la oscuridad a nuestro alrededor es demasiado densa, pero solo basta una chispa de fe para iluminar el camino completo. Sigamos siendo luz en nuestras comunidades.</p>
+</div>
+<!-- Post Actions -->
+<div class="flex items-center justify-between pt-4 border-t border-surface-border/50">
+<div class="flex gap-4">
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors group">
+<span class="material-symbols-outlined group-hover:fill-current" data-icon="favorite">favorite</span>
+<span class="font-label-sm text-label-sm">24</span>
+</button>
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-secondary transition-colors group">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-label-sm text-label-sm">5</span>
+</button>
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined" data-icon="share">share</span>
+</button>
+</div>
+<div class="flex items-center">
+<span class="px-2 py-1 border border-primary/20 bg-primary/5 rounded text-primary font-label-sm text-[10px] uppercase tracking-wider">Reflexión</span>
+</div>
+</div>
+</article>
+<!-- Post Card 2 (With Image) -->
+<article class="bg-glass-bg border border-surface-border rounded-xl p-6 backdrop-blur-xl hover:border-primary-container transition-colors duration-300">
+<!-- Post Header -->
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full overflow-hidden border border-surface-border">
+<img alt="Avatar de Carlos" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" data-alt="A portrait of a young man with short hair and a slight beard, wearing a dark jacket. The lighting is moody with deep shadows and a slight golden rim light. The background is a solid deep charcoal gray, fitting for a premium dark mode digital platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRWL-UdqaWnw3BSwuMZ4LE0M9HmBEhn4gFL1R5gFtGe_9N8YIZxAju0kLwc-ICr5ai1sT_2MF01X74XVzPxpk99n5KbvdrJvNZ2vytS-0OBWsdqeWG_0NpQsStf3vIeszKwDgO84QLjBeXKWOWBGmeuGsaYQwCEKvKgb0n7m9iMLZYplXX6maMyKSpZo-54MuwzFSHDkPbb5de6H2iJDa-7MMcO_sI-bfD347tlthCmSs7xqnYc4YW9Hk1lssJescdWmLa2D26UX8"/>
+</div>
+<div>
+<h4 class="font-headline-md text-[18px] leading-tight text-on-surface">Carlos Mendoza</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1 flex items-center gap-2">
+<span>Distrito Norte</span>
+<span class="w-1 h-1 rounded-full bg-surface-variant"></span>
+<span>Ayer a las 18:30</span>
+</p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<!-- Post Content -->
+<div class="mb-4">
+<p class="font-body-md text-body-md text-on-surface leading-relaxed mb-4">Preparando todo para el retiro de jóvenes de este fin de semana. ¡Esperamos grandes cosas! Recuerden traer sus biblias y mucha expectativa.</p>
+<!-- Image Placeholder / Content -->
+<div class="w-full h-64 md:h-80 rounded-lg overflow-hidden border border-surface-border relative group">
+<div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent z-10"></div>
+<img alt="Preparativos del retiro" class="w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700" data-alt="A dark, moody, wide shot of an empty auditorium or hall being set up for an event. Silhouette of chairs and music equipment on a stage in the distance. The lighting is dramatic, with subtle red and gold stage lights cutting through a slight atmospheric haze. Minimalist and cinematic aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAH72S0jAyYyS3GJW_IS3ru9XaAAb1WpV4uX5mWUOq68Ue0l3h8D78XwKepZktIXMNQm3dJahf8Q-MVwp1NmVRv6B9oShUXmiC4XABCUwGoxtrikEcC7DJlOG7u1ehX2w82iyYRot_850o_kF8fCATzrAm59mQaSRoV9sq20eNxITJ4CNNcyeL-5rvrdpnvcFL6RH46ANjAdlMdeJ_fPYqO06dzXV1qeHVHsTBbYfQ2ukwLjxYZtlPHvhmgPtWAm8GCP_ohAL1x2A8"/>
+<div class="absolute bottom-4 left-4 z-20 flex gap-2">
+<span class="px-2 py-1 bg-black/50 backdrop-blur-sm border border-white/10 rounded text-white font-label-sm text-[10px] uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="location_on">location_on</span>
+                                 Campamento Betel
+                             </span>
+</div>
+</div>
+</div>
+<!-- Post Actions -->
+<div class="flex items-center justify-between pt-4 border-t border-surface-border/50">
+<div class="flex gap-4">
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors group">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+<span class="font-label-sm text-label-sm">89</span>
+</button>
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-secondary transition-colors group">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-label-sm text-label-sm">12</span>
+</button>
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined" data-icon="share">share</span>
+</button>
+</div>
+<div class="flex items-center">
+<span class="px-2 py-1 border border-secondary/20 bg-secondary/5 rounded text-secondary font-label-sm text-[10px] uppercase tracking-wider">Anuncio</span>
+</div>
+</div>
+</article>
+</div>
+<!-- Right Column / Empty Space for Layout Balance (Desktop) -->
+<aside class="col-span-1 lg:col-span-3 hidden lg:block">
+<!-- Space left intentionally blank or for future "Trending Topics" / "Upcoming Events" cards -->
+</aside>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-8 md:bottom-8 md:right-8 w-14 h-14 bg-primary-container text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(143,25,55,0.4)] hover:shadow-[0_0_30px_rgba(143,25,55,0.6)] hover:bg-[#a61d40] transition-all duration-300 z-50 group hover:-translate-y-1">
+<span class="material-symbols-outlined text-[28px] group-hover:rotate-90 transition-transform duration-300" data-icon="add">add</span>
+</button>
+<!-- Footer -->
+<footer class="w-full py-section-gap border-t border-surface-border bg-gradient-to-t from-glow-crimson to-transparent bg-surface-container-lowest dark:bg-surface-container-lowest opacity-100 transition-opacity z-10 relative">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-gutter max-w-container-max mx-auto gap-6">
+<div class="font-headline-md text-headline-md text-primary tracking-tighter opacity-80 hover:opacity-100 transition-opacity">
+                UJELADEA
+            </div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm uppercase tracking-widest" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm uppercase tracking-widest" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm uppercase tracking-widest" href="#">Contact Us</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-label-sm text-label-sm uppercase tracking-widest" href="#">About</a>
+</div>
+<div class="font-body-md text-body-md text-on-surface-variant text-center md:text-right">
+                © 2024 UJELADEA. Faithful in Service.
+            </div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Himnario - UJELADEA</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;family=Sora:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-fixed-variant": "#8b1534",
+                      "surface-variant": "#353437",
+                      "tertiary-fixed": "#ffd9de",
+                      "surface-container": "#201f22",
+                      "secondary-container": "#785d00",
+                      "inverse-surface": "#e5e1e4",
+                      "on-error": "#690005",
+                      "tertiary-fixed-dim": "#ffb2bd",
+                      "surface-border": "#27272a",
+                      "outline-variant": "#574143",
+                      "surface-container-highest": "#353437",
+                      "on-secondary-fixed": "#241a00",
+                      "surface-dim": "#131315",
+                      "outline": "#a68a8c",
+                      "surface-container-high": "#2a2a2c",
+                      "secondary-fixed-dim": "#e6c364",
+                      "inverse-primary": "#ab304a",
+                      "secondary-fixed": "#ffe08f",
+                      "inverse-on-surface": "#313032",
+                      "primary-container": "#8f1937",
+                      "on-primary": "#670021",
+                      "on-tertiary": "#630926",
+                      "background": "#131315",
+                      "on-secondary-container": "#fdd977",
+                      "primary": "#ffb2ba",
+                      "surface-bright": "#39393b",
+                      "surface": "#131315",
+                      "on-secondary": "#3d2e00",
+                      "on-primary-container": "#ff9eaa",
+                      "surface-tint": "#ffb2ba",
+                      "on-secondary-fixed-variant": "#584400",
+                      "secondary": "#e6c364",
+                      "on-error-container": "#ffdad6",
+                      "error": "#ffb4ab",
+                      "tertiary": "#ffb2bd",
+                      "on-tertiary-fixed": "#400014",
+                      "on-tertiary-container": "#ff9eae",
+                      "on-surface-variant": "#debfc1",
+                      "surface-container-lowest": "#0e0e10",
+                      "primary-fixed-dim": "#ffb2ba",
+                      "glow-crimson": "rgba(143, 25, 55, 0.15)",
+                      "tertiary-container": "#86263f",
+                      "on-primary-fixed": "#400011",
+                      "primary-fixed": "#ffd9dc",
+                      "error-container": "#93000a",
+                      "surface-container-low": "#1c1b1d",
+                      "on-background": "#e5e1e4",
+                      "on-tertiary-fixed-variant": "#81233b",
+                      "on-surface": "#e5e1e4",
+                      "glass-bg": "rgba(18, 18, 21, 0.7)"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "16px",
+                      "gutter": "24px",
+                      "unit": "4px",
+                      "container-max": "1280px",
+                      "section-gap": "120px"
+              },
+              "fontFamily": {
+                      "display-lg-mobile": [
+                              "Sora", "sans-serif"
+                      ],
+                      "body-lg": [
+                              "Inter", "sans-serif"
+                      ],
+                      "headline-xl-mobile": [
+                              "Sora", "sans-serif"
+                      ],
+                      "display-lg": [
+                              "Sora", "sans-serif"
+                      ],
+                      "body-md": [
+                              "Inter", "sans-serif"
+                      ],
+                      "headline-md": [
+                              "Sora", "sans-serif"
+                      ],
+                      "label-sm": [
+                              "JetBrains Mono", "monospace"
+                      ],
+                      "headline-xl": [
+                              "Sora", "sans-serif"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg-mobile": [
+                              "40px",
+                              {
+                                      "lineHeight": "48px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-xl-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg": [
+                              "64px",
+                              {
+                                      "lineHeight": "72px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-xl": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body {
+            background-color: #09090b; /* Specifically requested dark style */
+            color: #e5e1e4;
+        }
+        
+        .glass-card {
+            background: rgba(24, 24, 27, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid #27272a;
+        }
+
+        .glow-bg {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle at 50% 20%, rgba(143, 25, 55, 0.15) 0%, rgba(9, 9, 11, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative overflow-x-hidden">
+<div class="glow-bg"></div>
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 backdrop-blur-xl border-b border-surface-border shadow-none bg-glass-bg dark:bg-glass-bg transition-all duration-300 ease-in-out">
+<div class="flex justify-between items-center w-full px-margin-mobile md:px-gutter h-20 max-w-container-max mx-auto">
+<!-- Brand -->
+<div class="flex items-center gap-4">
+<a class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg font-extrabold text-primary dark:text-primary" href="#" style="font-size: 24px; line-height: 32px;">UJELADEA</a>
+</div>
+<!-- Navigation Links (Desktop) -->
+<nav class="hidden md:flex items-center gap-8">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors hover:bg-white/5 dark:hover:bg-white/5 px-3 py-2 rounded-md" href="#">Feed</a>
+<a class="font-body-md text-body-md text-primary font-bold border-b-2 border-primary pb-1 px-3 py-2" href="#">Hymnal</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors hover:bg-white/5 dark:hover:bg-white/5 px-3 py-2 rounded-md" href="#">Bible Studies</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors hover:bg-white/5 dark:hover:bg-white/5 px-3 py-2 rounded-md" href="#">Societies</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors hover:bg-white/5 dark:hover:bg-white/5 px-3 py-2 rounded-md" href="#">Resources</a>
+</nav>
+<!-- Search & Profile -->
+<div class="flex items-center gap-4">
+<div class="hidden lg:flex items-center relative">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">search</span>
+<input class="bg-surface-container-high border-surface-border border rounded-full py-2 pl-10 pr-4 focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary text-body-md font-body-md w-64 transition-all" placeholder="Buscar himnos..." type="text"/>
+</div>
+<button class="md:hidden text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="w-10 h-10 rounded-full border border-surface-border overflow-hidden cursor-pointer hover:border-primary transition-colors">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A detailed portrait of a young adult looking directly at the camera, conveying a sense of calm spirituality. The lighting is soft and cinematic, with a dark background that subtly glows with a crimson tint. The aesthetic matches a premium, modern digital platform. High resolution, shallow depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-eAY4riczV4n8MWjWrTBin-Ht_P40VWJOutqDC0R9TfD3pJ43oughH7yvu_C9jZR0qwVpV_jVeKL-CZSDQDGH0Kl07NOgvQScw73pqzyWjdQisXbkt0a2988hhMwuoXKpXX9w593UCSRx9wGfsn1Jl9SPzhfOEb7uNSzgEheOy6KecJOy-kSsGTQ_oNo-SkHRwaCmOXT_AOGa3qDSg2emuenChZ4Kc8zPjIAVjF2HEUDmXG9gXKMzanadilVvXTXh6_tSntPdqKk"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-32 pb-section-gap px-margin-mobile md:px-gutter max-w-container-max mx-auto w-full relative z-10">
+<!-- Page Header -->
+<div class="flex flex-col items-center justify-center text-center mb-16 mt-8 space-y-4">
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-primary tracking-tight">Himnario</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">Cánticos e himnos de la fe</p>
+</div>
+<!-- Search Bar (Mobile/Tablet focus) -->
+<div class="w-full max-w-3xl mx-auto mb-12 lg:hidden">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-secondary transition-colors">search</span>
+<input class="w-full bg-surface-container border border-surface-border rounded-xl py-4 pl-12 pr-4 text-body-lg font-body-lg text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-all shadow-sm" placeholder="Buscar por número, título o letra..." type="text"/>
+</div>
+</div>
+<!-- Filter Tabs -->
+<div class="flex overflow-x-auto no-scrollbar pb-4 mb-12 gap-4 justify-start md:justify-center border-b border-surface-border/50">
+<button class="px-6 py-2 rounded-full bg-primary-container text-white font-label-sm text-label-sm whitespace-nowrap border border-primary-container transition-all">Todos</button>
+<button class="px-6 py-2 rounded-full glass-card text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm whitespace-nowrap hover:border-secondary/50 transition-all">Alabanza</button>
+<button class="px-6 py-2 rounded-full glass-card text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm whitespace-nowrap hover:border-secondary/50 transition-all">Adoración</button>
+<button class="px-6 py-2 rounded-full glass-card text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm whitespace-nowrap hover:border-secondary/50 transition-all">Clásicos</button>
+</div>
+<!-- Hymn Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+<!-- Card 1 -->
+<article class="glass-card rounded-xl p-6 flex flex-col gap-4 group hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden">
+<div class="absolute -right-12 -top-12 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+<div class="flex justify-between items-start">
+<span class="font-headline-md text-headline-md text-secondary opacity-80">001</span>
+<span class="px-2 py-1 rounded border border-surface-border text-on-surface-variant font-label-sm text-label-sm bg-surface-container-low/50">Alabanza</span>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline-xl-mobile text-headline-xl-mobile text-on-surface mb-2" style="font-size: 20px; line-height: 28px;">Santo, Santo, Santo</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Santo, Santo, Santo, Señor Omnipotente, siempre el labio mío loores te dará...</p>
+</div>
+<div class="pt-4 border-t border-surface-border mt-auto flex justify-between items-center">
+<button class="text-on-surface hover:text-primary transition-colors flex items-center gap-2 group/btn">
+<span class="material-symbols-outlined text-[20px]">play_circle</span>
+<span class="font-label-sm text-label-sm">Escuchar</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container hover:bg-surface-container-high border border-surface-border transition-colors text-primary-container" title="Descargar">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">download</span>
+</button>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="glass-card rounded-xl p-6 flex flex-col gap-4 group hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden">
+<div class="absolute -right-12 -top-12 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+<div class="flex justify-between items-start">
+<span class="font-headline-md text-headline-md text-secondary opacity-80">024</span>
+<span class="px-2 py-1 rounded border border-surface-border text-on-surface-variant font-label-sm text-label-sm bg-surface-container-low/50">Clásicos</span>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline-xl-mobile text-headline-xl-mobile text-on-surface mb-2" style="font-size: 20px; line-height: 28px;">Cuán Grande Es Él</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Señor, mi Dios, al contemplar los cielos, el firmamento y las estrellas mil...</p>
+</div>
+<div class="pt-4 border-t border-surface-border mt-auto flex justify-between items-center">
+<button class="text-on-surface hover:text-primary transition-colors flex items-center gap-2 group/btn">
+<span class="material-symbols-outlined text-[20px]">play_circle</span>
+<span class="font-label-sm text-label-sm">Escuchar</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container hover:bg-surface-container-high border border-surface-border transition-colors text-primary-container" title="Descargar">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">download</span>
+</button>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="glass-card rounded-xl p-6 flex flex-col gap-4 group hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden">
+<div class="absolute -right-12 -top-12 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+<div class="flex justify-between items-start">
+<span class="font-headline-md text-headline-md text-secondary opacity-80">145</span>
+<span class="px-2 py-1 rounded border border-surface-border text-on-surface-variant font-label-sm text-label-sm bg-surface-container-low/50">Adoración</span>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline-xl-mobile text-headline-xl-mobile text-on-surface mb-2" style="font-size: 20px; line-height: 28px;">Sublime Gracia</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Sublime gracia del Señor, que a un pecador salvó. Fui ciego mas hoy veo yo...</p>
+</div>
+<div class="pt-4 border-t border-surface-border mt-auto flex justify-between items-center">
+<button class="text-on-surface hover:text-primary transition-colors flex items-center gap-2 group/btn">
+<span class="material-symbols-outlined text-[20px]">play_circle</span>
+<span class="font-label-sm text-label-sm">Escuchar</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container hover:bg-surface-container-high border border-surface-border transition-colors text-primary-container" title="Descargar">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">download</span>
+</button>
+</div>
+</article>
+<!-- Card 4 -->
+<article class="glass-card rounded-xl p-6 flex flex-col gap-4 group hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden">
+<div class="absolute -right-12 -top-12 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+<div class="flex justify-between items-start">
+<span class="font-headline-md text-headline-md text-secondary opacity-80">078</span>
+<span class="px-2 py-1 rounded border border-surface-border text-on-surface-variant font-label-sm text-label-sm bg-surface-container-low/50">Alabanza</span>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline-xl-mobile text-headline-xl-mobile text-on-surface mb-2" style="font-size: 20px; line-height: 28px;">A Dios Sea La Gloria</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">A Dios sea la gloria, por lo que hizo por mí. Con su sangre me ha salvado...</p>
+</div>
+<div class="pt-4 border-t border-surface-border mt-auto flex justify-between items-center">
+<button class="text-on-surface hover:text-primary transition-colors flex items-center gap-2 group/btn">
+<span class="material-symbols-outlined text-[20px]">play_circle</span>
+<span class="font-label-sm text-label-sm">Escuchar</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container hover:bg-surface-container-high border border-surface-border transition-colors text-primary-container" title="Descargar">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">download</span>
+</button>
+</div>
+</article>
+<!-- Card 5 -->
+<article class="glass-card rounded-xl p-6 flex flex-col gap-4 group hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden">
+<div class="absolute -right-12 -top-12 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+<div class="flex justify-between items-start">
+<span class="font-headline-md text-headline-md text-secondary opacity-80">201</span>
+<span class="px-2 py-1 rounded border border-surface-border text-on-surface-variant font-label-sm text-label-sm bg-surface-container-low/50">Adoración</span>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline-xl-mobile text-headline-xl-mobile text-on-surface mb-2" style="font-size: 20px; line-height: 28px;">Cerca De Ti, Señor</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Cerca de ti, Señor, quiero morar. Tu grande y tierno amor quiero gozar...</p>
+</div>
+<div class="pt-4 border-t border-surface-border mt-auto flex justify-between items-center">
+<button class="text-on-surface hover:text-primary transition-colors flex items-center gap-2 group/btn">
+<span class="material-symbols-outlined text-[20px]">play_circle</span>
+<span class="font-label-sm text-label-sm">Escuchar</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container hover:bg-surface-container-high border border-surface-border transition-colors text-primary-container" title="Descargar">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">download</span>
+</button>
+</div>
+</article>
+<!-- Card 6 -->
+<article class="glass-card rounded-xl p-6 flex flex-col gap-4 group hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden">
+<div class="absolute -right-12 -top-12 w-32 h-32 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+<div class="flex justify-between items-start">
+<span class="font-headline-md text-headline-md text-secondary opacity-80">312</span>
+<span class="px-2 py-1 rounded border border-surface-border text-on-surface-variant font-label-sm text-label-sm bg-surface-container-low/50">Clásicos</span>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline-xl-mobile text-headline-xl-mobile text-on-surface mb-2" style="font-size: 20px; line-height: 28px;">Firme Estaré</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2">Cristo es mi dulce salvador, mi fuerte redentor. En él descanso y tengo paz...</p>
+</div>
+<div class="pt-4 border-t border-surface-border mt-auto flex justify-between items-center">
+<button class="text-on-surface hover:text-primary transition-colors flex items-center gap-2 group/btn">
+<span class="material-symbols-outlined text-[20px]">play_circle</span>
+<span class="font-label-sm text-label-sm">Escuchar</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container hover:bg-surface-container-high border border-surface-border transition-colors text-primary-container" title="Descargar">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">download</span>
+</button>
+</div>
+</article>
+</div>
+<!-- Pagination -->
+<div class="flex justify-center items-center gap-2">
+<button class="w-10 h-10 rounded-lg flex items-center justify-center glass-card text-on-surface-variant hover:text-on-surface hover:border-secondary transition-colors" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center bg-primary-container text-white font-label-sm text-label-sm border border-primary-container">1</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center glass-card text-on-surface-variant hover:text-on-surface hover:border-secondary transition-colors font-label-sm text-label-sm">2</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center glass-card text-on-surface-variant hover:text-on-surface hover:border-secondary transition-colors font-label-sm text-label-sm">3</button>
+<span class="text-on-surface-variant">...</span>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center glass-card text-on-surface-variant hover:text-on-surface hover:border-secondary transition-colors font-label-sm text-label-sm">24</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center glass-card text-on-surface-variant hover:text-on-surface hover:border-secondary transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-section-gap border-t border-surface-border bg-gradient-to-t from-glow-crimson to-transparent bg-surface-container-lowest dark:bg-surface-container-lowest relative z-10 opacity-100 hover:opacity-80 transition-opacity">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-gutter max-w-container-max mx-auto gap-8 md:gap-0">
+<div class="text-center md:text-left">
+<h2 class="font-headline-md text-headline-md text-primary mb-2">UJELADEA</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">© 2024 UJELADEA. Faithful in Service.</p>
+</div>
+<nav class="flex flex-wrap justify-center gap-6">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Us</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">About</a>
+</nav>
+</div>
+</footer>
+</body></html>
