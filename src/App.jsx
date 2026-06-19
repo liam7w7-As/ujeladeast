@@ -5,6 +5,10 @@ import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import SpotlightBackground from './components/ui/SpotlightBackground'
 import ChatWidget from './components/ui/ChatWidget'
+import InstallPrompt from './components/ui/InstallPrompt'
+import OfflineBanner from './components/ui/OfflineBanner'
+import UpdatePrompt from './components/ui/UpdatePrompt'
+
 import Home from './pages/Home'
 import Feed from './pages/Feed'
 import Login from './pages/Login'
@@ -29,6 +33,8 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <OfflineBanner />
+        <UpdatePrompt />
         <SpotlightBackground />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -56,8 +62,9 @@ function App() {
           </Route>
         </Routes>
 
-        {/* UJELADITO: widget flotante presente en TODAS las páginas */}
+        {/* Componentes Globales */}
         <ChatWidget />
+        <InstallPrompt />
       </BrowserRouter>
     </AuthProvider>
   )
