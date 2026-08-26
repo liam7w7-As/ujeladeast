@@ -1,16 +1,66 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { modalBackdrop, modalContent } from '../../lib/animations';
 
 export default function HymnModal({ hymn, isOpen, onClose }) {
   const [activeTab, setActiveTab] = useState('es'); // 'es' or 'ay'
+  const [fontSize, setFontSize] = useState('normal'); // 'compact', 'normal', 'large'
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const contentRef = useRef(null);
 
   const hasAymara = hymn?.titulo_ay || (hymn?.estrofas_ay && hymn?.estrofas_ay.length > 0);
 
-  // If user had Aymara selected from previous hymn but this one doesn't have it, switch back to Spanish
-  if (activeTab === 'ay' && !hasAymara && hymn) {
-    setActiveTab('es');
-  }
+  // Switch back to Spanish if current hymn has no Aymara lyrics
+  useEffect(() => {
+    if (activeTab === 'ay' && !hasAymara && hymn) {
+      setActiveTab('es');
+    }
+  }, [hymn, hasAymara, activeTab]);
+
+  // Manejo del botón "Atrás" del celular (Android / iOS history navigation)
+  useEffect(() => {
+    if (!isOpen || !hymn) return;
+
+    // Agregar estado temporal al historial del navegador
+    window.history.pushState({ hymnModalOpen: true }, '');
+
+    const handlePopState = () => {
+      // Si el usuario presiona el botón atrás físico del cel
+      onClose();
+    };
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    window.addEventListener('keydown', handleKeyDown);
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, hymn]);
+
+  const handleClose = () => {
+    if (window.history.state?.hymnModalOpen) {
+      window.history.back();
+    } else {
+      onClose();
+    }
+  };
+
+  const getFontSizeClass = () => {
+    switch (fontSize) {
+      case 'compact': return 'text-sm sm:text-base leading-relaxed';
+      case 'large': return 'text-lg sm:text-xl leading-loose';
+      default: return 'text-base sm:text-lg leading-relaxed';
+    }
+  };
 
   const renderLyrics = (language) => {
     if (!hymn) return null;
@@ -18,30 +68,60 @@ export default function HymnModal({ hymn, isOpen, onClose }) {
     const coro = language === 'es' ? hymn.coro_es : hymn.coro_ay;
 
     if (!estrofas || estrofas.length === 0) {
-      return <p className="text-on-surface-variant italic text-center py-8">Letra no disponible.</p>;
+      return (
+        <div className="flex flex-col items-center justify-center py-12 text-center text-white/40">
+          <span className="material-symbols-outlined text-4xl mb-2 text-white/20">menu_book</span>
+          <p className="italic text-sm">Letra no disponible en este momento.</p>
+        </div>
+      );
     }
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         {/* Estrofa 1 */}
-        <div className="flex gap-4">
-          <span className="font-bold text-primary select-none mt-1">1.</span>
-          <p className="font-body-lg text-lg text-on-surface whitespace-pre-wrap leading-relaxed">{estrofas[0]}</p>
+        <div className="flex gap-3 items-start bg-white/[0.02] hover:bg-white/[0.04] p-3 rounded-xl transition-colors border border-white/5">
+          <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#8f1937]/20 border border-[#8f1937]/40 text-xs font-bold text-[#ff4d79] mt-0.5 select-none shadow-sm">
+            1
+          </span>
+          <p className={`font-inter text-white/90 whitespace-pre-wrap ${getFontSizeClass()}`}>
+            {estrofas[0]}
+          </p>
         </div>
 
-        {/* Coro (Only shown once after 1st stanza) */}
+        {/* 🌟 Coro Destacado con Alto Contraste y Brillo 🌟 */}
         {coro && (
-          <div className="my-6 bg-[#8f1937]/10 border-l-4 border-[#8f1937] p-5 rounded-r-lg relative">
-            <span className="absolute top-2 right-3 text-[#8f1937]/30 font-bold text-xs uppercase tracking-widest select-none">Coro</span>
-            <p className="font-body-lg text-lg text-on-surface font-medium whitespace-pre-wrap leading-relaxed italic">{coro}</p>
-          </div>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="my-3 relative overflow-hidden rounded-xl border-l-4 border-[#ff4d79] bg-gradient-to-r from-[#8f1937]/35 via-[#8f1937]/15 to-transparent p-4 shadow-[0_0_30px_rgba(143,25,55,0.25)] border-y border-r border-white/5"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#ff4d79] text-white text-[10px] font-black uppercase tracking-widest shadow-md">
+                <span className="material-symbols-outlined text-[13px]">record_voice_over</span>
+                CORO
+              </span>
+              <span className="text-[11px] font-semibold text-[#ff80a0] uppercase tracking-wider">
+                Cantar con Júbilo
+              </span>
+            </div>
+            <p className={`font-inter font-medium text-white italic whitespace-pre-wrap ${getFontSizeClass()}`}>
+              {coro}
+            </p>
+          </motion.div>
         )}
 
-        {/* Remaining Estrofas */}
+        {/* Demás Estrofas */}
         {estrofas.slice(1).map((estrofa, index) => (
-          <div key={index + 1} className="flex gap-4">
-            <span className="font-bold text-primary select-none mt-1">{index + 2}.</span>
-            <p className="font-body-lg text-lg text-on-surface whitespace-pre-wrap leading-relaxed">{estrofa}</p>
+          <div 
+            key={index + 1} 
+            className="flex gap-3 items-start bg-white/[0.02] hover:bg-white/[0.04] p-3 rounded-xl transition-colors border border-white/5"
+          >
+            <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#8f1937]/20 border border-[#8f1937]/40 text-xs font-bold text-[#ff4d79] mt-0.5 select-none shadow-sm">
+              {index + 2}
+            </span>
+            <p className={`font-inter text-white/90 whitespace-pre-wrap ${getFontSizeClass()}`}>
+              {estrofa}
+            </p>
           </div>
         ))}
       </div>
@@ -51,105 +131,155 @@ export default function HymnModal({ hymn, isOpen, onClose }) {
   return (
     <AnimatePresence>
       {isOpen && hymn && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+        <div className={`fixed inset-0 z-50 flex items-center justify-center ${isFullscreen ? 'p-0' : 'p-2 sm:p-4'}`}>
           {/* Backdrop */}
           <motion.div 
             variants={modalBackdrop}
             initial="initial"
             animate="animate"
             exit="exit"
-            className="absolute inset-0 bg-black/80 backdrop-blur-md"
-            onClick={onClose}
+            className="absolute inset-0 bg-black/85 backdrop-blur-md"
+            onClick={handleClose}
           />
 
-          {/* Modal */}
+          {/* Modal Container */}
           <motion.div 
             variants={modalContent}
             initial="initial"
             animate="animate"
             exit="exit"
-            className="relative w-full max-w-2xl bg-[#09090b] border border-[#27272a] rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
+            className={`relative flex flex-col bg-[#0b0b0e] border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.9)] overflow-hidden transition-all duration-300 ${
+              isFullscreen 
+                ? 'w-full h-full rounded-none border-none max-h-none' 
+                : 'w-full max-w-2xl rounded-2xl max-h-[92vh]'
+            }`}
           >
-            {/* Header */}
-            <div className="flex items-start justify-between p-6 border-b border-[#27272a] bg-[#0e0e10]">
-              <div className="flex-1 pr-4">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="bg-[#8f1937] text-white font-bold text-lg px-3 py-1 rounded-lg leading-none">
-                    {hymn.numero}
-                  </span>
-                  {hymn.categoria && (
-                    <span className="text-[#8f1937] text-xs font-semibold uppercase tracking-wider border border-[#8f1937]/30 px-2 py-0.5 rounded-full">
-                      {hymn.categoria}
-                    </span>
-                  )}
-                </div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-white leading-tight mb-1">
-                  {activeTab === 'es' ? (hymn.titulo_es || 'Sin título') : (hymn.titulo_ay || hymn.titulo_es)}
-                </h2>
-                
-                <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-gray-400 font-medium">
-                  {hymn.tonalidad && (
-                    <span className="flex items-center gap-1.5 bg-[#18181b] px-2.5 py-1 rounded-md border border-[#27272a]">
-                      <span className="material-symbols-outlined text-[16px]">music_note</span>
-                      {hymn.tonalidad}
-                    </span>
-                  )}
-                  {hymn.compas && (
-                    <span className="flex items-center gap-1.5 bg-[#18181b] px-2.5 py-1 rounded-md border border-[#27272a]">
-                      <span className="material-symbols-outlined text-[16px]">speed</span>
-                      {hymn.compas}
-                    </span>
-                  )}
+            {/* Header Compacto */}
+            <div className="flex items-center justify-between px-4 py-3 sm:px-5 sm:py-3.5 border-b border-white/10 bg-[#121216] shrink-0">
+              <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                {/* Badge Número */}
+                <span className="bg-gradient-to-br from-[#8f1937] to-[#d85d7c] text-white font-black text-sm px-2.5 py-1 rounded-lg shrink-0 shadow-[0_0_12px_rgba(143,25,55,0.4)]">
+                  #{hymn.numero}
+                </span>
+
+                {/* Título Compacto */}
+                <div className="min-w-0">
+                  <h2 className="text-sm sm:text-base font-bold text-white leading-tight truncate">
+                    {activeTab === 'es' ? (hymn.titulo_es || 'Sin título') : (hymn.titulo_ay || hymn.titulo_es)}
+                  </h2>
+                  <div className="flex items-center gap-2 text-[11px] text-white/50 mt-0.5 truncate">
+                    {hymn.categoria && (
+                      <span className="text-[#ff4d79] font-semibold">{hymn.categoria}</span>
+                    )}
+                    {hymn.tonalidad && (
+                      <>
+                        <span>•</span>
+                        <span className="flex items-center gap-0.5">
+                          <span className="material-symbols-outlined text-[12px]">music_note</span>
+                          {hymn.tonalidad}
+                        </span>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
               
-              <motion.button 
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={onClose}
-                className="w-10 h-10 rounded-full bg-[#18181b] border border-[#27272a] hover:bg-[#27272a] hover:text-white text-gray-400 flex items-center justify-center transition-colors flex-shrink-0"
-              >
-                <span className="material-symbols-outlined">close</span>
-              </motion.button>
+              {/* Acciones de Cabecera (Tamaño de fuente, Pantalla completa, Cerrar) */}
+              <div className="flex items-center gap-1 shrink-0">
+                {/* Control de Tamaño de Letra */}
+                <div className="flex items-center bg-white/5 border border-white/10 rounded-lg p-0.5">
+                  <button
+                    onClick={() => setFontSize(fontSize === 'large' ? 'normal' : 'compact')}
+                    className={`px-2 py-1 text-xs font-bold rounded transition-colors ${
+                      fontSize === 'compact' ? 'bg-[#8f1937] text-white' : 'text-white/60 hover:text-white'
+                    }`}
+                    title="Letra compacta"
+                  >
+                    A-
+                  </button>
+                  <button
+                    onClick={() => setFontSize(fontSize === 'compact' ? 'normal' : 'large')}
+                    className={`px-2 py-1 text-xs font-bold rounded transition-colors ${
+                      fontSize === 'large' ? 'bg-[#8f1937] text-white' : 'text-white/60 hover:text-white'
+                    }`}
+                    title="Letra grande"
+                  >
+                    A+
+                  </button>
+                </div>
+
+                {/* Toggle Pantalla Completa */}
+                <motion.button 
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setIsFullscreen(!isFullscreen)}
+                  className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white flex items-center justify-center transition-colors"
+                  title={isFullscreen ? "Salir de pantalla completa" : "Modo lectura pantalla completa"}
+                >
+                  <span className="material-symbols-outlined text-[18px]">
+                    {isFullscreen ? 'fullscreen_exit' : 'fullscreen'}
+                  </span>
+                </motion.button>
+
+                {/* Botón Cerrar (X) */}
+                <motion.button 
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={handleClose}
+                  className="w-8 h-8 rounded-lg bg-white/5 hover:bg-red-500/20 border border-white/10 hover:border-red-500/40 text-white/70 hover:text-red-400 flex items-center justify-center transition-colors ml-1"
+                  title="Cerrar (o botón atrás del cel)"
+                >
+                  <span className="material-symbols-outlined text-[18px]">close</span>
+                </motion.button>
+              </div>
             </div>
 
-            {/* Tabs */}
+            {/* Pestañas de Idioma (Español / Aymara) */}
             {hasAymara && (
-              <div className="flex border-b border-[#27272a] bg-[#0e0e10] px-6">
+              <div className="flex border-b border-white/10 bg-[#0e0e12] px-4">
                 <button
                   onClick={() => setActiveTab('es')}
-                  className={`px-6 py-4 text-sm font-semibold uppercase tracking-wider transition-colors relative ${
-                    activeTab === 'es' ? 'text-primary' : 'text-gray-500 hover:text-gray-300'
+                  className={`px-4 py-2 text-xs font-bold uppercase tracking-wider transition-colors relative ${
+                    activeTab === 'es' ? 'text-[#ff4d79]' : 'text-white/50 hover:text-white/80'
                   }`}
                 >
                   Español
                   {activeTab === 'es' && (
                     <motion.span 
                       layoutId="hymnTabIndicator"
-                      className="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-t-full"
+                      className="absolute bottom-0 left-0 w-full h-0.5 bg-[#ff4d79] rounded-t-full shadow-[0_0_8px_rgba(255,77,121,0.6)]"
                     />
                   )}
                 </button>
                 <button
                   onClick={() => setActiveTab('ay')}
-                  className={`px-6 py-4 text-sm font-semibold uppercase tracking-wider transition-colors relative ${
-                    activeTab === 'ay' ? 'text-primary' : 'text-gray-500 hover:text-gray-300'
+                  className={`px-4 py-2 text-xs font-bold uppercase tracking-wider transition-colors relative ${
+                    activeTab === 'ay' ? 'text-[#ff4d79]' : 'text-white/50 hover:text-white/80'
                   }`}
                 >
                   Aymara
                   {activeTab === 'ay' && (
                     <motion.span 
                       layoutId="hymnTabIndicator"
-                      className="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-t-full"
+                      className="absolute bottom-0 left-0 w-full h-0.5 bg-[#ff4d79] rounded-t-full shadow-[0_0_8px_rgba(255,77,121,0.6)]"
                     />
                   )}
                 </button>
               </div>
             )}
 
-            {/* Body */}
-            <div className="p-6 overflow-y-auto custom-scrollbar">
+            {/* Cuerpo del Himno (Scroll optimizado) */}
+            <div 
+              ref={contentRef}
+              className="p-3.5 sm:p-5 overflow-y-auto custom-scrollbar flex-1"
+            >
               {renderLyrics(activeTab)}
+            </div>
+
+            {/* Footer Compacto */}
+            <div className="px-4 py-2 bg-[#121216]/80 border-t border-white/5 flex items-center justify-between text-[11px] text-white/40">
+              <span>UJELADEA • Distrito El Alto</span>
+              <span className="hidden sm:inline">Presiona ESC o botón Atrás para salir</span>
             </div>
           </motion.div>
         </div>
@@ -157,4 +287,5 @@ export default function HymnModal({ hymn, isOpen, onClose }) {
     </AnimatePresence>
   );
 }
+
 
