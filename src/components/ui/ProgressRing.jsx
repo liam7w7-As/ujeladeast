@@ -1,3 +1,5 @@
+import { motion } from 'motion/react';
+
 export default function ProgressRing({ percentage, size = 120, strokeWidth = 8 }) {
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
@@ -15,11 +17,13 @@ export default function ProgressRing({ percentage, size = 120, strokeWidth = 8 }
           cx={size / 2}
           cy={size / 2}
         />
-        <circle
-          className="text-primary transition-all duration-1000 ease-out"
+        <motion.circle
+          className="text-primary"
           strokeWidth={strokeWidth}
           strokeDasharray={circumference}
-          strokeDashoffset={offset}
+          initial={{ strokeDashoffset: circumference }}
+          animate={{ strokeDashoffset: offset }}
+          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
           strokeLinecap="round"
           stroke="currentColor"
           fill="transparent"
@@ -29,9 +33,17 @@ export default function ProgressRing({ percentage, size = 120, strokeWidth = 8 }
         />
       </svg>
       <div className="absolute flex flex-col items-center justify-center">
-        <span className="text-2xl font-bold text-white">{percentage}%</span>
-        <span className="text-[10px] text-on-surface-variant uppercase tracking-wider">Completado</span>
+        <motion.span 
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="text-2xl font-black text-white"
+        >
+          {percentage}%
+        </motion.span>
+        <span className="text-[10px] text-on-surface-variant uppercase font-bold tracking-wider">Completado</span>
       </div>
     </div>
   );
 }
+

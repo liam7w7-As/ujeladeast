@@ -1,16 +1,23 @@
+import { motion } from 'motion/react';
+
 export default function HymnCard({ hymn, onClick }) {
   return (
-    <article 
+    <motion.article 
       onClick={onClick}
-      className="bg-glass-bg border border-surface-border rounded-xl p-6 backdrop-blur-xl hover:border-[#8f1937] hover:shadow-[0_0_15px_rgba(143,25,55,0.15)] transition-all duration-300 cursor-pointer group flex flex-col h-full relative overflow-hidden"
+      whileHover={{ y: -5, scale: 1.01, transition: { duration: 0.2 } }}
+      whileTap={{ scale: 0.98 }}
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35 }}
+      className="bg-glass-bg border border-surface-border rounded-xl p-6 backdrop-blur-xl hover:border-[#8f1937]/60 hover:shadow-[0_0_25px_rgba(143,25,55,0.2)] transition-colors duration-300 cursor-pointer group flex flex-col h-full relative overflow-hidden"
     >
-      <div className="absolute -top-4 -right-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors"></div>
+      <div className="absolute -top-4 -right-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/15 transition-colors"></div>
       
       <div className="flex justify-between items-start mb-4 relative z-10">
-        <h3 className="font-headline-md text-xl text-on-surface group-hover:text-primary transition-colors leading-tight flex-1 pr-4">
+        <h3 className="font-headline-md text-xl font-bold text-on-surface group-hover:text-primary transition-colors leading-tight flex-1 pr-4">
           {hymn.titulo_es || 'Sin Título'}
         </h3>
-        <span className="text-3xl font-bold text-primary opacity-80 leading-none">
+        <span className="text-3xl font-black text-primary opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all leading-none">
           {hymn.numero}
         </span>
       </div>
@@ -34,6 +41,7 @@ export default function HymnCard({ hymn, onClick }) {
           </span>
         )}
       </div>
-    </article>
+    </motion.article>
   )
 }
+

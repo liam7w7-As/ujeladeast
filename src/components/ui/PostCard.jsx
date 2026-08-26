@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../../hooks/useAuth';
 import CommentsSection from './CommentsSection';
 import ShareButton from './ShareButton';
@@ -9,6 +10,7 @@ export default function PostCard({ id, profiles, created_at, content, image_url,
   const [localLike, setLocalLike] = useState(isLiked);
   const [localCount, setLocalCount] = useState(likes_count || 0);
   const [showComments, setShowComments] = useState(false);
+  const [isLiking, setIsLiking] = useState(false);
   
   const location = useLocation();
   const postRef = useRef(null);
@@ -41,8 +43,9 @@ export default function PostCard({ id, profiles, created_at, content, image_url,
   })();
 
   const handleLike = async () => {
-    if (!user) return; // Or show a toast
+    if (!user) return;
     const currentlyLiked = localLike;
+    setIsLiking(true);
     setLocalLike(!currentlyLiked);
     setLocalCount(prev => currentlyLiked ? Math.max(0, prev - 1) : prev + 1);
     
@@ -52,6 +55,8 @@ export default function PostCard({ id, profiles, created_at, content, image_url,
       // Revert on error
       setLocalLike(currentlyLiked);
       setLocalCount(prev => currentlyLiked ? prev + 1 : Math.max(0, prev - 1));
+    } finally {
+      setTimeout(() => setIsLiking(false), 500);
     }
   };
 
@@ -59,7 +64,13 @@ export default function PostCard({ id, profiles, created_at, content, image_url,
   const displayCategory = category === 'reflexion' ? 'Reflexión' : category === 'devocional' ? 'Devocional' : 'Anuncio';
 
   return (
-    <article ref={postRef} className="bg-glass-bg border border-surface-border rounded-xl p-6 backdrop-blur-xl hover:border-primary-container transition-colors duration-300 scroll-mt-24">
+    <motion.article 
+      ref={postRef} 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="bg-glass-bg border border-surface-border rounded-xl p-6 backdrop-blur-xl hover:border-primary-container/40 transition-colors duration-300 scroll-mt-24"
+    >
       {/* Post Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
@@ -95,19 +106,29 @@ export default function PostCard({ id, profiles, created_at, content, image_url,
       {/* Post Actions */}
       <div className="flex items-center justify-between pt-4 border-t border-surface-border/50">
         <div className="flex gap-4">
-          <button 
+          <motion.button 
+            whileTap={{ scale: 0.85 }}
             onClick={handleLike}
             className={`flex items-center gap-2 transition-colors group ${localLike ? 'text-primary' : 'text-on-surface-variant hover:text-primary'}`}>
-            <span className="material-symbols-outlined" style={localLike ? { fontVariationSettings: "'FILL' 1" } : {}}>favorite</span>
+            <motion.span 
+              animate={isLiking ? { scale: [1, 1.45, 0.9, 1.1, 1] } : { scale: 1 }}
+              transition={{ duration: 0.45 }}
+              className="material-symbols-outlined select-none" 
+              style={localLike ? { fontVariationSettings: "'FILL' 1" } : {}}
+            >
+              favorite
+            </motion.span>
             <span className="font-label-sm text-label-sm">{localCount}</span>
-          </button>
-          <button 
+          </motion.button>
+          
+          <motion.button 
+            whileTap={{ scale: 0.88 }}
             onClick={() => setShowComments(!showComments)}
             className={`flex items-center gap-2 transition-colors group ${showComments ? 'text-secondary' : 'text-on-surface-variant hover:text-secondary'}`}
           >
-            <span className="material-symbols-outlined" style={showComments ? { fontVariationSettings: "'FILL' 1" } : {}}>chat_bubble</span>
+            <span className="material-symbols-outlined select-none" style={showComments ? { fontVariationSettings: "'FILL' 1" } : {}}>chat_bubble</span>
             <span className="font-label-sm text-label-sm">{comments_count || 0}</span>
-          </button>
+          </motion.button>
           
           <ShareButton post={{ id, content }} />
         </div>
@@ -118,10 +139,13 @@ export default function PostCard({ id, profiles, created_at, content, image_url,
         </div>
       </div>
 
-      {/* Comments Section */}
-      {showComments && (
-        <CommentsSection postId={id} />
-      )}
-    </article>
+      {/* Comments Section with AnimatePresence */}
+      <AnimatePresence>
+        {showComments && (
+          <CommentsSection postId={id} />
+        )}
+      </AnimatePresence>
+    </motion.article>
   )
 }
+

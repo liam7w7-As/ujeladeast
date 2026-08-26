@@ -1,3 +1,5 @@
+import { motion } from 'motion/react';
+
 // Configuración de íconos y colores por tipo de archivo
 const FILE_CONFIG = {
   PDF:         { icon: 'picture_as_pdf',  color: 'text-red-400',    bg: 'bg-red-500/10',    border: 'border-red-500/20' },
@@ -37,7 +39,12 @@ export default function ResourceCard({ resource }) {
   const cfg = getFileConfig(file_type || category);
 
   return (
-    <div className="glass-card rounded-2xl p-5 flex flex-col gap-4 group relative overflow-hidden">
+    <motion.div 
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+      className="glass-card rounded-2xl p-5 flex flex-col gap-4 group relative overflow-hidden border border-surface-border hover:border-primary/40 hover:shadow-[0_0_25px_rgba(143,25,55,0.15)] transition-colors duration-300"
+    >
       {is_featured && (
         <span className="absolute top-3 right-3 text-[10px] font-bold text-secondary border border-secondary/40 px-2 py-0.5 rounded-full bg-surface/80 backdrop-blur-sm uppercase tracking-wider">
           Destacado
@@ -45,7 +52,7 @@ export default function ResourceCard({ resource }) {
       )}
 
       {/* File icon */}
-      <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${cfg.bg} ${cfg.border}`}>
+      <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${cfg.bg} ${cfg.border} group-hover:scale-105 transition-transform`}>
         <span className={`material-symbols-outlined text-2xl ${cfg.color}`}>{cfg.icon}</span>
       </div>
 
@@ -68,7 +75,9 @@ export default function ResourceCard({ resource }) {
 
       {/* Download button */}
       {file_url ? (
-        <a
+        <motion.a
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           href={file_url}
           target="_blank"
           rel="noopener noreferrer"
@@ -77,12 +86,13 @@ export default function ResourceCard({ resource }) {
         >
           <span className="material-symbols-outlined text-[18px]">download</span>
           Descargar
-        </a>
+        </motion.a>
       ) : (
         <div className="w-full py-2.5 rounded-xl bg-surface-container border border-surface-border text-on-surface-variant text-sm text-center">
           Sin enlace
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
+

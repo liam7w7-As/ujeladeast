@@ -1,9 +1,16 @@
+import { motion } from 'motion/react';
+
 export default function SocietyCard({ society, viewMode = 'grid', onClick }) {
   const { name, zone, president_name, photo_url, maps_link } = society;
 
   if (viewMode === 'list') {
     return (
-      <div className="glass-card rounded-2xl p-5 flex items-center gap-5 cursor-pointer group">
+      <motion.div 
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        whileHover={{ x: 4, transition: { duration: 0.2 } }}
+        className="glass-card rounded-2xl p-5 flex items-center gap-5 cursor-pointer group border border-surface-border hover:border-primary/40 transition-colors"
+      >
         {/* Foto */}
         <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 bg-surface-container-high flex items-center justify-center border border-surface-border">
           {photo_url ? (
@@ -26,7 +33,9 @@ export default function SocietyCard({ society, viewMode = 'grid', onClick }) {
 
         <div className="flex items-center gap-2 shrink-0">
           {maps_link && (
-            <a
+            <motion.a
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               href={maps_link}
               target="_blank"
               rel="noopener noreferrer"
@@ -35,22 +44,29 @@ export default function SocietyCard({ society, viewMode = 'grid', onClick }) {
               title="Ver ubicación"
             >
               <span className="material-symbols-outlined text-[18px]">location_on</span>
-            </a>
+            </motion.a>
           )}
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => onClick(society)}
             className="px-4 py-2 rounded-lg bg-primary-container/20 border border-primary-container/30 hover:bg-primary-container/40 text-primary text-xs font-medium transition-colors"
           >
             Ver más
-          </button>
+          </motion.button>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
   // Grid view
   return (
-    <div className="glass-card rounded-2xl overflow-hidden cursor-pointer group flex flex-col">
+    <motion.div 
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -6, transition: { duration: 0.2 } }}
+      className="glass-card rounded-2xl overflow-hidden cursor-pointer group flex flex-col border border-surface-border hover:border-primary/40 hover:shadow-[0_0_30px_rgba(143,25,55,0.18)] transition-all duration-300"
+    >
       {/* Foto */}
       <div className="w-full h-44 bg-surface-container-high flex items-center justify-center overflow-hidden relative">
         {photo_url ? (
@@ -61,7 +77,7 @@ export default function SocietyCard({ society, viewMode = 'grid', onClick }) {
           </div>
         )}
         {zone && (
-          <span className="absolute top-3 left-3 px-2 py-1 rounded-full text-[10px] font-bold text-secondary border border-secondary/50 bg-surface/80 backdrop-blur-sm uppercase tracking-wider">
+          <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-bold text-secondary border border-secondary/50 bg-surface/80 backdrop-blur-sm uppercase tracking-wider">
             {zone}
           </span>
         )}
@@ -81,7 +97,9 @@ export default function SocietyCard({ society, viewMode = 'grid', onClick }) {
 
         <div className="flex gap-2 mt-auto">
           {maps_link && (
-            <a
+            <motion.a
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
               href={maps_link}
               target="_blank"
               rel="noopener noreferrer"
@@ -90,17 +108,20 @@ export default function SocietyCard({ society, viewMode = 'grid', onClick }) {
             >
               <span className="material-symbols-outlined text-[18px]">location_on</span>
               <span>Ubicación</span>
-            </a>
+            </motion.a>
           )}
-          <button
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => onClick(society)}
             className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-primary-container/20 border border-primary-container/40 hover:bg-primary-container/60 text-primary text-sm font-medium transition-colors"
           >
             <span className="material-symbols-outlined text-[18px]">info</span>
             <span>Ver más</span>
-          </button>
+          </motion.button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
+
