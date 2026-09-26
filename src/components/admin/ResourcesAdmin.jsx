@@ -1,5 +1,7 @@
 import { useState, useRef } from 'react';
 import { useResources } from '../../hooks/useResources';
+import ResourcePreviewModal from '../ui/ResourcePreviewModal';
+import { downloadResourceFile } from '../../lib/downloadHelper';
 
 const CATEGORIES = ['DOCUMENTO', 'FORMULARIO', 'PRESENTACIÓN', 'VIDEO', 'AUDIO', 'OTRO'];
 
@@ -28,6 +30,7 @@ export default function ResourcesAdmin() {
   const [dragging, setDragging] = useState(false);
   const [saveStatus, setSaveStatus] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [previewResource, setPreviewResource] = useState(null);
   const [formError, setFormError] = useState('');
   const fileInputRef = useRef(null);
 
@@ -351,14 +354,26 @@ export default function ResourcesAdmin() {
                     </span>
                   </button>
 
-                  <div className="flex gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center gap-1.5 shrink-0 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                     {r.file_url && (
-                      <a href={r.file_url} target="_blank" rel="noopener noreferrer"
-                        className="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-white hover:bg-white/10 transition-colors"
-                        title="Ver/descargar"
-                      >
-                        <span className="material-symbols-outlined text-[18px]">open_in_new</span>
-                      </a>
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => setPreviewResource(r)}
+                          className="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-white hover:bg-white/10 transition-colors"
+                          title="Ver archivo"
+                        >
+                          <span className="material-symbols-outlined text-[18px]">visibility</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => downloadResourceFile(r.file_url, r.title, r.file_type)}
+                          className="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-primary-container/20 transition-colors"
+                          title="Descargar archivo"
+                        >
+                          <span className="material-symbols-outlined text-[18px]">download</span>
+                        </button>
+                      </>
                     )}
                     <button
                       onClick={() => setDeleteConfirm(r)}
@@ -392,6 +407,14 @@ export default function ResourcesAdmin() {
           </div>
         </div>
       )}
+
+      {/* Modal de Previsualización */}
+      <ResourcePreviewModal
+        resource={previewResource}
+        isOpen={!!previewResource}
+        onClose={() => setPreviewResource(null)}
+        onDownload={(res) => downloadResourceFile(res.file_url, res.title, res.file_type)}
+      />
     </div>
   );
 }

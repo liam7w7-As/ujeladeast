@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import PageShell from '../components/layout/PageShell';
 import ResourceCard from '../components/ui/ResourceCard';
+import ResourcePreviewModal from '../components/ui/ResourcePreviewModal';
 import { useResources } from '../hooks/useResources';
+import { downloadResourceFile } from '../lib/downloadHelper';
 
 const FILTERS = [
   { id: 'Todos',        label: 'Todos',          icon: 'apps' },
@@ -31,6 +33,7 @@ function SkeletonCard() {
 
 export default function Resources() {
   const [activeFilter, setActiveFilter] = useState('Todos');
+  const [previewResource, setPreviewResource] = useState(null);
   const { resources, featured, loading, error, getResources, getFeaturedResource } = useResources();
 
   useEffect(() => {
@@ -43,6 +46,11 @@ export default function Resources() {
     getResources(filterId);
   };
 
+  const handleDownload = (resource) => {
+    if (!resource?.file_url) return;
+    downloadResourceFile(resource.file_url, resource.title, resource.file_type);
+  };
+
   const featuredIcon = FILE_ICONS[featured?.file_type] || 'attach_file';
 
   return (
@@ -53,7 +61,7 @@ export default function Resources() {
         <div className="mb-12 animate-slide-up">
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">Recursos</h1>
           <p className="text-on-surface-variant max-w-2xl">
-            Material disponible para los jóvenes. Descarga y comparte los documentos oficiales, estudios y herramientas de UJELADEA.
+            Material disponible para los jóvenes. Visualiza o descarga los documentos oficiales, formularios, presentaciones y herramientas de UJELADEA.
           </p>
         </div>
 
@@ -89,16 +97,27 @@ export default function Resources() {
                     )}
                   </div>
                 </div>
-                <a
-                  href={featured.file_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  download
-                  className="flex-shrink-0 bg-primary-container hover:bg-primary-container/80 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all shadow-[0_0_20px_rgba(143,25,55,0.4)] hover:shadow-[0_0_30px_rgba(143,25,55,0.6)]"
-                >
-                  <span className="material-symbols-outlined">download</span>
-                  Descargar
-                </a>
+
+                {/* Acciones del recurso destacado */}
+                <div className="flex flex-wrap items-center gap-3 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setPreviewResource(featured)}
+                    className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-5 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    <span className="material-symbols-outlined text-[20px]">visibility</span>
+                    Ver recurso
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleDownload(featured)}
+                    className="bg-primary-container hover:bg-primary-container/80 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all shadow-[0_0_20px_rgba(143,25,55,0.4)] hover:shadow-[0_0_30px_rgba(143,25,55,0.6)] hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    <span className="material-symbols-outlined text-[20px]">download</span>
+                    Descargar
+                  </button>
+                </div>
               </div>
             </div>
           </section>
@@ -154,12 +173,25 @@ export default function Resources() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {resources.map(resource => (
-              <ResourceCard key={resource.id} resource={resource} />
+              <ResourceCard
+                key={resource.id}
+                resource={resource}
+                onPreview={(r) => setPreviewResource(r)}
+                onDownload={handleDownload}
+              />
             ))}
           </div>
         )}
 
       </main>
+
+      {/* Modal de Previsualización / Ver Recurso */}
+      <ResourcePreviewModal
+        resource={previewResource}
+        isOpen={!!previewResource}
+        onClose={() => setPreviewResource(null)}
+        onDownload={handleDownload}
+      />
     </PageShell>
   );
 }
