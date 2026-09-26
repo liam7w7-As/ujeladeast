@@ -5,8 +5,18 @@ export default function UpdatePrompt() {
     needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker,
   } = useRegisterSW({
-    onRegistered(r) {
-      console.log('SW Registered:', r);
+    onRegistered(registration) {
+      if (registration) {
+        // Chequear actualización cada 30 segundos
+        setInterval(() => {
+          registration.update();
+        }, 30 * 1000);
+
+        // Chequear actualización al volver a la pestaña
+        window.addEventListener('focus', () => {
+          registration.update();
+        });
+      }
     },
     onRegisterError(error) {
       console.log('SW registration error', error);
