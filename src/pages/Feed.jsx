@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'motion/react';
 import PageShell from '../components/layout/PageShell';
 import PostCard from '../components/ui/PostCard';
 import CreatePostModal from '../components/ui/CreatePostModal';
@@ -167,12 +168,18 @@ export default function Feed() {
         <aside className="col-span-1 lg:col-span-3 hidden lg:block">
         </aside>
 
-        <button 
+        {/* Botón flotante para crear publicación — separado y posicionado arriba del widget del chatbot */}
+        <motion.button 
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={handleOpenModal}
-          className="fixed bottom-24 right-8 md:bottom-8 md:right-8 w-14 h-14 bg-primary-container text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(143,25,55,0.4)] hover:shadow-[0_0_30px_rgba(143,25,55,0.6)] hover:bg-[#a61d40] transition-all duration-300 z-40 group hover:-translate-y-1"
+          className="fixed bottom-24 right-6 md:bottom-24 md:right-6 h-12 md:h-12 px-4 md:px-5 bg-gradient-to-r from-primary to-[#a61d40] text-white rounded-full flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(143,25,55,0.45)] hover:shadow-[0_4px_28px_rgba(143,25,55,0.7)] transition-all duration-300 z-40 group border border-white/10"
+          title="Crear publicación"
+          aria-label="Crear publicación"
         >
-          <span className="material-symbols-outlined text-[28px] group-hover:rotate-90 transition-transform duration-300">add</span>
-        </button>
+          <span className="material-symbols-outlined text-[20px] group-hover:rotate-90 transition-transform duration-300">edit_square</span>
+          <span className="font-semibold text-xs sm:text-sm tracking-wide">Publicar</span>
+        </motion.button>
 
       </main>
 
