@@ -1,163 +1,53 @@
-import { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { modalBackdrop, modalContent } from '../../lib/animations';
+import { useEffect, useRef, useState } from 'react';
+import { ImagePlus, LoaderCircle, Send, X } from 'lucide-react';
+import AppDialog from './AppDialog';
+import ProfileAvatar from './ProfileAvatar';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function CreatePostModal({ isOpen, onClose, onSubmit, isSubmitting }) {
+  const { user, profile } = useAuth();
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('Reflexiones');
   const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const fileInputRef = useRef(null);
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
+  const [imageUrl, setImageUrl] = useState('');
+  const [preview, setPreview] = useState(null);
+  const [error, setError] = useState('');
+  const inputRef = useRef(null);
+  const lock = useRef(false);
+  useEffect(() => () => { if (preview) URL.revokeObjectURL(preview); }, [preview]);
+  const chooseImage = event => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type) || file.size > 10 * 1024 * 1024) {
+      setError('Elige una imagen JPG, PNG, WebP o GIF de hasta 10 MB.');
+      event.target.value = '';
+      return;
     }
+    setError(''); setImageFile(file); setImageUrl(''); setPreview(URL.createObjectURL(file));
   };
-
-  const handleRemoveImage = () => {
-    setImageFile(null);
-    setImagePreview(null);
-    if (fileInputRef.current) fileInputRef.current.value = '';
+  const submit = async event => {
+    event.preventDefault();
+    if (lock.current || isSubmitting || !content.trim()) return;
+    if (imageUrl && !/^https:\/\//i.test(imageUrl)) { setError('El enlace de la imagen debe comenzar con https://.'); return; }
+    lock.current = true;
+    setError('');
+    try {
+      await onSubmit(content.trim(), imageFile || imageUrl || null, category);
+      setContent(''); setCategory('Reflexiones'); setImageFile(null); setPreview(null); setImageUrl('');
+    } catch (err) { setError(err.message || 'No se pudo publicar. Tu borrador se conserva.'); }
+    finally { lock.current = false; }
   };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!content.trim()) return;
-    await onSubmit(content, imageFile, category);
-    // Reset internal state
-    setContent('');
-    setCategory('Reflexiones');
-    setImageFile(null);
-    setImagePreview(null);
-  };
-
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop */}
-          <motion.div 
-            variants={modalBackdrop}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            className="absolute inset-0 bg-black/70 backdrop-blur-md"
-            onClick={onClose}
-          />
-
-          {/* Modal */}
-          <motion.div 
-            variants={modalContent}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            className="relative w-full max-w-lg bg-[#0e0e10] border border-[#27272a] rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between p-5 border-b border-[#27272a]">
-              <h2 className="text-xl font-bold text-white">Crear publicación</h2>
-              <motion.button 
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={onClose}
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <span className="material-symbols-outlined">close</span>
-              </motion.button>
-            </div>
-
-            {/* Body */}
-            <form onSubmit={handleSubmit} className="p-5 flex flex-col gap-4 overflow-y-auto">
-              <div>
-                <select 
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="bg-[#18181b] border border-[#27272a] text-sm text-gray-300 rounded-lg p-2 focus:outline-none focus:border-[#8f1937]"
-                >
-                  <option value="Reflexiones">Reflexión</option>
-                  <option value="Devocionales">Devocional</option>
-                  <option value="Anuncios">Anuncio</option>
-                </select>
-              </div>
-
-              <textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="¿Qué quieres compartir con la comunidad?"
-                className="w-full bg-transparent border-none text-white text-base resize-none focus:outline-none min-h-[120px] placeholder-gray-500"
-                required
-              />
-
-              {imagePreview && (
-                <div className="relative rounded-lg overflow-hidden border border-[#27272a] bg-black">
-                  <img src={imagePreview} alt="Preview" className="w-full h-auto max-h-64 object-contain" />
-                  <button 
-                    type="button"
-                    onClick={handleRemoveImage}
-                    className="absolute top-2 right-2 w-8 h-8 bg-black/50 hover:bg-black/80 rounded-full flex items-center justify-center text-white backdrop-blur-md transition-colors"
-                  >
-                    <span className="material-symbols-outlined text-[18px]">close</span>
-                  </button>
-                </div>
-              )}
-              
-              {!imagePreview && (
-                <div className="flex rounded-lg overflow-hidden border border-[#27272a] bg-[#18181b]">
-                  <input 
-                    type="url"
-                    placeholder="O pega el link de una imagen..."
-                    value={typeof imageFile === 'string' ? imageFile : ''}
-                    onChange={(e) => {
-                      setImageFile(e.target.value);
-                      setImagePreview(e.target.value);
-                    }}
-                    className="w-full bg-transparent border-none text-sm text-gray-300 p-3 focus:outline-none placeholder-gray-600"
-                  />
-                </div>
-              )}
-            </form>
-
-            {/* Footer */}
-            <div className="p-4 border-t border-[#27272a] flex items-center justify-between bg-[#09090b]">
-              <div className="flex items-center gap-2">
-                <motion.button 
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  type="button"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="px-3 py-2 rounded-lg bg-[#18181b] border border-[#27272a] hover:bg-[#27272a] flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
-                >
-                  <span className="material-symbols-outlined text-[18px]">upload</span> Subir Foto
-                </motion.button>
-                <input 
-                  type="file" 
-                  ref={fileInputRef} 
-                  onChange={handleImageChange} 
-                  accept="image/*" 
-                  className="hidden" 
-                />
-              </div>
-              <motion.button 
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
-                onClick={handleSubmit}
-                disabled={isSubmitting || !content.trim()}
-                className="px-6 py-2.5 bg-gradient-to-r from-[#8f1937] to-[#a81c40] disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl font-semibold shadow-lg shadow-[#8f1937]/30 transition-all flex items-center gap-2"
-              >
-                {isSubmitting ? (
-                  <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                ) : (
-                  'Publicar'
-                )}
-              </motion.button>
-            </div>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
-  );
+  return <AppDialog open={isOpen} onClose={onClose} title="Crear publicación" busy={isSubmitting}>
+    <form onSubmit={submit} className="flex min-h-0 flex-col">
+      <div className="space-y-5 overflow-y-auto px-4 py-5 sm:px-6">
+        <div className="flex items-center gap-3"><ProfileAvatar profile={profile} metadata={user?.user_metadata} /><div className="min-w-0"><p className="text-sm font-semibold break-words">{profile?.full_name || user?.user_metadata?.full_name || 'Tu publicación'}</p><p className="text-xs text-[#a7aaa9] mt-1">Comunidad UJELADEA</p></div></div>
+        <label className="block text-xs text-[#a7aaa9]">Categoría<select disabled={isSubmitting} value={category} onChange={event => setCategory(event.target.value)} className="mt-2 block rounded-lg border border-white/15 bg-[#222629] px-3 py-2 text-sm text-white"><option>Reflexiones</option><option>Devocionales</option><option>Anuncios</option></select></label>
+        <textarea aria-label="Contenido de la publicación" autoFocus disabled={isSubmitting} required maxLength={5000} value={content} onChange={event => setContent(event.target.value)} placeholder="¿Qué quieres compartir con la comunidad?" className="block min-h-36 w-full resize-y rounded-lg border border-white/10 bg-transparent p-3 text-sm leading-7 text-white outline-none placeholder:text-[#858c88] focus:border-[#d48b9a]" />
+        {imageFile && preview && <div className="relative rounded-lg bg-black overflow-hidden"><img src={preview} alt="Vista previa de tu imagen" className="max-h-64 w-full object-contain" /><button type="button" aria-label="Quitar imagen" disabled={isSubmitting} onClick={() => { setImageFile(null); setPreview(null); if (inputRef.current) inputRef.current.value = ''; }} className="absolute right-2 top-2 bg-black/75 rounded-lg p-2"><X size={18} /></button></div>}
+        {!imageFile && <label className="block text-xs text-[#a7aaa9]">Enlace de imagen (opcional)<input type="url" disabled={isSubmitting} placeholder="https://" value={imageUrl} onChange={event => setImageUrl(event.target.value)} className="mt-2 block w-full rounded-lg border border-white/10 bg-[#222629] px-3 py-2 text-sm text-white outline-none focus:border-[#d48b9a]" /></label>}
+        {error && <p role="alert" className="text-sm text-red-300">{error}</p>}
+      </div>
+      <footer className="flex shrink-0 items-center justify-between gap-2 border-t border-white/10 px-4 py-3 sm:px-6"><button type="button" disabled={isSubmitting} onClick={() => inputRef.current?.click()} className="flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm text-[#bdc9c3] hover:bg-white/5"><ImagePlus size={18} /><span>Foto</span></button><input ref={inputRef} onChange={chooseImage} type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="hidden" aria-label="Subir imagen" /><button type="submit" disabled={isSubmitting || !content.trim()} className="flex min-h-11 items-center gap-2 rounded-lg bg-[#a92d4a] px-4 text-sm font-semibold text-white disabled:opacity-40">{isSubmitting ? <LoaderCircle size={17} className="animate-spin" /> : <Send size={17} />}{isSubmitting ? 'Publicando...' : 'Publicar'}</button></footer>
+    </form>
+  </AppDialog>;
 }
-

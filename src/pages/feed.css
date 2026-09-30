@@ -1,0 +1,79 @@
+.community-feed { background: #101214; min-height: 100vh; color: #eeefed; letter-spacing: 0; }
+.community-feed .feed-layout { width: min(1120px, 100%); margin: 0 auto; padding: 112px 24px 96px; }
+.feed-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 28px; }
+.feed-heading h1 { font-size: 30px; line-height: 1.2; font-weight: 700; }
+.feed-heading p { color: #a7aaa9; font-size: 14px; margin-top: 8px; }
+.feed-columns { display: grid; grid-template-columns: minmax(0, 700px) minmax(220px, 1fr); gap: 40px; align-items: start; }
+.feed-stream, .feed-sidebar { min-width: 0; }
+.feed-compose { display: flex; align-items: center; gap: 12px; width: 100%; padding: 17px 20px; background: #1a1d20; border: 1px solid #ffffff12; border-radius: 8px; text-align: left; }
+.feed-compose:hover { border-color: #ffffff35; }
+.feed-compose-copy { flex: 1; min-width: 0; color: #d1d4d0; font-size: 14px; }
+.feed-compose-copy small { display: block; color: #a5aaa8; font-size: 12px; margin-top: 3px; }
+.feed-tabs { display: flex; min-width: 0; overflow-x: auto; border-bottom: 1px solid #ffffff16; gap: 24px; margin: 18px 0; scrollbar-width: thin; }
+.feed-tabs button { flex-shrink: 0; padding: 15px 0 13px; border-bottom: 2px solid transparent; color: #a7aaa9; font-size: 13px; font-weight: 500; }
+.feed-tabs button[aria-pressed='true'] { color: #ffc0c8; border-color: #e57e91; }
+.feed-posts { display: flex; flex-direction: column; gap: 18px; }
+.feed-post { min-width: 0; background: #1a1d20; border: 1px solid #ffffff13; border-radius: 8px; scroll-margin-top: 110px; }
+.feed-post-header { display: flex; align-items: flex-start; gap: 12px; padding: 20px 20px 14px; }
+.feed-post-author { flex: 1; min-width: 0; }
+.feed-post-author h2 { font-size: 14px; line-height: 1.4; font-weight: 600; overflow-wrap: anywhere; }
+.feed-post-author p { display: flex; flex-wrap: wrap; gap: 4px 8px; color: #a9aeab; font-size: 11px; line-height: 1.6; margin-top: 3px; }
+.feed-post-author p span { overflow-wrap: anywhere; }
+.feed-category { display: inline-flex; align-items: center; gap: 5px; font-size: 10px; line-height: 1.4; font-weight: 500; color: #aecfc4; padding: 4px 7px; border: 1px solid #aecfc426; border-radius: 4px; max-width: 105px; overflow-wrap: anywhere; }
+.feed-category[data-category='anuncio'] { color: #e8cb8d; border-color: #e8cb8d30; }
+.feed-category[data-category='devocional'] { color: #c2bded; border-color: #c2bded30; }
+.feed-post-body { padding: 0 20px 16px; font-family: var(--font-inter); font-size: 15px; line-height: 1.75; overflow-wrap: anywhere; white-space: pre-wrap; }
+.feed-post-media { display: block; width: 100%; background: #111315; border-top: 1px solid #ffffff08; border-bottom: 1px solid #ffffff08; }
+.feed-post-media img { display: block; width: 100%; height: auto; max-height: 580px; object-fit: contain; }
+.feed-post-actions { display: grid; grid-template-columns: 1fr 1fr 1fr; padding: 7px 10px; gap: 4px; }
+.feed-action { display: flex; justify-content: center; align-items: center; gap: 8px; min-height: 44px; width: 100%; padding: 8px 4px; font-size: 12px; color: #b8beb9; border-radius: 6px; }
+.feed-action:hover { background: #ffffff06; color: #eeefed; }
+.feed-action[aria-pressed='true'] { color: #ffabbc; }
+.feed-action:disabled { opacity: .65; cursor: wait; }
+.feed-action svg { flex-shrink: 0; }
+.feed-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 42px; padding: 10px 16px; border-radius: 6px; background: #a92d4a; color: #fff; font-size: 13px; font-weight: 600; }
+.feed-primary:hover { background: #bb3657; }
+.feed-sidebar { position: sticky; top: 114px; }
+.feed-sidebar-section { padding: 0 0 24px; margin-bottom: 24px; border-bottom: 1px solid #ffffff14; }
+.feed-sidebar h2 { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+.feed-sidebar-link { display: flex; align-items: center; gap: 12px; padding: 12px 0; font-size: 13px; }
+.feed-sidebar-link:hover { color: #ffb2ba; }
+.feed-sidebar-link small { display: block; margin-top: 3px; font-size: 11px; color: #a5aaa8; }
+.feed-sidebar-link > span { flex: 1; }
+.feed-sidebar-foot { display: flex; align-items: center; gap: 8px; color: #858e89; font-size: 11px; }
+.feed-comments { border-top: 1px solid #ffffff12; padding: 16px 20px 20px; }
+.feed-comment { display: flex; gap: 10px; padding: 12px 0; }
+.feed-comment-body { flex: 1; min-width: 0; }
+.feed-comment-heading { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
+.feed-comment-heading strong { font-size: 12px; overflow-wrap: anywhere; }
+.feed-comment-heading time { font-size: 10px; color: #99a29c; }
+.feed-comment-body p { font: 13px/1.65 var(--font-inter); color: #cdd1cd; white-space: pre-wrap; overflow-wrap: anywhere; margin-top: 4px; }
+.feed-empty { padding: 44px 20px; text-align: center; color: #a7aaa9; font-size: 14px; border: 1px dashed #ffffff22; border-radius: 8px; }
+.feed-feedback { padding: 16px; border-left: 2px solid #f59eab; color: #fecdd3; font-size: 13px; background: #9f123912; }
+@media (max-width: 959px) {
+  .community-feed .feed-layout { max-width: 748px; padding-top: 108px; }
+  .feed-columns { display: block; }
+  .feed-sidebar { display: none; }
+}
+@media (max-width: 540px) {
+  .community-feed .feed-layout { padding: 96px 12px 96px; }
+  .feed-heading { margin: 12px 4px 22px; align-items: flex-start; }
+  .feed-heading h1 { font-size: 25px; }
+  .feed-heading p { font-size: 12px; line-height: 1.6; max-width: 210px; }
+  .feed-heading .feed-primary { width: 42px; padding: 0; flex-shrink: 0; }
+  .feed-heading .feed-primary span { display: none; }
+  .feed-compose { padding: 14px; gap: 10px; }
+  .feed-compose-copy { font-size: 13px; }
+  .feed-compose-copy small { font-size: 11px; }
+  .feed-tabs { gap: 20px; margin: 10px 2px 14px; }
+  .feed-tabs button { font-size: 12px; }
+  .feed-posts { gap: 14px; }
+  .feed-post-header { padding: 16px 14px 12px; gap: 10px; flex-wrap: wrap; }
+  .feed-post-author { flex-basis: calc(100% - 52px); }
+  .feed-category { margin-left: 52px; margin-top: -6px; max-width: 100%; }
+  .feed-post-body { padding: 0 14px 14px; font-size: 14px; line-height: 1.75; }
+  .feed-post-actions { padding: 5px; gap: 0; }
+  .feed-action { font-size: 11px; gap: 5px; }
+  .feed-comments { padding: 12px 14px 16px; }
+}
+@media (prefers-reduced-motion: reduce) { .community-feed * { scroll-behavior: auto; } }

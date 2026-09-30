@@ -55,8 +55,6 @@ export default function AdminPosts() {
       await createPost(content, imageFileOrUrl, category);
       setIsModalOpen(false);
       await loadPosts();
-    } catch (err) {
-      alert(err.message || 'Error al publicar.');
     } finally {
       setIsSubmitting(false);
     }

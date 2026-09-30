@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { PROFILE_AVATARS } from '../lib/avatars';
+import { AlertCircle, Church, Eye, EyeOff, LockKeyhole, Mail, UserRound } from 'lucide-react';
 
 export default function Register() {
   const [fullName, setFullName] = useState('');
   const [churchName, setChurchName] = useState('');
+  const [gender, setGender] = useState('');
+  const [success, setSuccess] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -18,6 +22,7 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
 
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden.');
@@ -27,8 +32,9 @@ export default function Register() {
     setLoading(true);
     
     try {
-      await register(email, password, fullName, churchName);
-      navigate('/');
+      const data = await register(email, password, fullName, churchName, gender);
+      if (data.session) navigate('/feed');
+      else setSuccess('Revisa tu correo para confirmar tu cuenta. Tu avatar ya está seleccionado.');
     } catch (err) {
       setError(err.message || 'Error al registrar la cuenta.');
     } finally {
@@ -60,13 +66,22 @@ export default function Register() {
 
             {/* Register Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
+              <fieldset disabled={loading}>
+                <legend className="text-xs font-medium text-on-surface-variant mb-3">Tu perfil</legend>
+                <div className="grid grid-cols-2 gap-3">
+                  {Object.entries(PROFILE_AVATARS).map(([value, avatar]) => <label key={value} className={`flex cursor-pointer items-center gap-3 rounded-lg border p-3 transition-colors ${gender === value ? 'border-primary bg-primary-container/15' : 'border-white/10 bg-white/[0.02] hover:border-white/30'}`}>
+                    <input type="radio" required name="gender" value={value} checked={gender === value} onChange={() => setGender(value)} className="accent-[#b94363]" />
+                    <span className="flex min-w-0 flex-col items-center gap-2"><img src={avatar} alt="" className="h-14 w-14 rounded-full object-cover" /><span className="text-sm">{value === 'hombre' ? 'Hombre' : 'Mujer'}</span></span>
+                  </label>)}
+                </div>
+              </fieldset>
               
               {/* Full Name */}
               <div>
                 <label className="block text-xs font-medium text-on-surface-variant mb-1.5 uppercase tracking-wide" htmlFor="fullName">Nombre Completo</label>
                 <div className="relative group focus-within:border-secondary focus-within:shadow-[0_0_0_1px_rgba(143,25,55,0.2)] border border-[#27272a] rounded-md bg-glass-bg backdrop-blur-sm overflow-hidden transition-colors duration-300">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <span className="material-symbols-outlined text-on-surface-variant text-[18px]">person</span>
+                    <UserRound size={18} className="text-on-surface-variant" />
                   </div>
                   <input 
                     id="fullName" 
@@ -85,7 +100,7 @@ export default function Register() {
                 <label className="block text-xs font-medium text-on-surface-variant mb-1.5 uppercase tracking-wide" htmlFor="churchName">Iglesia</label>
                 <div className="relative group focus-within:border-secondary focus-within:shadow-[0_0_0_1px_rgba(143,25,55,0.2)] border border-[#27272a] rounded-md bg-glass-bg backdrop-blur-sm overflow-hidden transition-colors duration-300">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <span className="material-symbols-outlined text-on-surface-variant text-[18px]">church</span>
+                    <Church size={18} className="text-on-surface-variant" />
                   </div>
                   <input 
                     id="churchName" 
@@ -104,7 +119,7 @@ export default function Register() {
                 <label className="block text-xs font-medium text-on-surface-variant mb-1.5 uppercase tracking-wide" htmlFor="email">Correo Electrónico</label>
                 <div className="relative group focus-within:border-secondary focus-within:shadow-[0_0_0_1px_rgba(143,25,55,0.2)] border border-[#27272a] rounded-md bg-glass-bg backdrop-blur-sm overflow-hidden transition-colors duration-300">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <span className="material-symbols-outlined text-on-surface-variant text-[18px]">mail</span>
+                    <Mail size={18} className="text-on-surface-variant" />
                   </div>
                   <input 
                     id="email" 
@@ -123,7 +138,7 @@ export default function Register() {
                 <label className="block text-xs font-medium text-on-surface-variant mb-1.5 uppercase tracking-wide" htmlFor="password">Contraseña</label>
                 <div className="relative group focus-within:border-secondary focus-within:shadow-[0_0_0_1px_rgba(143,25,55,0.2)] border border-[#27272a] rounded-md bg-glass-bg backdrop-blur-sm overflow-hidden transition-colors duration-300">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <span className="material-symbols-outlined text-on-surface-variant text-[18px]">lock</span>
+                    <LockKeyhole size={18} className="text-on-surface-variant" />
                   </div>
                   <input 
                     id="password" 
@@ -137,10 +152,11 @@ export default function Register() {
                   <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
                     <button 
                       type="button" 
+                      aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                       onClick={() => setShowPassword(!showPassword)}
                       className="text-on-surface-variant hover:text-on-surface focus:outline-none transition-colors duration-200"
                     >
-                      <span className="material-symbols-outlined text-[18px]">{showPassword ? 'visibility' : 'visibility_off'}</span>
+                      {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
                     </button>
                   </div>
                 </div>
@@ -151,7 +167,7 @@ export default function Register() {
                 <label className="block text-xs font-medium text-on-surface-variant mb-1.5 uppercase tracking-wide" htmlFor="confirmPassword">Confirmar Contraseña</label>
                 <div className="relative group focus-within:border-secondary focus-within:shadow-[0_0_0_1px_rgba(143,25,55,0.2)] border border-[#27272a] rounded-md bg-glass-bg backdrop-blur-sm overflow-hidden transition-colors duration-300">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <span className="material-symbols-outlined text-on-surface-variant text-[18px]">lock_clock</span>
+                    <LockKeyhole size={18} className="text-on-surface-variant" />
                   </div>
                   <input 
                     id="confirmPassword" 
@@ -166,9 +182,10 @@ export default function Register() {
               </div>
 
               {/* Error Message */}
+              {success && <p role="status" className="rounded-lg border border-emerald-400/30 bg-emerald-400/10 p-3 text-sm text-emerald-200">{success}</p>}
               {error && (
-                <div className="text-[#8f1937] text-xs font-medium mt-1 bg-[#8f1937]/10 border border-[#8f1937]/30 p-2.5 rounded-md flex items-start gap-2">
-                  <span className="material-symbols-outlined text-[16px]">error</span>
+                <div role="alert" className="text-red-300 text-xs font-medium mt-1 bg-[#8f1937]/10 border border-[#8f1937]/30 p-2.5 rounded-md flex items-start gap-2">
+                  <AlertCircle size={16} className="shrink-0" />
                   <span>{error}</span>
                 </div>
               )}
@@ -176,7 +193,7 @@ export default function Register() {
               {/* Submit Button */}
               <button 
                 type="submit" 
-                disabled={loading}
+                disabled={loading || !!success}
                 className="w-full flex justify-center items-center py-2.5 px-4 mt-2 border border-transparent rounded-md shadow-sm text-sm text-white bg-primary-container hover:bg-[#a81c40] hover:shadow-[0_0_15px_rgba(143,25,55,0.4)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-container focus:ring-offset-[#09090b] transition-all duration-300 font-medium disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {loading ? (

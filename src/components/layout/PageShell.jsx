@@ -4,10 +4,10 @@ import Footer from './Footer'
 import Navbar from './Navbar'
 import { pageTransition } from '../../lib/animations'
 
-function PageShell({ activeItem = 'home', children, withFooter = true }) {
+function PageShell({ activeItem = 'home', children, withFooter = true, ambient = true, className = '' }) {
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-background text-on-background">
-      <AmbientBackground />
+    <div className={`relative min-h-screen overflow-x-hidden bg-background text-on-background ${className}`}>
+      {ambient && <AmbientBackground />}
       <Navbar activeItem={activeItem} />
       <motion.div
         variants={pageTransition}

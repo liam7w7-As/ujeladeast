@@ -1,14 +1,17 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from './useAuth';
+import { postCategory } from '../lib/feed';
 
 export function usePosts() {
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const fetchId = useRef(0);
   const [error, setError] = useState(null);
   const { user } = useAuth();
 
   const getPosts = useCallback(async (category = 'Todos') => {
+    const request = ++fetchId.current;
     setLoading(true);
     setError(null);
     try {
@@ -52,12 +55,12 @@ export function usePosts() {
         }));
       }
 
-      setPosts(finalPosts);
+      if (request === fetchId.current) setPosts(finalPosts);
     } catch (err) {
-      setError(err.message);
+      if (request === fetchId.current) setError(err.message);
       console.error('Error fetching posts:', err);
     } finally {
-      setLoading(false);
+      if (request === fetchId.current) setLoading(false);
     }
   }, [user]);
 
@@ -88,10 +91,8 @@ export function usePosts() {
         }
       }
 
-      let mappedCategory = 'reflexion';
-      if (category === 'Reflexiones') mappedCategory = 'reflexion';
-      if (category === 'Devocionales') mappedCategory = 'devocional';
-      if (category === 'Anuncios') mappedCategory = 'anuncio';
+      const selectedCategory = postCategory(category).id;
+      const mappedCategory = selectedCategory === 'otro' ? 'reflexion' : selectedCategory;
 
       const { error: insertError } = await supabase
         .from('posts')
@@ -122,7 +123,7 @@ export function usePosts() {
       // Update local state optimistically
       setPosts(currentPosts => currentPosts.map(post => {
         if (post.id === postId) {
-          return { ...post, likes_count: (post.likes_count || 0) + 1 };
+          return { ...post, isLiked: true, likes_count: (post.likes_count || 0) + (post.isLiked ? 0 : 1) };
         }
         return post;
       }));
@@ -145,7 +146,7 @@ export function usePosts() {
       // Update local state optimistically
       setPosts(currentPosts => currentPosts.map(post => {
         if (post.id === postId) {
-          return { ...post, likes_count: Math.max(0, (post.likes_count || 0) - 1) };
+          return { ...post, isLiked: false, likes_count: Math.max(0, (post.likes_count || 0) - (post.isLiked ? 1 : 0)) };
         }
         return post;
       }));
@@ -173,7 +174,7 @@ export function usePosts() {
     }
   };
 
-  const getComments = async (postId) => {
+  const getComments = useCallback(async (postId) => {
     try {
       const { data, error } = await supabase
         .from('post_comments')
@@ -191,9 +192,9 @@ export function usePosts() {
       return data || [];
     } catch (err) {
       console.error('Error fetching comments:', err);
-      return [];
+      throw err;
     }
-  };
+  }, []);
 
   const addComment = async (postId, content) => {
     if (!user) throw new Error('Debes iniciar sesión para comentar.');

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../../hooks/useAuth';
 import { useChat } from '../../hooks/useChat';
@@ -67,6 +67,7 @@ function TypingIndicator() {
 }
 
 export default function ChatWidget({ contextType: externalContextType, extraContext }) {
+  const { pathname } = useLocation();
   const { user, profile } = useAuth();
   const { messages, sending, error, createSession, sendMessage, currentSession, setError } = useChat();
 
@@ -146,6 +147,8 @@ export default function ChatWidget({ contextType: externalContextType, extraCont
       handleSend();
     }
   };
+
+  if (pathname === '/register' || pathname === '/login') return null;
 
   return (
     <>

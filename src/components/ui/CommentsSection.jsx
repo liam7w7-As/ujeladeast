@@ -1,147 +1,57 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { formatDistanceToNow } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Send, Trash2 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { usePosts } from '../../hooks/usePosts';
-import { useNavigate } from 'react-router-dom';
+import { postTime } from '../../lib/feed';
+import ProfileAvatar from './ProfileAvatar';
 
-export default function CommentsSection({ postId }) {
-  const { user } = useAuth();
+export default function CommentsSection({ postId, onCountChange }) {
+  const { user, profile } = useAuth();
   const { getComments, addComment, deleteComment } = usePosts();
-  const navigate = useNavigate();
-  
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const [retry, setRetry] = useState(0);
+  const lock = useRef(false);
   useEffect(() => {
-    loadComments();
-  }, [postId]);
+    let cancelled = false;
+    getComments(postId).then(data => { if (!cancelled) { setComments(data); setError(''); } })
+      .catch(() => { if (!cancelled) setError('No se pudieron cargar los comentarios.'); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [postId, getComments, retry]);
 
-  const loadComments = async () => {
-    setLoading(true);
-    const data = await getComments(postId);
-    setComments(data);
-    setLoading(false);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!user) {
-      navigate('/login');
-      return;
-    }
-    if (!content.trim()) return;
-
-    setSubmitting(true);
+  const submit = async event => {
+    event.preventDefault();
+    if (!user || !content.trim() || lock.current) return;
+    lock.current = true; setBusy(true); setError('');
     try {
-      const newComment = await addComment(postId, content.trim());
-      setComments([...comments, newComment]);
+      const comment = await addComment(postId, content.trim());
+      setComments(current => [...current, comment]);
+      onCountChange?.(comments.length + 1);
       setContent('');
-    } catch (error) {
-      console.error('Error al comentar:', error);
-    } finally {
-      setSubmitting(false);
-    }
+    } catch { setError('No se pudo enviar el comentario. Intenta nuevamente.'); }
+    finally { lock.current = false; setBusy(false); }
   };
-
-  const handleDelete = async (commentId) => {
-    if (!confirm('¿Seguro que deseas eliminar este comentario?')) return;
+  const remove = async id => {
+    if (lock.current || !window.confirm('¿Eliminar tu comentario?')) return;
+    lock.current = true; setBusy(true); setError('');
     try {
-      await deleteComment(commentId, postId);
-      setComments(comments.filter(c => c.id !== commentId));
-    } catch (error) {
-      console.error('Error al eliminar:', error);
-    }
+      await deleteComment(id, postId);
+      setComments(current => current.filter(comment => comment.id !== id));
+      onCountChange?.(Math.max(0, comments.length - 1));
+    } catch { setError('No se pudo eliminar el comentario.'); }
+    finally { lock.current = false; setBusy(false); }
   };
-
-  return (
-    <motion.div 
-      initial={{ opacity: 0, height: 0 }}
-      animate={{ opacity: 1, height: 'auto' }}
-      exit={{ opacity: 0, height: 0 }}
-      transition={{ duration: 0.35, ease: 'easeOut' }}
-      className="mt-4 pt-4 border-t border-white/5 overflow-hidden"
-    >
-      <div className="space-y-4 mb-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-        {loading ? (
-          <div className="text-center py-4 text-white/40 text-sm">Cargando comentarios...</div>
-        ) : comments.length === 0 ? (
-          <div className="text-center py-4 text-white/40 text-sm">No hay comentarios aún. ¡Sé el primero!</div>
-        ) : (
-          <AnimatePresence>
-            {comments.map((comment, index) => (
-              <motion.div 
-                key={comment.id}
-                initial={{ opacity: 0, y: 10, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.25, delay: index * 0.04 }}
-                className="flex gap-3 group"
-              >
-                <img 
-                  src={comment.profiles?.avatar_url || `https://ui-avatars.com/api/?name=${comment.profiles?.full_name}&background=8f1937&color=fff`}
-                  alt="Avatar" 
-                  className="w-8 h-8 rounded-full bg-white/10 shrink-0 object-cover"
-                />
-                <div className="flex-1 min-w-0">
-                  <div className="bg-white/5 hover:bg-white/[0.07] transition-colors rounded-2xl rounded-tl-none px-4 py-2.5 inline-block max-w-full">
-                    <div className="flex items-baseline gap-2 justify-between">
-                      <span className="font-semibold text-white text-sm truncate">
-                        {comment.profiles?.full_name || 'Usuario UJELADEA'}
-                      </span>
-                      <span className="text-[10px] text-white/40 shrink-0">
-                        {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true, locale: es })}
-                      </span>
-                    </div>
-                    <p className="text-white/80 text-sm break-words whitespace-pre-wrap mt-0.5">{comment.content}</p>
-                  </div>
-                  {user && user.id === comment.user_id && (
-                    <div className="mt-1 flex gap-3 px-2">
-                      <button 
-                        onClick={() => handleDelete(comment.id)}
-                        className="text-[11px] font-medium text-white/30 hover:text-red-400 transition-colors"
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        )}
-      </div>
-
-      <form onSubmit={handleSubmit} className="flex gap-3">
-        <img 
-          src={user?.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${user?.user_metadata?.full_name || 'U'}&background=8f1937&color=fff`}
-          alt="Tu avatar" 
-          className="w-8 h-8 rounded-full bg-white/10 shrink-0 object-cover"
-        />
-        <div className="relative flex-1">
-          <input
-            type="text"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder={user ? "Escribe un comentario..." : "Inicia sesión para comentar..."}
-            className="w-full bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#8f1937] transition-colors pr-10"
-            disabled={submitting}
-          />
-          <motion.button 
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            type="submit" 
-            disabled={!content.trim() || submitting}
-            className="absolute right-1 top-1 bottom-1 w-8 flex items-center justify-center text-[#8f1937] hover:bg-white/5 rounded-full transition-colors disabled:opacity-50 disabled:hover:bg-transparent"
-          >
-            <span className="material-symbols-outlined text-[20px]">send</span>
-          </motion.button>
-        </div>
-      </form>
-    </motion.div>
-  );
+  return <section className="feed-comments" aria-label="Comentarios">
+    <h3 className="text-xs font-semibold text-[#cad4cd] mb-2">Conversación</h3>
+    {loading ? <p role="status" className="py-4 text-xs text-[#a7aaa9]">Cargando comentarios...</p> : !error && comments.length === 0 && <p className="py-4 text-xs text-[#a7aaa9]">Sé el primero en comentar.</p>}
+    <div className="max-h-96 overflow-y-auto">{comments.map(comment => <div key={comment.id} className="feed-comment"><ProfileAvatar profile={comment.profiles} className="h-8 w-8" /><div className="feed-comment-body"><div className="feed-comment-heading"><strong>{comment.profiles?.full_name || 'Miembro de la comunidad'}</strong><time dateTime={comment.created_at}>{postTime(comment.created_at)}</time></div><p>{comment.content}</p></div>{user?.id === comment.user_id && <button type="button" disabled={busy} title="Eliminar comentario" aria-label="Eliminar comentario" onClick={() => remove(comment.id)} className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[#929c95] hover:text-red-300"><Trash2 size={14} /></button>}</div>)}</div>
+    {error && <p role="alert" className="my-3 text-xs text-red-300">{error}{!comments.length && <button type="button" onClick={() => { setLoading(true); setRetry(value => value + 1); }} className="ml-2 underline">Reintentar</button>}</p>}
+    {user ? <form onSubmit={submit} className="mt-4 flex items-start gap-2"><ProfileAvatar profile={profile} metadata={user.user_metadata} className="h-8 w-8" /><div className="flex flex-1 min-w-0 items-end gap-1 rounded-lg border border-white/15 bg-[#121618] p-1"><textarea aria-label="Escribe un comentario" placeholder="Escribe un comentario..." value={content} onChange={event => setContent(event.target.value)} rows={1} maxLength={2000} disabled={busy} className="max-h-40 min-h-9 min-w-0 flex-1 resize-y bg-transparent px-2 py-2 text-xs leading-5 outline-none" /><button type="submit" aria-label="Enviar comentario" title="Enviar comentario" disabled={busy || !content.trim()} className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[#ffc0c8] hover:bg-white/5 disabled:opacity-30"><Send size={17} /></button></div></form>
+      : <Link to="/login" className="mt-4 inline-block text-xs text-[#ffc0c8] underline underline-offset-4">Inicia sesión para comentar</Link>}
+  </section>;
 }
-

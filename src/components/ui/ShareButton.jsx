@@ -1,12 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
+import { Check, Copy, MessageCircle, Share2, ThumbsUp } from 'lucide-react';
 
-export default function ShareButton({ post }) {
+export default function ShareButton({ post, className = 'flex items-center gap-2 text-white/60 hover:text-white' }) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [error, setError] = useState('');
   const menuRef = useRef(null);
 
   const postUrl = `${window.location.origin}/feed?post=${post.id}`;
-  const shareText = `Mira esta publicación en UJELADEA: "${post.content.substring(0, 50)}..."`;
+  const shareText = `Mira esta publicación en UJELADEA: "${(post.content || '').substring(0, 80)}"`;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -14,8 +16,10 @@ export default function ShareButton({ post }) {
         setIsOpen(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    const escape = event => { if (event.key === 'Escape') setIsOpen(false); };
+    document.addEventListener('pointerdown', handleClickOutside);
+    document.addEventListener('keydown', escape);
+    return () => { document.removeEventListener('pointerdown', handleClickOutside); document.removeEventListener('keydown', escape); };
   }, []);
 
   const handleShareClick = async () => {
@@ -38,6 +42,7 @@ export default function ShareButton({ post }) {
   };
 
   const copyToClipboard = async () => {
+    setError('');
     try {
       await navigator.clipboard.writeText(postUrl);
       setCopied(true);
@@ -46,40 +51,42 @@ export default function ShareButton({ post }) {
         setIsOpen(false);
       }, 2000);
     } catch (err) {
+      setError('No se pudo copiar el enlace.');
       console.error('Failed to copy!', err);
     }
   };
 
   const shareWhatsApp = () => {
-    window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + postUrl)}`, '_blank');
+    window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + postUrl)}`, '_blank', 'noopener,noreferrer');
     setIsOpen(false);
   };
 
   const shareFacebook = () => {
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`, '_blank');
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`, '_blank', 'noopener,noreferrer');
     setIsOpen(false);
   };
 
   return (
     <div className="relative" ref={menuRef}>
       <button 
+        type="button"
+        aria-label="Compartir publicación"
+        aria-expanded={isOpen}
         onClick={handleShareClick}
-        className="flex items-center gap-2 text-white/50 hover:text-[#8f1937] transition-colors"
+        className={className}
       >
-        <span className="material-symbols-outlined text-[20px]">share</span>
+        <Share2 size={18} />
         <span className="text-xs font-medium">Compartir</span>
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 bottom-full mb-2 w-48 bg-[#1a1a1f] border border-white/10 rounded-xl shadow-xl overflow-hidden animate-in zoom-in-95 fade-in z-10">
+        <div className="absolute right-0 bottom-full mb-2 w-48 bg-[#25292c] border border-white/15 rounded-lg shadow-xl overflow-hidden z-20">
           <div className="p-1 flex flex-col">
             <button 
               onClick={copyToClipboard}
               className="flex items-center gap-3 px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-colors text-left"
             >
-              <span className="material-symbols-outlined text-[18px]">
-                {copied ? 'check' : 'content_copy'}
-              </span>
+              {copied ? <Check size={17} /> : <Copy size={17} />}
               {copied ? '¡Copiado!' : 'Copiar enlace'}
             </button>
             
@@ -87,7 +94,7 @@ export default function ShareButton({ post }) {
               onClick={shareWhatsApp}
               className="flex items-center gap-3 px-3 py-2 text-sm text-[#25D366] hover:bg-[#25D366]/10 rounded-lg transition-colors text-left"
             >
-              <span className="material-symbols-outlined text-[18px]">forum</span>
+              <MessageCircle size={17} />
               WhatsApp
             </button>
             
@@ -95,9 +102,10 @@ export default function ShareButton({ post }) {
               onClick={shareFacebook}
               className="flex items-center gap-3 px-3 py-2 text-sm text-[#1877F2] hover:bg-[#1877F2]/10 rounded-lg transition-colors text-left"
             >
-              <span className="material-symbols-outlined text-[18px]">thumb_up</span>
+              <ThumbsUp size={17} />
               Facebook
             </button>
+            {error && <p role="alert" className="px-3 py-2 text-xs text-red-300">{error}</p>}
           </div>
         </div>
       )}

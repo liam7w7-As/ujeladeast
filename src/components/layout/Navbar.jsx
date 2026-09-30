@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'motion/react'
 import Button from '../ui/Button'
 import { useAuth } from '../../hooks/useAuth'
 import NotificationBell from '../ui/NotificationBell'
+import { HeartHandshake, LogOut, Menu, X } from 'lucide-react'
+import ProfileAvatar from '../ui/ProfileAvatar'
 
 const navItems = [
   { label: 'Inicio', href: '/', id: 'home' },
@@ -19,7 +21,7 @@ function Navbar({ activeItem = 'home' }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <nav className={`fixed left-0 right-0 top-0 z-50 mx-auto mt-6 flex w-[calc(100%-32px)] flex-col border border-surface-border bg-glass-bg px-6 shadow-2xl backdrop-blur-2xl transition-all duration-300 lg:max-w-[1280px] md:w-max ${isMenuOpen ? 'rounded-2xl py-4' : 'rounded-full py-3'}`}>
+    <nav className={`fixed left-0 right-0 top-0 z-50 mx-auto mt-3 sm:mt-5 flex w-[calc(100%-24px)] max-w-[1280px] flex-col border border-surface-border bg-glass-bg px-4 sm:px-6 shadow-2xl backdrop-blur-2xl transition-all duration-300 ${isMenuOpen ? 'rounded-2xl py-4 max-h-[calc(100dvh-24px)] overflow-y-auto' : 'rounded-full py-3'}`}>
       
       {/* Top Row: Logo & Desktop Menus & Mobile Toggle */}
       <div className="flex w-full items-center justify-between gap-4">
@@ -27,7 +29,7 @@ function Navbar({ activeItem = 'home' }) {
         {/* Logo */}
         <Link
           aria-label="UJELADEA inicio"
-          className="flex items-center gap-3 md:border-r border-surface-border md:pr-6 group"
+          className="flex items-center gap-3 xl:border-r border-surface-border xl:pr-6 group mr-auto xl:mr-0"
           to="/"
           onClick={() => setIsMenuOpen(false)}
         >
@@ -48,7 +50,7 @@ function Navbar({ activeItem = 'home' }) {
         </Link>
 
         {/* Desktop Links */}
-        <div className="hidden items-center gap-6 px-4 md:flex flex-grow justify-center">
+        <div className="hidden items-center gap-5 px-2 xl:flex flex-grow justify-center">
           {navItems.map((item) => {
             const isActive = item.id === activeItem
             return (
@@ -76,7 +78,7 @@ function Navbar({ activeItem = 'home' }) {
         </div>
 
         {/* Desktop Auth / User */}
-        <div className="hidden items-center gap-4 md:border-l border-surface-border md:pl-6 md:flex">
+        <div className="hidden items-center gap-4 xl:border-l border-surface-border xl:pl-4 xl:flex">
           {user ? (
             <div className="flex items-center gap-3">
               {/* Botón SOS / Apoyo Espiritual */}
@@ -87,10 +89,11 @@ function Navbar({ activeItem = 'home' }) {
                 style={{ color: '#c9a84c', borderColor: 'rgba(201,168,76,0.35)', background: 'rgba(201,168,76,0.08)' }}
                 title="Apoyo espiritual de UJELADITO"
               >
-                <span className="material-symbols-outlined text-[15px]">volunteer_activism</span>
+                <HeartHandshake size={16} />
                 SOS
               </Link>
               <div className="flex items-center gap-2 max-w-[120px] ml-2">
+                <ProfileAvatar profile={profile} metadata={user.user_metadata} className="h-8 w-8 shrink-0" />
                 <span className="font-label-sm text-sm text-on-surface truncate">
                   {profile?.full_name || user.email.split('@')[0]}
                 </span>
@@ -102,7 +105,7 @@ function Navbar({ activeItem = 'home' }) {
                 className="w-8 h-8 rounded-full bg-surface-container-high border border-surface-border flex items-center justify-center text-on-surface-variant hover:text-primary hover:border-primary/50 transition-colors"
                 title="Cerrar sesión"
               >
-                <span className="material-symbols-outlined text-[18px]">logout</span>
+                <LogOut size={18} />
               </motion.button>
             </div>
           ) : (
@@ -118,12 +121,12 @@ function Navbar({ activeItem = 'home' }) {
         {user && <NotificationBell />}
         <motion.button 
           whileTap={{ scale: 0.9 }}
-          className="md:hidden flex items-center justify-center text-on-surface w-10 h-10 rounded-full hover:bg-white/10 transition-colors"
+          className="xl:hidden flex shrink-0 items-center justify-center text-on-surface w-11 h-11 rounded-full hover:bg-white/10 transition-colors"
+          aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+          aria-expanded={isMenuOpen}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          <span className="material-symbols-outlined">
-            {isMenuOpen ? 'close' : 'menu'}
-          </span>
+          {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
         </motion.button>
 
       </div>
@@ -136,7 +139,7 @@ function Navbar({ activeItem = 'home' }) {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="overflow-hidden flex flex-col gap-4 mt-4 pt-4 border-t border-surface-border md:hidden"
+            className="flex flex-col gap-4 mt-4 pt-4 border-t border-surface-border xl:hidden"
           >
             <div className="flex flex-col gap-2">
               {navItems.map((item) => {
@@ -167,7 +170,7 @@ function Navbar({ activeItem = 'home' }) {
                 className="flex items-center gap-2 font-inter text-base font-semibold px-4 py-3 rounded-lg transition-colors border"
                 style={{ color: '#c9a84c', borderColor: 'rgba(201,168,76,0.25)', background: 'rgba(201,168,76,0.08)' }}
               >
-                <span className="material-symbols-outlined text-[20px]">volunteer_activism</span>
+                <HeartHandshake size={20} />
                 Apoyo Espiritual (SOS)
               </Link>
             )}
@@ -176,9 +179,7 @@ function Navbar({ activeItem = 'home' }) {
               {user ? (
                 <div className="flex items-center justify-between px-2">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-surface-container-high border border-surface-border flex items-center justify-center text-on-surface font-bold text-sm">
-                      {profile?.full_name?.charAt(0)?.toUpperCase() || user.email.charAt(0).toUpperCase()}
-                    </div>
+                    <ProfileAvatar profile={profile} metadata={user.user_metadata} className="h-10 w-10 shrink-0" />
                     <div className="flex flex-col">
                       <span className="font-label-sm text-sm text-on-surface truncate max-w-[150px]">
                         {profile?.full_name || user.email.split('@')[0]}
@@ -193,7 +194,7 @@ function Navbar({ activeItem = 'home' }) {
                     className="w-10 h-10 rounded-full bg-error/10 border border-error/30 flex items-center justify-center text-error hover:bg-error/20 transition-colors"
                     title="Cerrar sesión"
                   >
-                    <span className="material-symbols-outlined">logout</span>
+                    <LogOut size={20} />
                   </button>
                 </div>
               ) : (

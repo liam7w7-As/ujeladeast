@@ -1,151 +1,57 @@
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useEffect, useRef, useState } from 'react';
+import { Heart, MessageCircle } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { postCategory, postTime } from '../../lib/feed';
 import CommentsSection from './CommentsSection';
 import ShareButton from './ShareButton';
-import { useLocation } from 'react-router-dom';
+import ProfileAvatar from './ProfileAvatar';
+import AppDialog from './AppDialog';
 
-export default function PostCard({ id, profiles, created_at, content, image_url, likes_count, comments_count, category, isLiked, onToggleLike }) {
+export default function PostCard({ id, profiles, created_at, content, image_url, likes_count = 0, comments_count = 0, category, isLiked = false, onToggleLike }) {
   const { user } = useAuth();
-  const [localLike, setLocalLike] = useState(isLiked);
-  const [localCount, setLocalCount] = useState(likes_count || 0);
-  const [showComments, setShowComments] = useState(false);
-  const [isLiking, setIsLiking] = useState(false);
-  
+  const navigate = useNavigate();
   const location = useLocation();
+  const linked = new URLSearchParams(location.search).get('post') === String(id);
+  const [commentsOpen, setCommentsOpen] = useState(linked);
+  const [pendingLike, setPendingLike] = useState(null);
+  const [error, setError] = useState('');
+  const [expanded, setExpanded] = useState(false);
+  const [imageOpen, setImageOpen] = useState(false);
+  const [imageFailed, setImageFailed] = useState(false);
+  const [commentSnapshot, setCommentSnapshot] = useState(null);
   const postRef = useRef(null);
+  const likeLock = useRef(false);
+  const author = profiles?.full_name || 'Miembro de la comunidad';
+  const badge = postCategory(category);
+  const text = content || '';
+  const liked = pendingLike ?? isLiked;
+  const count = Math.max(0, likes_count + (pendingLike === null || pendingLike === isLiked ? 0 : pendingLike ? 1 : -1));
+  const commentCount = commentSnapshot?.base === comments_count ? commentSnapshot.count : comments_count;
 
-  const author = profiles?.full_name || 'Usuario';
-  const role = profiles?.church_name || 'Comunidad';
-  const avatar = profiles?.avatar_url || `https://ui-avatars.com/api/?name=${author}&background=8f1937&color=fff`;
-  
   useEffect(() => {
-    // Check if URL has ?post=id
-    const searchParams = new URLSearchParams(location.search);
-    if (searchParams.get('post') === id) {
-      setShowComments(true);
-      setTimeout(() => {
-        postRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 500);
-    }
-  }, [id, location.search]);
+    if (!linked) return;
+    const timer = setTimeout(() => { setCommentsOpen(true); postRef.current?.scrollIntoView({ block: 'start' }); }, 100);
+    return () => clearTimeout(timer);
+  }, [linked]);
 
-  // Format relative time
-  const time = (() => {
-    const diff = new Date() - new Date(created_at);
-    const minutes = Math.floor(diff / 60000);
-    if (minutes < 60) return `Hace ${minutes} min`;
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `Hace ${hours} horas`;
-    const days = Math.floor(hours / 24);
-    if (days === 1) return `Ayer`;
-    return `Hace ${days} días`;
-  })();
-
-  const handleLike = async () => {
-    if (!user) return;
-    const currentlyLiked = localLike;
-    setIsLiking(true);
-    setLocalLike(!currentlyLiked);
-    setLocalCount(prev => currentlyLiked ? Math.max(0, prev - 1) : prev + 1);
-    
-    try {
-      await onToggleLike(id, !currentlyLiked);
-    } catch (error) {
-      // Revert on error
-      setLocalLike(currentlyLiked);
-      setLocalCount(prev => currentlyLiked ? prev + 1 : Math.max(0, prev - 1));
-    } finally {
-      setTimeout(() => setIsLiking(false), 500);
-    }
+  const toggleLike = async () => {
+    if (!user) { navigate('/login'); return; }
+    if (likeLock.current) return;
+    likeLock.current = true;
+    setError(''); setPendingLike(!isLiked);
+    try { await onToggleLike(id, !isLiked); }
+    catch { setError('No se pudo guardar tu reacción. Intenta nuevamente.'); }
+    finally { likeLock.current = false; setPendingLike(null); }
   };
 
-  const isImageCard = !!image_url;
-  const displayCategory = category === 'reflexion' ? 'Reflexión' : category === 'devocional' ? 'Devocional' : 'Anuncio';
-
-  return (
-    <motion.article 
-      ref={postRef} 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="bg-glass-bg border border-surface-border rounded-xl p-6 backdrop-blur-xl hover:border-primary-container/40 transition-colors duration-300 scroll-mt-24"
-    >
-      {/* Post Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-full overflow-hidden border border-surface-border shrink-0">
-            <img alt={`Avatar de ${author}`} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" src={avatar} />
-          </div>
-          <div className="min-w-0">
-            <h4 className="font-headline-md text-[18px] leading-tight text-on-surface truncate">{author}</h4>
-            <p className="font-label-sm text-label-sm text-on-surface-variant mt-1 flex items-center gap-2 truncate">
-              <span className="truncate">{role}</span>
-              <span className="w-1 h-1 rounded-full bg-surface-variant shrink-0"></span>
-              <span className="shrink-0">{time}</span>
-            </p>
-          </div>
-        </div>
-        <button className="text-on-surface-variant hover:text-on-surface p-1 rounded-full hover:bg-white/5 transition-colors shrink-0">
-          <span className="material-symbols-outlined">more_vert</span>
-        </button>
-      </div>
-
-      {/* Post Content */}
-      <div className={isImageCard ? "mb-4" : "mb-6"}>
-        <p className="font-body-md text-body-md text-on-surface leading-relaxed whitespace-pre-wrap mb-4">{content}</p>
-        
-        {isImageCard && (
-          <div className="w-full h-64 md:h-80 rounded-lg overflow-hidden border border-surface-border relative group">
-            <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent z-10"></div>
-            <img alt="Contenido" className="w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-700" src={image_url} />
-          </div>
-        )}
-      </div>
-
-      {/* Post Actions */}
-      <div className="flex items-center justify-between pt-4 border-t border-surface-border/50">
-        <div className="flex gap-4">
-          <motion.button 
-            whileTap={{ scale: 0.85 }}
-            onClick={handleLike}
-            className={`flex items-center gap-2 transition-colors group ${localLike ? 'text-primary' : 'text-on-surface-variant hover:text-primary'}`}>
-            <motion.span 
-              animate={isLiking ? { scale: [1, 1.45, 0.9, 1.1, 1] } : { scale: 1 }}
-              transition={{ duration: 0.45 }}
-              className="material-symbols-outlined select-none" 
-              style={localLike ? { fontVariationSettings: "'FILL' 1" } : {}}
-            >
-              favorite
-            </motion.span>
-            <span className="font-label-sm text-label-sm">{localCount}</span>
-          </motion.button>
-          
-          <motion.button 
-            whileTap={{ scale: 0.88 }}
-            onClick={() => setShowComments(!showComments)}
-            className={`flex items-center gap-2 transition-colors group ${showComments ? 'text-secondary' : 'text-on-surface-variant hover:text-secondary'}`}
-          >
-            <span className="material-symbols-outlined select-none" style={showComments ? { fontVariationSettings: "'FILL' 1" } : {}}>chat_bubble</span>
-            <span className="font-label-sm text-label-sm">{comments_count || 0}</span>
-          </motion.button>
-          
-          <ShareButton post={{ id, content }} />
-        </div>
-        <div className="flex items-center shrink-0 ml-2">
-          <span className={`px-2 py-1 border rounded text-[10px] font-label-sm uppercase tracking-wider ${category === 'anuncio' ? 'border-secondary/20 bg-secondary/5 text-secondary' : 'border-primary/20 bg-primary/5 text-primary'}`}>
-            {displayCategory}
-          </span>
-        </div>
-      </div>
-
-      {/* Comments Section with AnimatePresence */}
-      <AnimatePresence>
-        {showComments && (
-          <CommentsSection postId={id} />
-        )}
-      </AnimatePresence>
-    </motion.article>
-  )
+  return <article ref={postRef} className="feed-post" aria-label={`Publicación de ${author}`}>
+    <header className="feed-post-header"><ProfileAvatar profile={profiles} className="h-[42px] w-[42px]" /><div className="feed-post-author"><h2>{author}</h2><p><span>{profiles?.church_name || 'Comunidad UJELADEA'}</span><span aria-hidden="true">·</span><time dateTime={created_at}>{postTime(created_at)}</time></p></div><span className="feed-category" data-category={badge.id}>{badge.label}</span></header>
+    {text && <div className="feed-post-body"><p>{!expanded && text.length > 550 ? `${text.slice(0, 550)}…` : text}</p>{text.length > 550 && <button type="button" onClick={() => setExpanded(value => !value)} aria-expanded={expanded} className="mt-2 text-sm text-[#ffc0c8] hover:underline">{expanded ? 'Ver menos' : 'Seguir leyendo'}</button>}</div>}
+    {image_url && (imageFailed ? <p className="px-4 py-8 text-center text-sm text-[#a5aaa8]">No se pudo cargar la imagen.</p> : <button type="button" className="feed-post-media" onClick={() => setImageOpen(true)} aria-label="Ampliar imagen de la publicación"><img src={image_url} alt={`Imagen de la publicación de ${author}`} loading="lazy" decoding="async" onError={() => setImageFailed(true)} /></button>)}
+    <div className="feed-post-actions"><button type="button" onClick={toggleLike} disabled={pendingLike !== null} aria-pressed={liked} aria-label={liked ? 'Quitar me gusta' : 'Me gusta'} className="feed-action"><Heart size={18} fill={liked ? 'currentColor' : 'none'} /><span>{count > 0 ? count : 'Me gusta'}</span></button><button type="button" onClick={() => setCommentsOpen(value => !value)} aria-expanded={commentsOpen} className="feed-action"><MessageCircle size={18} /><span>{commentCount > 0 ? `${commentCount} ${commentCount === 1 ? 'comentario' : 'comentarios'}` : 'Comentar'}</span></button><ShareButton post={{ id, content: text }} className="feed-action" /></div>
+    {error && <p role="alert" className="mx-4 mb-4 text-xs text-red-300">{error}</p>}
+    {commentsOpen && <CommentsSection postId={id} onCountChange={total => setCommentSnapshot({ base: comments_count, count: total })} />}
+    <AppDialog open={imageOpen} onClose={() => setImageOpen(false)} title={`Publicación de ${author}`} wide><div className="overflow-auto bg-black p-2"><img src={image_url} alt={`Imagen de la publicación de ${author}`} className="max-h-[calc(100dvh-110px)] w-full object-contain" /></div></AppDialog>
+  </article>;
 }
-
