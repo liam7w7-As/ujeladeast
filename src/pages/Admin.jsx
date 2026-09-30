@@ -1,7 +1,9 @@
 import Sidebar from '../components/layout/Sidebar';
 import { Link, Outlet } from 'react-router-dom';
 import { useState } from 'react';
-import { Bell, Menu, Search, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import AdminSearch from '../components/admin/AdminSearch';
+import NotificationBell from '../components/ui/NotificationBell';
 
 export default function Admin() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -15,21 +17,13 @@ export default function Admin() {
             <Link to="/" className="font-display-lg-mobile text-display-lg-mobile font-extrabold text-primary dark:text-primary tracking-tight">UJELADEA</Link>
             <span className="font-label-sm text-label-sm bg-primary-container text-white px-2 py-1 rounded border border-outline-variant uppercase tracking-wider ml-2 hidden md:inline-block">Admin</span>
           </div>
-          <div className="hidden md:flex items-center gap-6">
-            <div className="relative">
-              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" />
-              <input className="bg-surface-container-high border border-surface-border rounded-full py-2 pl-10 pr-4 text-body-md font-body-md text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary/50 w-64 transition-colors outline-none" placeholder="Buscar..." type="text"/>
-            </div>
-            <div className="flex items-center gap-4">
-              <button aria-label="Notificaciones" className="text-on-surface-variant hover:text-primary transition-colors relative">
-                <Bell size={20} />
-                <span className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
-              </button>
-            </div>
-          </div>
+          <div className="flex items-center gap-1 sm:gap-3">
+            <AdminSearch />
+            <NotificationBell admin />
           <button onClick={() => setMobileOpen(open => !open)} aria-expanded={mobileOpen} aria-label={mobileOpen ? 'Cerrar menú' : 'Abrir menú'} className="lg:hidden text-on-surface-variant p-2">
             {mobileOpen ? <X size={26} /> : <Menu size={26} />}
           </button>
+          </div>
         </div>
       </nav>
 

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import CreatePostModal from '../../components/ui/CreatePostModal';
 import { usePosts } from '../../hooks/usePosts';
+import { useAdminSearchQuery } from '../../hooks/useAdminSearchQuery';
 
 const CATEGORIES = ['Devocional', 'Estudio', 'Anuncio', 'Testimonio', 'Otro'];
 
@@ -12,7 +13,7 @@ export default function AdminPosts() {
   
   // Filters
   const [categoryFilter, setCategoryFilter] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useAdminSearchQuery();
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);

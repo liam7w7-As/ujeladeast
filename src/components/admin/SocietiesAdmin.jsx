@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { isValidMapsLink } from '../../lib/mapsHelper';
+import { useAdminSearchQuery } from '../../hooks/useAdminSearchQuery';
 
 const EMPTY_FORM = {
   name: '',
@@ -42,6 +43,7 @@ function InputField({ value, onChange, placeholder, type = 'text', error }) {
 }
 
 export default function SocietiesAdmin({ onSuccess }) {
+  const [searchQuery, setSearchQuery] = useAdminSearchQuery();
   const [form, setForm] = useState(EMPTY_FORM);
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
@@ -51,6 +53,7 @@ export default function SocietiesAdmin({ onSuccess }) {
   const [editing, setEditing] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const filteredSocieties = societies.filter(society => society.name?.toLowerCase().includes(searchQuery.toLowerCase()));
 
   // Photo upload state
   const [photoMode, setPhotoMode] = useState('url'); // 'url' | 'file'
@@ -429,6 +432,7 @@ export default function SocietiesAdmin({ onSuccess }) {
       )}
 
       {/* Lista de sociedades */}
+      <label className="block text-sm text-on-surface-variant">Buscar sociedades<input type="search" value={searchQuery} onChange={event => setSearchQuery(event.target.value)} className="mt-1 block w-full bg-surface-container border border-surface-border rounded-lg px-3 py-2 text-white" /></label>
       <div className="glass-card rounded-2xl overflow-hidden">
         <div className="p-5 border-b border-surface-border flex justify-between items-center">
           <h3 className="font-semibold text-white flex items-center gap-2">
@@ -448,14 +452,14 @@ export default function SocietiesAdmin({ onSuccess }) {
           <div className="flex justify-center p-10">
             <div className="w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
           </div>
-        ) : societies.length === 0 ? (
+        ) : filteredSocieties.length === 0 ? (
           <div className="p-10 text-center">
             <span className="material-symbols-outlined text-4xl text-on-surface-variant/30 block mb-3">church</span>
-            <p className="text-sm text-on-surface-variant">No hay sociedades aún. Crea la primera con el botón de arriba.</p>
+            <p className="text-sm text-on-surface-variant">{searchQuery ? 'No hay sociedades que coincidan con la búsqueda.' : 'No hay sociedades aún. Crea la primera con el botón de arriba.'}</p>
           </div>
         ) : (
           <div className="divide-y divide-surface-border/50">
-            {societies.map((s) => (
+            {filteredSocieties.map((s) => (
               <div key={s.id} className="flex items-center gap-4 p-4 hover:bg-white/3 transition-colors group">
                 {/* Foto miniatura */}
                 <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 bg-surface-container flex items-center justify-center border border-surface-border">

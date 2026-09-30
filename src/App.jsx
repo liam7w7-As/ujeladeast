@@ -29,6 +29,8 @@ import AdminPosts from './pages/admin/AdminPosts'
 import AdminHymnal from './pages/admin/AdminHymnal'
 import AdminStudies from './pages/admin/AdminStudies'
 import AdminStudyTracking from './pages/admin/AdminStudyTracking'
+import AdminNotifications from './pages/admin/AdminNotifications'
+import AdminSearchResults from './pages/admin/AdminSearchResults'
 
 function App() {
   return (
@@ -61,6 +63,8 @@ function App() {
             <Route path="himnario" element={<AdminHymnal />} />
             <Route path="estudios" element={<AdminStudies />} />
             <Route path="seguimiento" element={<AdminStudyTracking />} />
+            <Route path="notificaciones" element={<AdminNotifications />} />
+            <Route path="buscar" element={<AdminSearchResults />} />
           </Route>
         </Routes>
 

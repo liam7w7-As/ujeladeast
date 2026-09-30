@@ -1,7 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useResources } from '../../hooks/useResources';
 import ResourcePreviewModal from '../ui/ResourcePreviewModal';
 import { downloadResourceFile } from '../../lib/downloadHelper';
+import { useAdminSearchQuery } from '../../hooks/useAdminSearchQuery';
 
 const CATEGORIES = ['DOCUMENTO', 'FORMULARIO', 'PRESENTACIÓN', 'VIDEO', 'AUDIO', 'OTRO'];
 
@@ -20,6 +21,7 @@ function formatDateShort(str) {
 }
 
 export default function ResourcesAdmin() {
+  const [searchQuery, setSearchQuery] = useAdminSearchQuery();
   const { resources, loading, uploading, uploadProgress, error,
           getResources, uploadResource, deleteResource, toggleFeatured } = useResources();
 
@@ -33,9 +35,10 @@ export default function ResourcesAdmin() {
   const [previewResource, setPreviewResource] = useState(null);
   const [formError, setFormError] = useState('');
   const fileInputRef = useRef(null);
+  const filteredResources = resources.filter(resource => resource.title?.toLowerCase().includes(searchQuery.toLowerCase()));
 
   // Cargar al montar
-  useState(() => { getResources('Todos'); }, []);
+  useEffect(() => { getResources('Todos'); }, [getResources]);
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -300,11 +303,13 @@ export default function ResourcesAdmin() {
       </div>
 
       {/* Resource list */}
+      {error && <p role="alert" className="text-sm text-red-300">No se pudieron cargar los recursos. Intenta recargar la lista.</p>}
+      <label className="block text-sm text-on-surface-variant">Buscar recursos<input type="search" value={searchQuery} onChange={event => setSearchQuery(event.target.value)} className="mt-1 block w-full bg-surface-container border border-surface-border rounded-lg px-3 py-2 text-white" /></label>
       <div className="glass-card rounded-2xl overflow-hidden">
         <div className="p-5 border-b border-surface-border flex justify-between items-center">
           <h3 className="font-semibold text-white flex items-center gap-2">
             <span className="material-symbols-outlined text-[18px] text-secondary">folder_open</span>
-            Recursos ({resources.length})
+            Recursos ({filteredResources.length})
           </h3>
           <button onClick={() => getResources('Todos')} className="text-on-surface-variant hover:text-white transition-colors" title="Recargar">
             <span className="material-symbols-outlined text-[18px]">refresh</span>
@@ -315,14 +320,14 @@ export default function ResourcesAdmin() {
           <div className="flex justify-center p-10">
             <div className="w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
           </div>
-        ) : resources.length === 0 ? (
+        ) : filteredResources.length === 0 ? (
           <div className="p-10 text-center">
             <span className="material-symbols-outlined text-4xl text-on-surface-variant/30 block mb-3">folder_open</span>
-            <p className="text-sm text-on-surface-variant">No hay recursos aún. Sube el primero arriba.</p>
+            <p className="text-sm text-on-surface-variant">{searchQuery ? 'No hay recursos que coincidan con la búsqueda.' : 'No hay recursos aún. Sube el primero arriba.'}</p>
           </div>
         ) : (
           <div className="divide-y divide-surface-border/50">
-            {resources.map(r => {
+            {filteredResources.map(r => {
               const c = cfg(r.file_type);
               return (
                 <div key={r.id} className="flex items-center gap-4 p-4 hover:bg-white/3 transition-colors group">

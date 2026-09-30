@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
+import { useAdminSearchQuery } from '../../hooks/useAdminSearchQuery';
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
@@ -10,7 +11,7 @@ export default function AdminUsers() {
   
   // Filters
   const [roleFilter, setRoleFilter] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useAdminSearchQuery();
 
   const loadUsers = async () => {
     try {

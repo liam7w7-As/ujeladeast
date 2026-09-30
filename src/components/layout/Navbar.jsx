@@ -90,7 +90,6 @@ function Navbar({ activeItem = 'home' }) {
                 <span className="material-symbols-outlined text-[15px]">volunteer_activism</span>
                 SOS
               </Link>
-              <NotificationBell />
               <div className="flex items-center gap-2 max-w-[120px] ml-2">
                 <span className="font-label-sm text-sm text-on-surface truncate">
                   {profile?.full_name || user.email.split('@')[0]}
@@ -116,6 +115,7 @@ function Navbar({ activeItem = 'home' }) {
         </div>
 
         {/* Mobile Toggle Button */}
+        {user && <NotificationBell />}
         <motion.button 
           whileTap={{ scale: 0.9 }}
           className="md:hidden flex items-center justify-center text-on-surface w-10 h-10 rounded-full hover:bg-white/10 transition-colors"

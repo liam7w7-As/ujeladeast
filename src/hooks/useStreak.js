@@ -8,7 +8,7 @@ export function useStreak() {
   const { user } = useAuth();
   const [streakData, setStreakData] = useState({ current_streak: 0, max_streak: 0, total_xp: 0 });
   const [loading, setLoading] = useState(false);
-  const { createNotification } = useNotifications();
+  const { createNotification } = useNotifications({ subscribe: false });
 
   const getStreak = useCallback(async () => {
     if (!user) return;

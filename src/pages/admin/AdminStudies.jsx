@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
+import { useSearchParams } from 'react-router-dom';
 
 export default function AdminStudies() {
+  const [params, setParams] = useSearchParams();
   const [plans, setPlans] = useState([]);
   const [weeks, setWeeks] = useState([]);
   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   
-  const [selectedPlan, setSelectedPlan] = useState(null);
+  const selectedPlan = plans.find(plan => plan.id === params.get('plan')) || null;
+  const setSelectedPlan = plan => setParams({ plan: plan.id });
   const [selectedWeek, setSelectedWeek] = useState(null);
   const [expandedWeeks, setExpandedWeeks] = useState({});
 
