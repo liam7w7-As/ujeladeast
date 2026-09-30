@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from './useAuth';
+import { collectPages, progressPercentage } from '../lib/studyTracking';
 
 export function useStudy() {
   const { user } = useAuth();
@@ -40,8 +41,7 @@ export function useStudy() {
         .select(`
           *,
           study_lessons (
-            id,
-            day_number,
+            id, day_number, title, scripture_ref,
             user_progress ( completed, user_id )
           )
         `)
@@ -55,6 +55,7 @@ export function useStudy() {
         ...week,
         study_lessons: week.study_lessons.map(lesson => ({
           ...lesson,
+          user_progress: lesson.user_progress?.find(p => p.user_id === user?.id) || null,
           completed: lesson.user_progress?.some(p => p.user_id === user?.id && p.completed) || false
         }))
       }));
@@ -167,20 +168,33 @@ export function useStudy() {
     if (!user) throw new Error('Usuario no autenticado');
     try {
       setLoading(true);
+      const payload = {
+        user_id: user.id,
+        lesson_id: lessonId,
+        completed: true,
+        answers: answers || {},
+        completed_at: new Date().toISOString()
+      };
+      // The unique user/lesson key chooses one winner, including concurrent tabs.
       const { data, error } = await supabase
         .from('user_progress')
-        .upsert({
-          user_id: user.id,
-          lesson_id: lessonId,
-          completed: true,
-          answers: answers || {},
-          completed_at: new Date().toISOString()
-        }, { onConflict: 'user_id, lesson_id' })
+        .upsert(payload, { onConflict: 'user_id, lesson_id', ignoreDuplicates: true })
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
-      return data;
+      if (data) return data;
+
+      const { data: updated, error: updateError } = await supabase
+        .from('user_progress')
+        .update(payload)
+        .eq('user_id', user.id)
+        .eq('lesson_id', lessonId)
+        .eq('completed', false)
+        .select()
+        .maybeSingle();
+      if (updateError) throw updateError;
+      return updated;
     } catch (err) {
       setError(err.message);
       throw err;
@@ -192,16 +206,15 @@ export function useStudy() {
   const getUserProgress = useCallback(async (planId) => {
     if (!user || !planId) return 0;
     try {
-      const { count: completedCount } = await supabase
-        .from('user_progress')
-        .select('id', { count: 'exact', head: true })
-        .eq('user_id', user.id)
-        .eq('completed', true);
-        
-      const totalLessons = 52 * 7; 
-      const percentage = ((completedCount || 0) / totalLessons) * 100;
-      if (completedCount > 0 && percentage < 1) return 1;
-      return Math.round(percentage);
+      const lessons = await collectPages((from, to) => supabase
+        .from('study_lessons')
+        .select('id, study_weeks!inner(plan_id), user_progress(user_id, completed)')
+        .eq('study_weeks.plan_id', planId)
+        .order('id')
+        .range(from, to));
+      const completedCount = lessons.filter(lesson => lesson.user_progress
+        ?.some(progress => progress.user_id === user.id && progress.completed)).length;
+      return progressPercentage(completedCount, lessons.length);
     } catch (err) {
       console.error('Error in getUserProgress:', err);
       return 0;

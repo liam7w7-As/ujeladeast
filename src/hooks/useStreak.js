@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from './useAuth';
 import { useNotifications } from './useNotifications';
+import { daysSince, effectiveStreak } from '../lib/studyTracking';
 
 export function useStreak() {
   const { user } = useAuth();
@@ -21,8 +22,9 @@ export function useStreak() {
       
       if (error && error.code !== 'PGRST116') throw error;
       if (data) {
-        setStreakData(data);
-        return data;
+        const normalized = { ...data, current_streak: effectiveStreak(data) };
+        setStreakData(normalized);
+        return normalized;
       } else {
         // Create initial record
         const { data: newData, error: insertError } = await supabase
@@ -65,17 +67,14 @@ export function useStreak() {
          throw fetchError;
       }
 
-      const today = new Date();
-      const lastStudy = currentData.last_study_date ? new Date(currentData.last_study_date) : null;
+      const lastStudy = currentData.last_study_date;
       
       let newStreak = currentData.current_streak;
       let newMax = currentData.max_streak;
       let addedXP = xpGained;
       
       if (lastStudy) {
-        // Compare dates (ignore time)
-        const diffTime = today.setHours(0,0,0,0) - new Date(lastStudy).setHours(0,0,0,0);
-        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+        const diffDays = daysSince(lastStudy);
         
         if (diffDays === 1) {
           newStreak += 1; // Studied yesterday, streak continues
@@ -120,30 +119,5 @@ export function useStreak() {
     }
   }, [user, createNotification]);
 
-  const checkStreakLost = useCallback(async () => {
-    if (!user) return;
-    try {
-      const current = await getStreak();
-      if (!current || !current.last_study_date) return;
-      
-      const today = new Date();
-      const lastStudy = new Date(current.last_study_date);
-      const diffTime = today.setHours(0,0,0,0) - lastStudy.setHours(0,0,0,0);
-      const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-      
-      if (diffDays > 1 && current.current_streak > 0) {
-        const { data, error } = await supabase
-          .from('user_streaks')
-          .update({ current_streak: 0 })
-          .eq('user_id', user.id)
-          .select()
-          .single();
-        if (!error) setStreakData(data);
-      }
-    } catch (err) {
-      console.error('Error checking streak lost:', err);
-    }
-  }, [user, getStreak]);
-
-  return { streakData, loading, getStreak, updateStreak, checkStreakLost };
+  return { streakData, loading, getStreak, updateStreak };
 }

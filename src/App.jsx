@@ -28,6 +28,7 @@ import AdminUsers from './pages/admin/AdminUsers'
 import AdminPosts from './pages/admin/AdminPosts'
 import AdminHymnal from './pages/admin/AdminHymnal'
 import AdminStudies from './pages/admin/AdminStudies'
+import AdminStudyTracking from './pages/admin/AdminStudyTracking'
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
             <Route path="posts" element={<AdminPosts />} />
             <Route path="himnario" element={<AdminHymnal />} />
             <Route path="estudios" element={<AdminStudies />} />
+            <Route path="seguimiento" element={<AdminStudyTracking />} />
           </Route>
         </Routes>
 

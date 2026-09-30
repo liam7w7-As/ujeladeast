@@ -30,8 +30,8 @@ export default function BibleStudy() {
   const location = useLocation();
   
   // Hooks
-  const { plan, weeks, getCurrentPlan, getWeeks, getTodayLesson, completeLesson, getUserProgress, loading: studyLoading } = useStudy();
-  const { streakData, getStreak, updateStreak, checkStreakLost } = useStreak();
+  const { plan, weeks, lessons, getLessons, getCurrentPlan, getWeeks, getTodayLesson, completeLesson, getUserProgress, loading: studyLoading } = useStudy();
+  const { streakData, getStreak, updateStreak } = useStreak();
   const { entries, getRecentEntries, saveEntry, error: journalError } = useJournal();
   const { messages: sosMessages, sending: sosSending, error: sosError, createSession: createSosSession, sendMessage: sendSosMessage, currentSession: sosSession, setError: setSosError } = useChat();
   
@@ -85,7 +85,6 @@ export default function BibleStudy() {
   // Initial Load
   useEffect(() => {
     if (user) {
-      checkStreakLost();
       getStreak();
       getRecentEntries(3);
       getCurrentPlan();
@@ -125,15 +124,24 @@ export default function BibleStudy() {
   };
 
   const handleCompleteLesson = async () => {
-    if (!activeLesson) return;
+    if (!activeLesson || completing) return;
     try {
       setCompleting(true);
       // Guardar progreso y respuestas
-      await completeLesson(activeLesson.id, answers);
+      const progress = await completeLesson(activeLesson.id, answers);
+      if (!progress) {
+        alert('Esta lección ya estaba completada. Tu avance se conserva.');
+        setActiveView('dashboard');
+        return;
+      }
       
       // Guardar diario si hay contenido o versos
       if (journalContent.trim() || favoriteVerses.length > 0) {
-        await saveEntry(activeLesson.id, journalContent, favoriteVerses);
+        try {
+          await saveEntry(activeLesson.id, journalContent, favoriteVerses);
+        } catch {
+          alert('La lección se completó, pero no se pudo guardar el diario.');
+        }
       }
       
       // Calcular XP Base
@@ -322,7 +330,12 @@ export default function BibleStudy() {
                   <WeekCard 
                     key={week.id} 
                     week={week} 
-                    onClick={(w) => {
+                    onClick={async (w) => {
+                      const loadedLessons = await getLessons(w.id);
+                      if (!loadedLessons) {
+                        alert('No se pudieron cargar las lecciones de esta semana.');
+                        return;
+                      }
                       setActiveWeek(w);
                       setActiveView('week');
                     }}
@@ -347,7 +360,7 @@ export default function BibleStudy() {
             <p className="text-on-surface-variant mb-8">Elige la lección del día para comenzar tu estudio.</p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {activeWeek.study_lessons?.map(lesson => (
+              {lessons.map(lesson => (
                 <LessonCard 
                   key={lesson.id} 
                   lesson={lesson} 
