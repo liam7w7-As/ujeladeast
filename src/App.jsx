@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { lazy, Suspense } from 'react'
 import { MotionConfig } from 'motion/react'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute, { AdminRoute } from './routes/ProtectedRoute'
@@ -34,6 +35,8 @@ import AdminStudyTracking from './pages/admin/AdminStudyTracking'
 import AdminNotifications from './pages/admin/AdminNotifications'
 import AdminSearchResults from './pages/admin/AdminSearchResults'
 
+const Bible = lazy(() => import('./pages/Bible'))
+
 function App() {
   return (
     <AuthProvider>
@@ -49,6 +52,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/recuperar" element={<RecoverPassword />} />
           <Route path="/himnario" element={<Hymnal />} />
+          <Route path="/biblia" element={<Suspense fallback={<div role="status" className="p-24 text-center">Abriendo Biblia...</div>}><Bible /></Suspense>} />
           <Route path="/estudios" element={<BibleStudy />} />
           <Route path="/sociedades" element={<Societies />} />
           <Route path="/recursos" element={<Resources />} />

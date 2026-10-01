@@ -148,7 +148,7 @@ export default function ChatWidget({ contextType: externalContextType, extraCont
     }
   };
 
-  if (['/register', '/login', '/recuperar', '/feed', '/chat'].includes(pathname)) return null;
+  if (['/register', '/login', '/recuperar', '/feed', '/chat', '/biblia'].includes(pathname)) return null;
 
   return (
     <>

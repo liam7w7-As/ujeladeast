@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, Compass, Home, Music2, Grid2X2, Library, Users, MessageCircle, LogIn, LogOut, PlusSquare, HeartHandshake, Shield } from 'lucide-react';
+import { BookOpen, BookMarked, Compass, Home, Music2, Grid2X2, Library, Users, MessageCircle, LogIn, LogOut, PlusSquare, HeartHandshake, Shield } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { useAuth } from '../../hooks/useAuth';
 import ProfileAvatar from '../ui/ProfileAvatar';
@@ -12,6 +12,7 @@ const tabs = [
   { to: '/', label: 'Inicio', Icon: Home },
   { to: '/feed', label: 'Comunidad', Icon: Compass },
   { to: '/himnario', label: 'Himnario', Icon: Music2 },
+  { to: '/biblia', label: 'Biblia', Icon: BookMarked },
   { to: '/estudios', label: 'Estudios', Icon: BookOpen },
 ];
 const extraLinks = [

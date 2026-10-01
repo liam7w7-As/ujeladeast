@@ -3,9 +3,11 @@
 ## Alcance
 
 Se prepararon RVR1960, NTV, NVI y TLA. Los originales externos no se modifican.
-Los paquetes estan en `data/bible/prepared`, fuera de `public` y del bundle de
-React. Este cambio no incorpora un lector, no publica los paquetes como rutas
-de la app y no descarga Biblias automaticamente al instalar la PWA.
+Los paquetes fuente preparados estan en `data/bible/prepared`, fuera de
+`public` y del bundle de React. El lector publico esta en `/biblia` y utiliza
+una segunda representacion segura en `public/bibles`, generada a partir del
+HTML conservado. Ninguna Biblia completa se descarga automaticamente al
+instalar la PWA. No requiere cuenta ni cambios en Supabase.
 
 ## Resultado
 
@@ -47,9 +49,11 @@ en `audit.json`; el HTML se conserva en TODOS los capitulos.
 
 No insertar el HTML fuente directamente con `dangerouslySetInnerHTML`.
 El preparador lo analiza con DOMParser en una pagina sin acceso a red y no
-ejecuta scripts, pero NO lo sanitiza para su futura visualizacion. El lector
-debera renderizar campos estructurados como texto de React o emplear un
-sanitizador mantenido con una lista explicita de etiquetas y atributos.
+ejecuta scripts, pero NO lo sanitiza para su futura visualizacion. El publicador
+adicional convierte el DOM en nodos estructurados y comprueba que todo el texto
+coincide exactamente. Solo acepta etiquetas de texto y tablas. No conserva
+eventos, estilos inline, URLs ni atributos arbitrarios. El lector crea elementos
+React con otra lista explicita de etiquetas y muestra las cadenas como texto.
 
 ## Formato
 
@@ -91,14 +95,77 @@ Comprueba la descompresion completa y compara cada capitulo original con su
 equivalente preparado mediante igualdad profunda. Regenerar sobrescribe solo
 los seis archivos generados en `data/bible/prepared`.
 
-## Integracion pendiente
+## Lector y publicacion
 
-Antes de crear el lector: resolver la representacion de tablas y poesia,
-validar visualmente los capitulos diagnosticados y decidir el reparto por
-libros o capitulos. Conservar siempre notas y atribuciones.
+`scripts/publish-bibles.mjs` lee los cuatro paquetes preparados y genera:
 
-La descarga offline debera ser explicita por version, con progreso, checksum,
-almacenamiento transaccional y posibilidad de eliminar una version. Evitar
-cargar todos los paquetes al iniciar la app. Configurar por separado si el
-servidor entrega gzip como archivo o como Content-Encoding para no intentar
-descomprimir dos veces una respuesta que el navegador ya haya decodificado.
+- 264 archivos gzip por libro para lectura bajo demanda.
+- Cuatro archivos gzip con versiones completas para descarga explicita.
+- `src/lib/bibleCatalog.json`: titulos, atribuciones, capitulos, tamanos y hashes.
+
+Los archivos publicados son nodos seguros de lectura, no el HTML original ni
+una segunda copia de `items`. Asi se conservan las notas y tablas del HTML sin
+duplicar todo el texto. Cada nodo contiene etiqueta, clases de formato,
+referencia, hijos y, opcionalmente, dimensiones de celdas. Una etiqueta fuente
+desconocida detiene la generacion. Todas las cadenas se comparan con textContent
+del DOM original en los 4756 capitulos. Los nodos de notas se muestran en un
+dialogo; las tablas permiten desplazamiento horizontal.
+
+| Version | Descarga completa (MB) | JSON descomprimido (MB) |
+| --- | ---: | ---: |
+| RVR1960 | 1.75 | 8.76 |
+| NTV | 2.21 | 12.11 |
+| NVI | 2.05 | 11.41 |
+| TLA | 2.02 | 11.91 |
+
+Los nombres incluyen hash de contenido. El catalogo se carga con la ruta lazy
+del lector. Los `.gz` no estan incluidos en el precache del service worker ni
+en la cache de himnarios. Los assets del lector y de su worker SI se precachean
+para permitir arranque offline de la PWA.
+
+```powershell
+node scripts/publish-bibles.mjs
+node --test tests/bibleReader.test.mjs
+```
+
+Los resultados generados se versionan. Vercel solo necesita el build habitual:
+no ejecuta Chrome ni Playwright. Al regenerar, los archivos de hashes anteriores
+se conservan; revisar su uso antes de retirarlos para no romper clientes antiguos.
+
+## Descargas y almacenamiento
+
+Un Web Worker descarga, descomprime y verifica SHA-256 antes de entregar datos.
+La cabecera magica identifica gzip: tambien admite respuestas que el navegador
+ya haya descomprimido via Content-Encoding. El hash se verifica sobre el JSON
+descomprimido. La cancelacion termina el worker y la peticion.
+
+IndexedDB `ujeladea-bible` separa `books` y `versions`. La descarga escribe los
+66 libros y el indicador de disponibilidad en una unica transaccion. Un fallo
+o falta de espacio revierte ambos. Solo se anuncia disponibilidad al finalizar
+la transaccion. El borrado de una version tambien es atomico. Una descarga
+anterior no se pierde si falla una actualizacion.
+
+Marcadores, posicion y ajustes son locales al dispositivo, no se sincronizan
+con la cuenta. Borrar una version no borra marcadores ni datos de estudios.
+Se solicita almacenamiento persistente tras descargar, pero el navegador puede
+denegarlo o el usuario puede borrar datos: no se promete permanencia absoluta.
+La lectura online mantiene como maximo tres libros en memoria, no guarda una
+version completa sin accion del usuario.
+
+## Verificacion del lector
+
+Con un build de produccion servido por Vite preview en el puerto 5181:
+
+```powershell
+node tests/bibleReader.browser.mjs
+```
+
+`BIBLE_TEST_URL` y `BIBLE_TEST_OUTPUT` permiten cambiar servidor y capturas.
+Se verifican 320/390/768/1440 px, selector de version, notas, ajustes, marcadores,
+descarga, arranque offline en un libro no visitado, borrado, archivos corruptos,
+cancelacion/reintento, tablas, poesia y rollback por falta de espacio.
+El chequeo de datos verifica los 264 libros contra sus paquetes completos.
+
+Compatibilidad: se requiere un navegador con Web Workers, Web Crypto,
+IndexedDB y DecompressionStream para gzip. La app informa errores de descarga
+o almacenamiento; la lectura online sigue disponible si IndexedDB esta bloqueado.

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Compass, Home, Library, LogIn, LogOut, MessageCircle, Music2, PlusSquare, Users } from 'lucide-react';
+import { BookOpen, BookMarked, Compass, Home, Library, LogIn, LogOut, MessageCircle, Music2, PlusSquare, Users } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { useAuth } from '../../hooks/useAuth';
 import NotificationBell from '../ui/NotificationBell';
@@ -13,6 +13,7 @@ const links = [
   { to: '/feed', label: 'Comunidad', Icon: Compass },
   { to: '/estudios', label: 'Estudios', Icon: BookOpen },
   { to: '/himnario', label: 'Himnario', Icon: Music2 },
+  { to: '/biblia', label: 'Biblia', Icon: BookMarked },
   { to: '/sociedades', label: 'Sociedades', Icon: Users },
   { to: '/recursos', label: 'Recursos', Icon: Library },
   { to: '/chat', label: 'UJELADITO', Icon: MessageCircle },

@@ -11,6 +11,7 @@ const navItems = [
   { label: 'Inicio', href: '/', id: 'home' },
   { label: 'Feed', href: '/feed', id: 'feed' },
   { label: 'Himnario', href: '/himnario', id: 'hymnal' },
+  { label: 'Biblia', href: '/biblia', id: 'bible' },
   { label: 'Estudios', href: '/estudios', id: 'bible-studies' },
   { label: 'Sociedades', href: '/sociedades', id: 'societies' },
   { label: 'Recursos', href: '/recursos', id: 'resources' },

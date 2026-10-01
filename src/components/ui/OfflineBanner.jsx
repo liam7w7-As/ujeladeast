@@ -22,7 +22,7 @@ export default function OfflineBanner() {
     <div className="bg-amber-500/20 border-b border-amber-500/30 px-4 py-2 flex items-center justify-center gap-2 w-full z-[100] relative">
       <span className="material-symbols-outlined text-amber-400 text-[18px]">wifi_off</span>
       <p className="text-amber-200 text-xs font-medium text-center">
-        Sin conexión a internet. Algunas funciones están limitadas, pero el himnario sigue disponible.
+        Sin conexión. Puedes abrir el contenido que ya esté guardado en este dispositivo.
       </p>
     </div>
   );
