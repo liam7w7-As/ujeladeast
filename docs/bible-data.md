@@ -174,6 +174,10 @@ o almacenamiento; la lectura online sigue disponible si IndexedDB esta bloqueado
 
 Cada versiculo empieza en un bloque nuevo. Se mantienen las continuaciones,
 la poesia y las tablas del documento; los fragmentos vacios no generan filas.
+Las referencias editoriales `r`, `sr` y `mr` se unen en un texto secundario
+compacto, conservando parentesis, abreviaturas y rangos originales. Los fragmentos
+`heading` del documento usan una clase distinta de la cabecera del lector.
+Estas referencias siguen siendo texto, no enlaces a pasajes.
 Las opciones aparecen una vez por referencia. Para copiar o guardar se juntan
 todos los fragmentos de esa referencia, sin numeros incrustados, notas ni
 encabezados de tablas. Los rangos propios de una traduccion (por ejemplo 1-3)
@@ -213,6 +217,7 @@ Pruebas adicionales:
 node --test tests/bibleVerses.test.mjs
 node tests/bibleExperience.browser.mjs
 node tests/bibleCustomization.browser.mjs
+node tests/bibleReferences.browser.mjs
 ```
 
 Se verifican fragmentos, rangos, celdas de tablas, cita copiada, persistencia y

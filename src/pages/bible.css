@@ -39,7 +39,8 @@
 .bible-chapter-heading h2 { font-size: 30px; line-height: 1.3; font-weight: 650; }
 .bible-chapter > .bible-label { display: none; }
 .bible-s, .bible-s1, .bible-s2, .bible-s3, .bible-ms, .bible-ms1 { font-weight: 650; font-size: .95em; line-height: 1.6; margin: 26px 0 14px; }
-.bible-r, .bible-sr, .bible-mr { font-size: .8em; color: var(--reader-muted, #a3b0a9); line-height: 1.65; margin-bottom: 16px; }
+.bible-source-heading { display: inline; }
+.bible-cross-references { font-size: .8em; color: var(--reader-muted, #a3b0a9); line-height: 1.5; margin: -6px 0 14px; overflow-wrap: anywhere; }
 .bible-p, .bible-m, .bible-pm, .bible-pmo { margin: 12px 0; }
 .bible-verse > .bible-label { font-size: .62em; vertical-align: super; line-height: 0; margin-right: 5px; color: var(--reader-accent, #e9a6bb); font-weight: 650; }
 .bible-verse .bible-vp { font-size: .72em; color: var(--reader-accent, #e9a6bb); margin-right: 5px; }

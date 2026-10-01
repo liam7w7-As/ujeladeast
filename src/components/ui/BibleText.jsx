@@ -11,6 +11,10 @@ export default function BibleText({ nodes, onNote, onVerse, favorites = [], sele
     const [tag, style, reference, children, spans] = node;
     if (!tags.has(tag)) return null;
     const classes = style.split(/\s+/).filter(Boolean);
+    // Source headings are inline fragments, not the reader's application header.
+    if (classes.some(value => ['r', 'sr', 'mr'].includes(value))) {
+      return <div key={key} className="bible-cross-references" role="note" aria-label="Referencias bíblicas">{nodeText(node).replace(/\s+/g, ' ').trim()}</div>;
+    }
     const verse = classes.includes('verse') && Boolean(reference) && Boolean(onVerse);
     const meaningful = verse && verseText(node).trim();
     const first = meaningful && !seen.has(reference);
@@ -22,7 +26,7 @@ export default function BibleText({ nodes, onNote, onVerse, favorites = [], sele
     }
     if (tag === 'br') return <br key={key} />;
     const Tag = tag;
-    const content = <Tag key={key} className={`${classes.map(value => `bible-${value}`).join(' ')} ${verse ? 'bible-verse-row' : ''} ${first ? 'bible-verse-start' : ''} ${verse && reference === selectedReference ? 'bible-verse-selected' : ''}`} data-reference={reference || undefined}
+    const content = <Tag key={key} className={`${classes.map(value => value === 'heading' ? 'bible-source-heading' : `bible-${value}`).join(' ')} ${verse ? 'bible-verse-row' : ''} ${first ? 'bible-verse-start' : ''} ${verse && reference === selectedReference ? 'bible-verse-selected' : ''}`} data-reference={reference || undefined}
       onClick={meaningful ? event => {
         if (event.target.closest('button') || !window.getSelection()?.isCollapsed) return;
         event.stopPropagation();
