@@ -148,7 +148,7 @@ export default function ChatWidget({ contextType: externalContextType, extraCont
     }
   };
 
-  if (pathname === '/register' || pathname === '/login' || pathname === '/feed') return null;
+  if (['/register', '/login', '/recuperar', '/feed', '/chat'].includes(pathname)) return null;
 
   return (
     <>
@@ -162,7 +162,7 @@ export default function ChatWidget({ contextType: externalContextType, extraCont
             whileHover={{ scale: 1.1, rotate: 3 }}
             whileTap={{ scale: 0.9 }}
             onClick={handleOpen}
-            className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-[0_4px_24px_rgba(143,25,55,0.5)] overflow-hidden border-2 border-[#8f1937] hover:shadow-[0_4px_32px_rgba(143,25,55,0.7)]"
+            className="public-chat-launcher fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-[0_4px_24px_rgba(143,25,55,0.5)] overflow-hidden border-2 border-[#8f1937] hover:shadow-[0_4px_32px_rgba(143,25,55,0.7)]"
             title="Hablar con UJELADITO"
             aria-label="Abrir chatbot UJELADITO"
           >
@@ -179,7 +179,7 @@ export default function ChatWidget({ contextType: externalContextType, extraCont
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.85, y: 30 }}
             transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-            className="fixed bottom-6 right-6 z-50 w-[360px] flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-[#0e0e12] origin-bottom-right"
+            className="public-chat-panel fixed bottom-6 right-6 z-50 w-[360px] flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-[#0e0e12] origin-bottom-right"
             style={{ height: '520px' }}
           >
             {/* Header */}

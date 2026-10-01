@@ -1,3 +1,5 @@
+import ContentIcon from './ContentIcon';
+import { createPortal } from 'react-dom';
 import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { extractCoordsFromMapsLink, buildOSMEmbedUrl } from '../../lib/mapsHelper';
@@ -17,10 +19,10 @@ export default function SocietyDetailModal({ society, onClose }) {
     };
   }, [onClose, society]);
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {society && (
-        <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center p-0 md:p-4">
+        <div className="fixed inset-0 z-[60] flex items-end md:items-center justify-center p-0 md:p-4">
           {/* Backdrop */}
           <motion.div
             variants={modalBackdrop}
@@ -45,7 +47,7 @@ export default function SocietyDetailModal({ society, onClose }) {
                 <img src={society.photo_url} alt={society.name} className="w-full h-full object-cover" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-b from-surface-container to-surface-container-high">
-                  <span className="material-symbols-outlined text-7xl text-on-surface-variant opacity-20">church</span>
+                  <ContentIcon className="text-7xl text-on-surface-variant opacity-20" name="church" />
                 </div>
               )}
               {/* Gradient overlay */}
@@ -56,9 +58,11 @@ export default function SocietyDetailModal({ society, onClose }) {
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={onClose}
+                aria-label="Cerrar sociedad"
+                title="Cerrar sociedad"
                 className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/50 backdrop-blur-md text-white hover:bg-black/70 transition-colors flex items-center justify-center"
               >
-                <span className="material-symbols-outlined text-[20px]">close</span>
+                <ContentIcon className="text-[20px]" name="close" />
               </motion.button>
 
               {/* Zone badge */}
@@ -76,7 +80,7 @@ export default function SocietyDetailModal({ society, onClose }) {
                 <h2 className="text-2xl font-bold text-white mb-1">{society.name}</h2>
                 {society.president_name && (
                   <p className="text-secondary flex items-center gap-1.5 text-sm">
-                    <span className="material-symbols-outlined text-[16px]">person</span>
+                    <ContentIcon className="text-[16px]" name="person" />
                     Presidente de Jóvenes: <span className="font-medium text-white ml-1">{society.president_name}</span>
                   </p>
                 )}
@@ -86,7 +90,7 @@ export default function SocietyDetailModal({ society, onClose }) {
               {society.schedule && (
                 <div className="bg-surface-container rounded-2xl p-4 border border-surface-border">
                   <h4 className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                    <span className="material-symbols-outlined text-[16px] text-secondary">schedule</span>
+                    <ContentIcon className="text-[16px] text-secondary" name="schedule" />
                     Horario de reuniones
                   </h4>
                   <p className="text-on-surface text-sm leading-relaxed whitespace-pre-line">{society.schedule}</p>
@@ -105,7 +109,7 @@ export default function SocietyDetailModal({ society, onClose }) {
               {osmUrl ? (
                 <div>
                   <h4 className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                    <span className="material-symbols-outlined text-[16px] text-secondary">location_on</span>
+                    <ContentIcon className="text-[16px] text-secondary" name="location_on" />
                     Ubicación
                   </h4>
                   <div className="rounded-2xl overflow-hidden border border-surface-border">
@@ -122,7 +126,7 @@ export default function SocietyDetailModal({ society, onClose }) {
                 </div>
               ) : coords === null && society.maps_link && (
                 <div className="bg-surface-container rounded-xl p-4 border border-surface-border text-sm text-on-surface-variant flex items-center gap-2">
-                  <span className="material-symbols-outlined text-[18px] text-secondary">info</span>
+                  <ContentIcon className="text-[18px] text-secondary" name="info" />
                   No se pudo extraer el mapa embebido, pero puedes abrirlo directamente.
                 </div>
               )}
@@ -137,7 +141,7 @@ export default function SocietyDetailModal({ society, onClose }) {
                   rel="noopener noreferrer"
                   className="w-full py-3.5 rounded-xl bg-primary-container hover:bg-primary-container/80 text-white font-bold flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(143,25,55,0.3)] hover:shadow-[0_0_28px_rgba(143,25,55,0.5)]"
                 >
-                  <span className="material-symbols-outlined">open_in_new</span>
+                  <ContentIcon className="" name="open_in_new" />
                   Abrir en Google Maps
                 </motion.a>
               )}
@@ -145,7 +149,7 @@ export default function SocietyDetailModal({ society, onClose }) {
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>, document.body
   );
 }
 

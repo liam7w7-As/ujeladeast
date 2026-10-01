@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { BookOpen, ArrowRight } from 'lucide-react';
 import PageShell from '../components/layout/PageShell';
 import StreakCard from '../components/ui/StreakCard';
 import XPBar from '../components/ui/XPBar';
@@ -179,10 +180,12 @@ export default function BibleStudy() {
     return (
       <PageShell activeItem="bible-studies">
         <div className="flex-grow flex items-center justify-center pt-32 pb-section-gap px-margin-mobile">
-          <div className="glass-card p-8 rounded-2xl text-center max-w-md">
-            <span className="material-symbols-outlined text-4xl text-primary mb-4 block">lock</span>
-            <h2 className="text-xl font-bold text-white mb-2">Inicia Sesión</h2>
-            <p className="text-on-surface-variant mb-6">Debes iniciar sesión para acceder al módulo de Estudios Bíblicos y guardar tu progreso.</p>
+          <div className="py-10 text-center max-w-md">
+            <BookOpen size={38} className="mx-auto text-emerald-200 mb-5" />
+            <h1 className="text-2xl font-bold text-white mb-3">Un momento con la Palabra</h1>
+            <p className="text-sm leading-7 text-on-surface-variant mb-6">Inicia sesión para continuar tus estudios y guardar tu progreso.</p>
+            <Link to="/login" state={{ from: '/estudios' }} className="inline-flex items-center gap-3 rounded-lg bg-primary-container px-6 py-3 text-sm text-white">Iniciar sesión<ArrowRight size={18} /></Link>
+            <Link to="/register" className="block mt-5 text-sm text-primary">Crear una cuenta</Link>
           </div>
         </div>
       </PageShell>

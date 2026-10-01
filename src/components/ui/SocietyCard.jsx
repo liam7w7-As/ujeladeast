@@ -1,3 +1,4 @@
+import ContentIcon from './ContentIcon';
 import { motion } from 'motion/react';
 
 export default function SocietyCard({ society, viewMode = 'grid', onClick }) {
@@ -16,7 +17,7 @@ export default function SocietyCard({ society, viewMode = 'grid', onClick }) {
           {photo_url ? (
             <img src={photo_url} alt={name} className="w-full h-full object-cover" />
           ) : (
-            <span className="material-symbols-outlined text-3xl text-on-surface-variant">church</span>
+            <ContentIcon className="text-3xl text-on-surface-variant" name="church" />
           )}
         </div>
 
@@ -25,7 +26,7 @@ export default function SocietyCard({ society, viewMode = 'grid', onClick }) {
           {zone && <p className="text-xs text-on-surface-variant mt-0.5">{zone}</p>}
           {president_name && (
             <p className="text-xs text-on-surface-variant mt-1 flex items-center gap-1">
-              <span className="material-symbols-outlined text-[14px] text-secondary">person</span>
+              <ContentIcon className="text-[14px] text-secondary" name="person" />
               {president_name}
             </p>
           )}
@@ -43,7 +44,7 @@ export default function SocietyCard({ society, viewMode = 'grid', onClick }) {
               className="w-9 h-9 rounded-lg flex items-center justify-center bg-surface-container border border-surface-border hover:border-primary/50 hover:text-primary text-on-surface-variant transition-colors"
               title="Ver ubicación"
             >
-              <span className="material-symbols-outlined text-[18px]">location_on</span>
+              <ContentIcon className="text-[18px]" name="location_on" />
             </motion.a>
           )}
           <motion.button
@@ -73,7 +74,7 @@ export default function SocietyCard({ society, viewMode = 'grid', onClick }) {
           <img src={photo_url} alt={name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
         ) : (
           <div className="flex flex-col items-center justify-center text-on-surface-variant gap-2 w-full h-full bg-gradient-to-b from-surface-container to-surface-container-high">
-            <span className="material-symbols-outlined text-5xl opacity-30">church</span>
+            <ContentIcon className="text-5xl opacity-30" name="church" />
           </div>
         )}
         {zone && (
@@ -89,7 +90,7 @@ export default function SocietyCard({ society, viewMode = 'grid', onClick }) {
           <h3 className="font-bold text-white text-lg group-hover:text-primary transition-colors">{name}</h3>
           {president_name && (
             <p className="text-sm text-on-surface-variant mt-1 flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-[16px] text-secondary">person</span>
+              <ContentIcon className="text-[16px] text-secondary" name="person" />
               {president_name}
             </p>
           )}
@@ -106,7 +107,7 @@ export default function SocietyCard({ society, viewMode = 'grid', onClick }) {
               onClick={(e) => e.stopPropagation()}
               className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-surface-border hover:border-primary/50 text-on-surface-variant hover:text-primary text-sm transition-colors"
             >
-              <span className="material-symbols-outlined text-[18px]">location_on</span>
+              <ContentIcon className="text-[18px]" name="location_on" />
               <span>Ubicación</span>
             </motion.a>
           )}
@@ -116,7 +117,7 @@ export default function SocietyCard({ society, viewMode = 'grid', onClick }) {
             onClick={() => onClick(society)}
             className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-primary-container/20 border border-primary-container/40 hover:bg-primary-container/60 text-primary text-sm font-medium transition-colors"
           >
-            <span className="material-symbols-outlined text-[18px]">info</span>
+            <ContentIcon className="text-[18px]" name="info" />
             <span>Ver más</span>
           </motion.button>
         </div>

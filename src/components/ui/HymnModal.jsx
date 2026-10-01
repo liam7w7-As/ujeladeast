@@ -1,3 +1,5 @@
+import ContentIcon from './ContentIcon';
+import { createPortal } from 'react-dom';
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { modalBackdrop, modalContent } from '../../lib/animations';
@@ -70,7 +72,7 @@ export default function HymnModal({ hymn, isOpen, onClose }) {
     if (!estrofas || estrofas.length === 0) {
       return (
         <div className="flex flex-col items-center justify-center py-12 text-center text-white/40">
-          <span className="material-symbols-outlined text-4xl mb-2 text-white/20">menu_book</span>
+          <ContentIcon className="text-4xl mb-2 text-white/20" name="menu_book" />
           <p className="italic text-sm">Letra no disponible en este momento.</p>
         </div>
       );
@@ -97,7 +99,7 @@ export default function HymnModal({ hymn, isOpen, onClose }) {
           >
             <div className="flex items-center justify-between mb-2">
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#ff4d79] text-white text-[10px] font-black uppercase tracking-widest shadow-md">
-                <span className="material-symbols-outlined text-[13px]">record_voice_over</span>
+                <ContentIcon className="text-[13px]" name="record_voice_over" />
                 CORO
               </span>
               <span className="text-[11px] font-semibold text-[#ff80a0] uppercase tracking-wider">
@@ -128,10 +130,10 @@ export default function HymnModal({ hymn, isOpen, onClose }) {
     );
   };
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && hymn && (
-        <div className={`fixed inset-0 z-50 flex items-center justify-center ${isFullscreen ? 'p-0' : 'p-2 sm:p-4'}`}>
+        <div className={`fixed inset-0 z-[60] flex items-center justify-center ${isFullscreen ? 'p-0' : 'p-2 sm:p-4'}`}>
           {/* Backdrop */}
           <motion.div 
             variants={modalBackdrop}
@@ -175,7 +177,7 @@ export default function HymnModal({ hymn, isOpen, onClose }) {
                       <>
                         <span>•</span>
                         <span className="flex items-center gap-0.5">
-                          <span className="material-symbols-outlined text-[12px]">music_note</span>
+                          <ContentIcon className="text-[12px]" name="music_note" />
                           {hymn.tonalidad}
                         </span>
                       </>
@@ -216,9 +218,7 @@ export default function HymnModal({ hymn, isOpen, onClose }) {
                   className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white flex items-center justify-center transition-colors"
                   title={isFullscreen ? "Salir de pantalla completa" : "Modo lectura pantalla completa"}
                 >
-                  <span className="material-symbols-outlined text-[18px]">
-                    {isFullscreen ? 'fullscreen_exit' : 'fullscreen'}
-                  </span>
+                  <ContentIcon className="text-[18px]" name={isFullscreen ? 'fullscreen_exit' : 'fullscreen'} />
                 </motion.button>
 
                 {/* Botón Cerrar (X) */}
@@ -229,7 +229,7 @@ export default function HymnModal({ hymn, isOpen, onClose }) {
                   className="w-8 h-8 rounded-lg bg-white/5 hover:bg-red-500/20 border border-white/10 hover:border-red-500/40 text-white/70 hover:text-red-400 flex items-center justify-center transition-colors ml-1"
                   title="Cerrar (o botón atrás del cel)"
                 >
-                  <span className="material-symbols-outlined text-[18px]">close</span>
+                  <ContentIcon className="text-[18px]" name="close" />
                 </motion.button>
               </div>
             </div>
@@ -284,7 +284,7 @@ export default function HymnModal({ hymn, isOpen, onClose }) {
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>, document.body
   );
 }
 

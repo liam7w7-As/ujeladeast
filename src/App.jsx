@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { MotionConfig } from 'motion/react'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute, { AdminRoute } from './routes/ProtectedRoute'
 import Navbar from './components/layout/Navbar'
@@ -13,6 +14,7 @@ import Home from './pages/Home'
 import Feed from './pages/Feed'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import RecoverPassword from './pages/RecoverPassword'
 import Hymnal from './pages/Hymnal'
 import BibleStudy from './pages/BibleStudy'
 import Societies from './pages/Societies'
@@ -35,6 +37,7 @@ import AdminSearchResults from './pages/admin/AdminSearchResults'
 function App() {
   return (
     <AuthProvider>
+      <MotionConfig reducedMotion="user">
       <BrowserRouter>
         <OfflineBanner />
         <UpdatePrompt />
@@ -44,6 +47,7 @@ function App() {
           <Route path="/feed" element={<Feed />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/recuperar" element={<RecoverPassword />} />
           <Route path="/himnario" element={<Hymnal />} />
           <Route path="/estudios" element={<BibleStudy />} />
           <Route path="/sociedades" element={<Societies />} />
@@ -72,6 +76,7 @@ function App() {
         <ChatWidget />
         <InstallPrompt />
       </BrowserRouter>
+      </MotionConfig>
     </AuthProvider>
   )
 }

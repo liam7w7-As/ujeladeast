@@ -21,7 +21,7 @@ function Navbar({ activeItem = 'home' }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <nav className={`fixed left-0 right-0 top-0 z-50 mx-auto mt-3 sm:mt-5 flex w-[calc(100%-24px)] max-w-[1280px] flex-col border border-surface-border bg-glass-bg px-4 sm:px-6 shadow-2xl backdrop-blur-2xl transition-all duration-300 ${isMenuOpen ? 'rounded-2xl py-4 max-h-[calc(100dvh-24px)] overflow-y-auto' : 'rounded-full py-3'}`}>
+    <nav className={`desktop-navbar fixed left-0 right-0 top-0 z-50 mx-auto mt-3 sm:mt-5 flex w-[calc(100%-24px)] max-w-[1280px] flex-col border border-surface-border bg-glass-bg px-4 sm:px-6 shadow-2xl backdrop-blur-2xl transition-all duration-300 ${isMenuOpen ? 'rounded-2xl py-4 max-h-[calc(100dvh-24px)] overflow-y-auto' : 'rounded-full py-3'}`}>
       
       {/* Top Row: Logo & Desktop Menus & Mobile Toggle */}
       <div className="flex w-full items-center justify-between gap-4">

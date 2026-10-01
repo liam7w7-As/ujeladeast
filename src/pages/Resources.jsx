@@ -1,3 +1,4 @@
+import ContentIcon from '../components/ui/ContentIcon';
 import { useState, useEffect } from 'react';
 import PageShell from '../components/layout/PageShell';
 import ResourceCard from '../components/ui/ResourceCard';
@@ -80,7 +81,7 @@ export default function Resources() {
                   <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">{featured.title}</h2>
                   <div className="flex flex-wrap items-center gap-3 text-on-surface-variant text-sm">
                     <span className="flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[16px]">{featuredIcon}</span>
+                      <ContentIcon className="text-[16px]" name={featuredIcon} />
                       {featured.file_type || featured.category}
                     </span>
                     {featured.file_size && (
@@ -105,7 +106,7 @@ export default function Resources() {
                     onClick={() => setPreviewResource(featured)}
                     className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-5 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
                   >
-                    <span className="material-symbols-outlined text-[20px]">visibility</span>
+                    <ContentIcon className="text-[20px]" name="visibility" />
                     Ver recurso
                   </button>
 
@@ -114,7 +115,7 @@ export default function Resources() {
                     onClick={() => handleDownload(featured)}
                     className="bg-primary-container hover:bg-primary-container/80 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all shadow-[0_0_20px_rgba(143,25,55,0.4)] hover:shadow-[0_0_30px_rgba(143,25,55,0.6)] hover:scale-[1.02] active:scale-[0.98]"
                   >
-                    <span className="material-symbols-outlined text-[20px]">download</span>
+                    <ContentIcon className="text-[20px]" name="download" />
                     Descargar
                   </button>
                 </div>
@@ -126,7 +127,7 @@ export default function Resources() {
         {/* Error */}
         {error && (
           <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm flex items-center gap-2">
-            <span className="material-symbols-outlined text-[18px]">error</span>
+            <ContentIcon className="text-[18px]" name="error" />
             Error al cargar recursos: {error}
           </div>
         )}
@@ -143,7 +144,7 @@ export default function Resources() {
                   : 'border-surface-border text-on-surface-variant hover:text-white hover:border-white/20 bg-surface-container/40'
               }`}
             >
-              <span className="material-symbols-outlined text-[16px]">{filter.icon}</span>
+              <ContentIcon className="text-[16px]" name={filter.icon} />
               {filter.label}
             </button>
           ))}
@@ -163,7 +164,7 @@ export default function Resources() {
           </div>
         ) : resources.length === 0 ? (
           <div className="glass-card rounded-2xl p-14 text-center">
-            <span className="material-symbols-outlined text-5xl text-on-surface-variant/30 block mb-3">folder_open</span>
+            <ContentIcon className="text-5xl text-on-surface-variant/30 block mb-3" name="folder_open" />
             <p className="text-on-surface-variant">
               {activeFilter === 'Todos'
                 ? 'No hay recursos disponibles aún.'

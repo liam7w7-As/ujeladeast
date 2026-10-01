@@ -120,7 +120,7 @@ export default function Chat() {
         El contenido es un flex row centrado con ancho máximo.
       */}
       <div
-        className="fixed inset-0 top-0 flex flex-col bg-[#09090b]"
+        className="chat-page-frame fixed inset-0 top-0 flex flex-col bg-[#09090b]"
         style={{ paddingTop: '72px' }}  /* altura navbar */
       >
         <div className="flex-1 flex min-h-0 max-w-[1100px] mx-auto w-full">

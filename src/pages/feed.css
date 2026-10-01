@@ -125,7 +125,7 @@
 .feed-toast { position: fixed; z-index: 60; bottom: 28px; left: calc(50% + var(--feed-rail-width) / 2); translate: -50% 0; display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; background: #edf3f0; color: #18211d; box-shadow: 0 6px 32px #0004; font-size: 12px; max-width: calc(100% - 24px); }
 .feed-toast > svg { color: #28634d; flex-shrink: 0; }
 .feed-toast button { display: grid; place-items: center; width: 28px; height: 28px; }
-@media (max-width: 1199px) and (min-width: 900px) {
+@media (max-width: 1279px) and (min-width: 900px) {
   .community-feed { --feed-rail-width: 80px; }
   .feed-rail { padding: 24px 10px; align-items: center; }
   .feed-rail .feed-brand { padding: 6px 0 30px; }
@@ -139,7 +139,7 @@
   .feed-columns { display: block; max-width: 560px; }
   .feed-sidebar { display: none; }
 }
-@media (max-width: 899px) {
+@media (max-width: 1279px) {
   .community-feed { --feed-rail-width: 0px; }
   .feed-rail { display: none; }
   .feed-mobile-top { position: fixed; inset: 0 0 auto; height: calc(60px + env(safe-area-inset-top, 0px)); padding: env(safe-area-inset-top, 0px) 18px 0; display: flex; align-items: center; justify-content: space-between; z-index: 40; background: #0b0c0e; border-bottom: 1px solid #ffffff13; }
@@ -151,12 +151,12 @@
   .feed-mobile-create span { display: none; }
   .feed-mobile-create { color: #f4a5b8; }
   .feed-login { color: #f4a5b8; font-size: 12px; padding: 10px; }
-  .feed-layout { margin-left: 0; padding: calc(82px + env(safe-area-inset-top, 0px)) 24px calc(85px + env(safe-area-inset-bottom, 0px)); }
+  .feed-layout { margin-left: 0; padding: calc(82px + env(safe-area-inset-top, 0px)) 24px calc(100px + env(safe-area-inset-bottom, 0px)); }
   .feed-heading { margin-bottom: 18px; }
   .feed-heading h1 { font-size: 21px; }
   .feed-heading p { font-size: 11px; }
   .feed-post { scroll-margin-top: calc(72px + env(safe-area-inset-top, 0px)); }
-  .feed-toast { bottom: calc(76px + env(safe-area-inset-bottom, 0px)); width: max-content; }
+  .feed-toast { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); width: max-content; }
 }
 @media (max-width: 599px) {
   .feed-layout { padding-left: 0; padding-right: 0; }

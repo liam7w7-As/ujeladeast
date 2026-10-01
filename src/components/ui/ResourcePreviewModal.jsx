@@ -1,3 +1,5 @@
+import ContentIcon from './ContentIcon';
+import { createPortal } from 'react-dom';
 import { useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { modalBackdrop, modalContent } from '../../lib/animations';
@@ -33,9 +35,9 @@ export default function ResourcePreviewModal({ resource, isOpen, onClose, onDown
     ? `https://docs.google.com/viewer?url=${encodeURIComponent(file_url)}&embedded=true`
     : null;
 
-  return (
+  return createPortal(
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 overflow-hidden">
+      <div className="fixed inset-0 z-[60] flex items-center justify-center p-2 sm:p-4 md:p-6 overflow-hidden">
         {/* Backdrop */}
         <motion.div
           initial="hidden"
@@ -57,9 +59,7 @@ export default function ResourcePreviewModal({ resource, isOpen, onClose, onDown
           {/* Header */}
           <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-white/10 bg-[#16161c]/80 backdrop-blur-md shrink-0">
             <div className="flex items-center gap-3 min-w-0 pr-4">
-              <span className="material-symbols-outlined text-primary text-2xl shrink-0">
-                {isPdf ? 'picture_as_pdf' : isImage ? 'image' : isVideo ? 'smart_display' : isAudio ? 'music_note' : 'description'}
-              </span>
+              <ContentIcon className="text-primary text-2xl shrink-0" name={isPdf ? 'picture_as_pdf' : isImage ? 'image' : isVideo ? 'smart_display' : isAudio ? 'music_note' : 'description'} />
               <div className="min-w-0">
                 <h2 className="text-white text-sm sm:text-base font-semibold truncate leading-tight">
                   {title}
@@ -80,7 +80,7 @@ export default function ResourcePreviewModal({ resource, isOpen, onClose, onDown
                 title="Abrir en pestaña nueva"
                 className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/80 hover:text-white text-xs font-medium border border-white/10 transition-colors"
               >
-                <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+                <ContentIcon className="text-[16px]" name="open_in_new" />
                 <span>Pestaña nueva</span>
               </a>
 
@@ -89,7 +89,7 @@ export default function ResourcePreviewModal({ resource, isOpen, onClose, onDown
                 title="Descargar archivo"
                 className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-primary-container hover:bg-primary-container/80 text-white text-xs font-semibold shadow-md shadow-primary-container/20 transition-all active:scale-95"
               >
-                <span className="material-symbols-outlined text-[16px]">download</span>
+                <ContentIcon className="text-[16px]" name="download" />
                 <span className="hidden sm:inline">Descargar</span>
               </button>
 
@@ -98,7 +98,7 @@ export default function ResourcePreviewModal({ resource, isOpen, onClose, onDown
                 title="Cerrar vista previa"
                 className="w-8 h-8 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors ml-1"
               >
-                <span className="material-symbols-outlined text-[20px]">close</span>
+                <ContentIcon className="text-[20px]" name="close" />
               </button>
             </div>
           </div>
@@ -137,7 +137,7 @@ export default function ResourcePreviewModal({ resource, isOpen, onClose, onDown
             {isAudio && (
               <div className="w-full max-w-md p-6 bg-white/5 border border-white/10 rounded-2xl flex flex-col items-center gap-4 text-center">
                 <div className="w-20 h-20 rounded-full bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-400">
-                  <span className="material-symbols-outlined text-4xl">music_note</span>
+                  <ContentIcon className="text-4xl" name="music_note" />
                 </div>
                 <div>
                   <h3 className="text-white font-medium text-base mb-1">{title}</h3>
@@ -158,7 +158,7 @@ export default function ResourcePreviewModal({ resource, isOpen, onClose, onDown
             {!isPdf && !isImage && !isVideo && !isAudio && !isOffice && (
               <div className="w-full max-w-md p-6 bg-white/5 border border-white/10 rounded-2xl flex flex-col items-center gap-4 text-center">
                 <div className="w-16 h-16 rounded-full bg-primary-container/20 border border-primary-container/30 flex items-center justify-center text-primary">
-                  <span className="material-symbols-outlined text-3xl">attach_file</span>
+                  <ContentIcon className="text-3xl" name="attach_file" />
                 </div>
                 <div>
                   <h3 className="text-white font-medium text-base mb-1">{title}</h3>
@@ -173,14 +173,14 @@ export default function ResourcePreviewModal({ resource, isOpen, onClose, onDown
                     rel="noopener noreferrer"
                     className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-medium border border-white/10 flex items-center gap-1.5 transition-colors"
                   >
-                    <span className="material-symbols-outlined text-[16px]">open_in_new</span>
+                    <ContentIcon className="text-[16px]" name="open_in_new" />
                     Abrir en pestaña nueva
                   </a>
                   <button
                     onClick={() => onDownload(resource)}
                     className="px-4 py-2 rounded-xl bg-primary-container hover:bg-primary-container/80 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors"
                   >
-                    <span className="material-symbols-outlined text-[16px]">download</span>
+                    <ContentIcon className="text-[16px]" name="download" />
                     Descargar
                   </button>
                 </div>
@@ -189,6 +189,6 @@ export default function ResourcePreviewModal({ resource, isOpen, onClose, onDown
           </div>
         </motion.div>
       </div>
-    </AnimatePresence>
+    </AnimatePresence>, document.body
   );
 }

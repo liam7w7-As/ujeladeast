@@ -1,8 +1,13 @@
+import ContentIcon from './ContentIcon';
 import { motion } from 'motion/react';
 
 export default function HymnCard({ hymn, onClick }) {
   return (
     <motion.article 
+      role="button"
+      tabIndex={0}
+      aria-label={`Abrir himno ${hymn.numero}: ${hymn.titulo_es || 'Sin título'}`}
+      onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onClick(); } }}
       onClick={onClick}
       whileHover={{ y: -5, scale: 1.01, transition: { duration: 0.2 } }}
       whileTap={{ scale: 0.98 }}
@@ -31,12 +36,12 @@ export default function HymnCard({ hymn, onClick }) {
       <div className="flex items-center gap-2 mt-auto pt-4 border-t border-surface-border/50 relative z-10">
         {hymn.tonalidad && (
           <span className="px-2 py-1 bg-surface-container border border-surface-border rounded text-[10px] uppercase tracking-wider font-medium text-on-surface-variant flex items-center gap-1">
-            <span className="material-symbols-outlined text-[12px]">music_note</span>
+            <ContentIcon className="text-[12px]" name="music_note" />
             {hymn.tonalidad}
           </span>
         )}
         {hymn.categoria && (
-          <span className="px-2 py-1 bg-[#8f1937]/10 border border-[#8f1937]/20 rounded text-[10px] uppercase tracking-wider font-medium text-[#8f1937] ml-auto">
+          <span className="px-2 py-1 bg-[#8f1937]/10 border border-[#8f1937]/20 rounded text-[10px] uppercase tracking-wider font-medium text-primary ml-auto">
             {hymn.categoria}
           </span>
         )}

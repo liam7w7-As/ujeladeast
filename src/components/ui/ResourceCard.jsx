@@ -1,3 +1,4 @@
+import ContentIcon from './ContentIcon';
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import { downloadResourceFile } from '../../lib/downloadHelper';
@@ -74,7 +75,7 @@ export default function ResourceCard({ resource, onPreview, onDownload }) {
 
       {/* File icon */}
       <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${cfg.bg} ${cfg.border} group-hover:scale-105 transition-transform`}>
-        <span className={`material-symbols-outlined text-2xl ${cfg.color}`}>{cfg.icon}</span>
+        <ContentIcon className={`text-2xl ${cfg.color}`} name={cfg.icon} />
       </div>
 
       {/* Info */}
@@ -105,7 +106,7 @@ export default function ResourceCard({ resource, onPreview, onDownload }) {
             onClick={handlePreviewClick}
             className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/25 text-white/90 hover:text-white text-xs sm:text-sm font-medium transition-all shadow-sm"
           >
-            <span className="material-symbols-outlined text-[18px] text-white/80">visibility</span>
+            <ContentIcon className="text-[18px] text-white/80" name="visibility" />
             <span>Ver</span>
           </motion.button>
 
@@ -118,9 +119,7 @@ export default function ResourceCard({ resource, onPreview, onDownload }) {
             disabled={downloading}
             className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-primary-container/25 border border-primary-container/40 hover:bg-primary-container hover:shadow-[0_0_15px_rgba(143,25,55,0.4)] text-white text-xs sm:text-sm font-medium transition-all disabled:opacity-60"
           >
-            <span className="material-symbols-outlined text-[18px]">
-              {downloading ? 'hourglass_top' : 'download'}
-            </span>
+            <ContentIcon className="text-[18px]" name={downloading ? 'hourglass_top' : 'download'} />
             <span>{downloading ? 'Bajando...' : 'Descargar'}</span>
           </motion.button>
         </div>

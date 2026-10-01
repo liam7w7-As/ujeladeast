@@ -1,11 +1,13 @@
 import { motion } from 'motion/react'
+import { useNavigate } from 'react-router-dom'
 import Button from '../ui/Button'
 import ParticleCanvas from './ParticleCanvas'
 import { fadeInUp } from '../../lib/animations'
 
 function HeroSection() {
+  const navigate = useNavigate()
   return (
-    <section className="relative z-10 mb-[160px] flex min-h-[75vh] flex-col items-center justify-center gap-8 text-center px-4">
+    <section className="home-hero relative z-10 mb-[160px] flex min-h-[75vh] flex-col items-center justify-center gap-8 text-center px-4">
       <ParticleCanvas />
 
       {/* Badge / Pill */}
@@ -60,10 +62,10 @@ function HeroSection() {
         className="mt-4 flex flex-col gap-4 sm:flex-row items-center"
       >
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Button showArrow>Explorar Feed</Button>
+          <Button showArrow onClick={() => navigate('/feed')}>Explorar comunidad</Button>
         </motion.div>
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Button variant="glass">Conocer más</Button>
+          <Button variant="glass" onClick={() => navigate('/sociedades')}>Nuestras sociedades</Button>
         </motion.div>
       </motion.div>
     </section>

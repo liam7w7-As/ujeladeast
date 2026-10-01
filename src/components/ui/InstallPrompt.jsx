@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Download } from 'lucide-react';
 
 export default function InstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -21,13 +22,15 @@ export default function InstallPrompt() {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
     // Si la app ya está instalada, no mostrar nada
-    window.addEventListener('appinstalled', () => {
+    const handleInstalled = () => {
       setShowPrompt(false);
       setDeferredPrompt(null);
-    });
+    };
+    window.addEventListener('appinstalled', handleInstalled);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleInstalled);
     };
   }, []);
 
@@ -60,7 +63,7 @@ export default function InstallPrompt() {
   return (
     <AnimatePresence>
       {showPrompt && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 pb-24 md:pb-6 pointer-events-none flex justify-center">
+        <div className="pwa-install-prompt fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 pb-24 md:pb-6 pointer-events-none flex justify-center">
           <motion.div 
             initial={{ opacity: 0, y: 50, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -93,7 +96,7 @@ export default function InstallPrompt() {
                 onClick={handleInstallClick}
                 className="flex-1 sm:flex-none px-5 py-2.5 bg-gradient-to-r from-[#8f1937] to-[#a61c3f] text-white text-xs font-bold rounded-xl shadow-lg shadow-[#8f1937]/30 transition-all text-center flex items-center justify-center gap-1.5"
               >
-                <span className="material-symbols-outlined text-[16px]">download</span>
+                <Download size={16} aria-hidden="true" />
                 Instalar
               </motion.button>
               <motion.button 

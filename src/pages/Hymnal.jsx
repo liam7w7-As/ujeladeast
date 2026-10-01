@@ -1,3 +1,4 @@
+import ContentIcon from '../components/ui/ContentIcon';
 import { useState } from 'react';
 import PageShell from '../components/layout/PageShell';
 import HymnCard from '../components/ui/HymnCard';
@@ -25,7 +26,7 @@ export default function Hymnal() {
         <div className="mb-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
             <div>
-              <h1 className="font-headline-xl-mobile text-headline-xl-mobile md:font-headline-xl md:text-headline-xl text-on-surface mb-2 tracking-tight">Himnario</h1>
+              <h1 className="text-2xl md:text-4xl font-bold text-on-surface mb-2">Himnario</h1>
               <p className="font-body-lg text-body-lg text-on-surface-variant">Encuentra alabanzas y cánticos de adoración</p>
             </div>
             
@@ -33,10 +34,11 @@ export default function Hymnal() {
             <div className="w-full md:w-80">
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="material-symbols-outlined text-on-surface-variant group-focus-within:text-primary transition-colors">search</span>
+                  <ContentIcon className="text-on-surface-variant group-focus-within:text-primary transition-colors" name="search" />
                 </div>
                 <input 
                   type="text" 
+                  aria-label="Buscar himnos"
                   placeholder="Buscar por número o título..." 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -57,7 +59,7 @@ export default function Hymnal() {
                 }}
                 className={`whitespace-nowrap px-5 py-2.5 rounded-lg font-label-md text-sm uppercase tracking-wider transition-all duration-300 ${
                   activeHymnary === h.id 
-                    ? 'bg-primary text-white shadow-[0_0_15px_rgba(143,25,55,0.3)]' 
+                    ? 'bg-primary-container text-white'
                     : 'bg-glass-bg border border-surface-border text-on-surface-variant hover:border-surface-variant hover:text-on-surface'
                 }`}
               >
@@ -70,7 +72,7 @@ export default function Hymnal() {
         {/* Content */}
         {error && (
           <div className="p-4 bg-error/10 border border-error/30 text-error rounded-xl flex items-center gap-3">
-            <span className="material-symbols-outlined">error</span>
+            <ContentIcon className="" name="error" />
             {error}
           </div>
         )}
@@ -103,7 +105,7 @@ export default function Hymnal() {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-20 px-4 text-center border border-surface-border border-dashed rounded-2xl bg-glass-bg">
-            <span className="material-symbols-outlined text-6xl text-surface-variant mb-4">music_off</span>
+            <ContentIcon className="text-6xl text-surface-variant mb-4" name="music_off" />
             <h3 className="text-xl font-headline-md text-on-surface mb-2">No se encontraron himnos</h3>
             <p className="text-on-surface-variant">Prueba con otro término de búsqueda o cambia de himnario.</p>
           </div>

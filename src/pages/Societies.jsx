@@ -1,3 +1,4 @@
+import ContentIcon from '../components/ui/ContentIcon';
 import { useState, useEffect, useMemo } from 'react';
 import PageShell from '../components/layout/PageShell';
 import SocietyCard from '../components/ui/SocietyCard';
@@ -64,7 +65,7 @@ export default function Societies() {
         <div className="flex flex-col sm:flex-row gap-3 mb-8 animate-slide-up-delay-1">
           {/* Búsqueda */}
           <div className="relative flex-grow max-w-md">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+            <ContentIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]" name="search" />
             <input
               type="text"
               value={searchQuery}
@@ -86,7 +87,7 @@ export default function Societies() {
                 <option key={z} value={z}>{z}</option>
               ))}
             </select>
-            <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[20px]">expand_more</span>
+            <ContentIcon className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[20px]" name="expand_more" />
           </div>
 
           {/* Toggle Grid / List */}
@@ -96,14 +97,14 @@ export default function Societies() {
               className={`px-3 py-2 rounded-lg flex items-center justify-center transition-colors ${viewMode === 'grid' ? 'bg-primary-container/30 text-primary' : 'text-on-surface-variant hover:text-white'}`}
               title="Vista cuadrícula"
             >
-              <span className="material-symbols-outlined text-[20px]">grid_view</span>
+              <ContentIcon className="text-[20px]" name="grid_view" />
             </button>
             <button
               onClick={() => setViewMode('list')}
               className={`px-3 py-2 rounded-lg flex items-center justify-center transition-colors ${viewMode === 'list' ? 'bg-primary-container/30 text-primary' : 'text-on-surface-variant hover:text-white'}`}
               title="Vista lista"
             >
-              <span className="material-symbols-outlined text-[20px]">view_list</span>
+              <ContentIcon className="text-[20px]" name="view_list" />
             </button>
           </div>
         </div>
@@ -111,7 +112,7 @@ export default function Societies() {
         {/* Error */}
         {error && (
           <div className="bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl p-4 mb-6 text-sm flex items-center gap-2">
-            <span className="material-symbols-outlined text-[18px]">error</span>
+            <ContentIcon className="text-[18px]" name="error" />
             Error al cargar las sociedades: {error}
           </div>
         )}
@@ -139,7 +140,7 @@ export default function Societies() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="glass-card rounded-2xl p-12 text-center">
-            <span className="material-symbols-outlined text-5xl text-on-surface-variant/30 mb-4 block">church</span>
+            <ContentIcon className="text-5xl text-on-surface-variant/30 mb-4 block" name="church" />
             <p className="text-on-surface-variant">No se encontraron sociedades</p>
             {(searchQuery || selectedZone) && (
               <p className="text-sm text-on-surface-variant/60 mt-1">Intenta con otro término de búsqueda</p>
