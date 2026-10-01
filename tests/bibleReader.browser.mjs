@@ -27,6 +27,10 @@ try {
     const bounds = await page.locator('.bible-immersive').boundingBox();
     assert.equal(bounds.height, 900);
     assert.equal(bounds.y, 0);
+    const lineRatio = await page.locator('.bible-chapter').evaluate(element => {
+      const style = getComputedStyle(element); return parseFloat(style.lineHeight) / parseFloat(style.fontSize);
+    });
+    assert.ok(Math.abs(lineRatio - (width < 768 ? 1.7 : 1.95)) < 0.01);
     await page.screenshot({ path: `${output}/reader-${width}.png` });
   }
   await page.setViewportSize({ width: 390, height: 844 });

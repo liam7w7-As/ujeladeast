@@ -243,6 +243,7 @@ body:has(.bible-immersive) { overflow: hidden; }
   .bible-immersive .bible-header-actions { gap: 0; }
   .bible-immersive .bible-toolbar-divider { margin: 0 2px; }
   .bible-immersive .bible-controls { padding: 0 12px; height: 52px; min-height: 52px; }
-  .bible-immersive .bible-reading-area > .bible-chapter { padding: 20px 16px 36px; }
+  .bible-immersive .bible-reading-area > .bible-chapter { padding: 20px 16px 36px; line-height: 1.7; }
+  .bible-immersive .bible-compare-scroll.bible-chapter { line-height: 1.5; }
   .bible-immersive .bible-notice:not(:empty) { padding: 6px 12px; }
 }

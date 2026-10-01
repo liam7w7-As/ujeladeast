@@ -75,6 +75,10 @@ try {
   await page.getByRole('dialog').getByLabel('Cerrar ventana').click();
   for (const width of [320, 390, 768]) {
     await page.setViewportSize({ width, height: 844 });
+    const lineRatio = await regions.first().evaluate(element => {
+      const style = getComputedStyle(element); return parseFloat(style.lineHeight) / parseFloat(style.fontSize);
+    });
+    assert.ok(Math.abs(lineRatio - (width < 768 ? 1.5 : 1.65)) < 0.01);
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `Overflow at ${width}`);
     const boxes = await page.locator('.bible-compare-column').evaluateAll(elements => elements.map(element => {
       const { x, y, width, height } = element.getBoundingClientRect(); return { x, y, width, height };
