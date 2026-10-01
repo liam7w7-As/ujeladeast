@@ -169,3 +169,39 @@ El chequeo de datos verifica los 264 libros contra sus paquetes completos.
 Compatibilidad: se requiere un navegador con Web Workers, Web Crypto,
 IndexedDB y DecompressionStream para gzip. La app informa errores de descarga
 o almacenamiento; la lectura online sigue disponible si IndexedDB esta bloqueado.
+
+## Favoritos y comparacion
+
+Cada versiculo empieza en un bloque nuevo. Se mantienen las continuaciones,
+la poesia y las tablas del documento; los fragmentos vacios no generan filas.
+Las opciones aparecen una vez por referencia. Para copiar o guardar se juntan
+todos los fragmentos de esa referencia, sin numeros incrustados, notas ni
+encabezados de tablas. Los rangos propios de una traduccion (por ejemplo 1-3)
+se conservan juntos y nunca se dividen inventando correspondencias.
+
+`bible:verseFavorites` conserva hasta 500 favoritos por dispositivo, incluyendo
+texto, version y referencia. `bible:bookmarks` sigue conservando los marcadores
+de capitulos anteriores. No hay migracion destructiva ni sincronizacion de
+favoritos con Supabase. El dialogo de marcadores separa versiculos y capitulos;
+abrir un favorito salta a su referencia y la destaca. La copia incluye cita y
+version. Si el portapapeles esta bloqueado, ofrece texto seleccionable y no
+anuncia un exito falso. Los fallos de almacenamiento tambien son visibles.
+
+Se pueden comparar dos o tres versiones. Cada columna tiene carga, errores y
+scroll independientes; el libro y capitulo se cambian juntos. En pantallas de
+hasta 1000 px se navega entre columnas mediante pestanas o desplazamiento
+horizontal, manteniendo el scroll vertical de cada una. Cambiar de capitulo
+reinicia los paneles. La comparacion funciona offline con versiones descargadas;
+una version ausente no bloquea las demas. Los favoritos de versiones diferentes
+se guardan por separado aunque tengan el mismo numero de versiculo.
+
+Pruebas adicionales:
+
+```powershell
+node --test tests/bibleVerses.test.mjs
+node tests/bibleExperience.browser.mjs
+```
+
+Se verifican fragmentos, rangos, celdas de tablas, cita copiada, persistencia y
+salto a favoritos, scroll independiente, anchos moviles, cambios de capitulo,
+errores de portapapeles/almacenamiento y comparacion offline parcial y completa.

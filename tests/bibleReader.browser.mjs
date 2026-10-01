@@ -50,6 +50,7 @@ try {
   await page.locator('.bible-verse').first().waitFor();
   await page.getByLabel('Guardar capítulo').click();
   await page.getByLabel('Marcadores', { exact: true }).click();
+  await page.getByRole('tab', { name: /Capítulos/ }).click();
   assert.match(await page.getByRole('dialog').innerText(), /Juan 3/);
   await page.getByRole('dialog').getByLabel('Cerrar ventana').click();
   await page.getByLabel('Descargas', { exact: true }).click();
@@ -80,6 +81,7 @@ try {
   await page.reload();
   await page.getByRole('heading', { name: 'No pudimos abrir este capítulo' }).waitFor();
   await page.getByLabel('Marcadores', { exact: true }).click();
+  await page.getByRole('tab', { name: /Capítulos/ }).click();
   assert.match(await page.getByRole('dialog').innerText(), /Juan 3/);
   await page.getByRole('dialog').getByLabel('Cerrar ventana').click();
   await context.setOffline(false);
