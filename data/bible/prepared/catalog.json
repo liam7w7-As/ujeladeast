@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "compression": "gzip",
+  "versions": [
+    {
+      "id": "RVR1960",
+      "title": "Biblia Reina Valera 1960",
+      "file": "RVR1960.json.gz",
+      "books": 66,
+      "chapters": 1189,
+      "notes": 3784,
+      "sourceBytes": 22996948,
+      "unpackedBytes": 17746687,
+      "downloadBytes": 2650141,
+      "sha256": "0f992428b95564dc3c98357b8ade18b08929e48a976feb6d0ba440fcbb3c7fbe",
+      "sourceSha256": "61e2f60ada8be94868e3db0b89102c8ad8b26dfef49e3fb03bc682f8b37ea778"
+    },
+    {
+      "id": "NTV",
+      "title": "Nueva Traducción Viviente",
+      "file": "NTV.json.gz",
+      "books": 66,
+      "chapters": 1189,
+      "notes": 4851,
+      "sourceBytes": 28860373,
+      "unpackedBytes": 23307254,
+      "downloadBytes": 3372899,
+      "sha256": "971f69843cfd2e5aee8cb0bf9c176afcc4ffb51f897d1529b835b81b39fb1eb2",
+      "sourceSha256": "3cb7c222f63fe7b20a102661ee5945ebc7803390b9ee4d4ac5ed4238e7b143a9"
+    },
+    {
+      "id": "NVI",
+      "title": "Nueva Versión Internacional - Español",
+      "file": "NVI.json.gz",
+      "books": 66,
+      "chapters": 1189,
+      "notes": 2686,
+      "sourceBytes": 27835451,
+      "unpackedBytes": 21865064,
+      "downloadBytes": 3119118,
+      "sha256": "fdc74204167ca5013bc158c0bdd7b69bf3f236efe24d732ab5db175e7352dbfa",
+      "sourceSha256": "a0ade6833b7d06bac083b70b246f2b9a03ad0b8c824433ba43d46dd910ff0ada"
+    },
+    {
+      "id": "TLA",
+      "title": "Traducción en Lenguaje Actual",
+      "file": "TLA.json.gz",
+      "books": 66,
+      "chapters": 1189,
+      "notes": 481,
+      "sourceBytes": 27204630,
+      "unpackedBytes": 21622484,
+      "downloadBytes": 3030635,
+      "sha256": "5553e4b84e54680ce13b6995b43fe1ecaeabf17dc6508e1e853c55192ca6c950",
+      "sourceSha256": "eb895c5505bfa7995d8ce62912b1a30a555c4e5a31548de9be051c24f0687a82"
+    }
+  ]
+}
