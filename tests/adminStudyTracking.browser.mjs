@@ -44,7 +44,10 @@ try {
     if (url.pathname.includes('/profiles')) body = { id, full_name: 'Administrador', role, church_name: 'Central' };
     else if (url.pathname.includes('/study_plans')) body = url.searchParams.get('offset') === '0' ? plans : [];
     else if (url.pathname.includes('/study_weeks')) body = url.searchParams.get('plan_id') === 'eq.plan-a' && url.searchParams.get('offset') === '0' ? weeks : [];
-    else if (url.pathname.includes('/study_lessons')) body = url.searchParams.get('study_weeks.plan_id') === 'eq.plan-a' && url.searchParams.get('offset') === '0' ? lessons : [];
+    else if (url.pathname.includes('/study_lessons')) {
+      if (url.searchParams.has('id')) body = { ...lessons[0], questions: [], user_progress: [] };
+      else body = url.searchParams.get('study_weeks.plan_id') === 'eq.plan-a' && url.searchParams.get('offset') === '0' ? lessons : [];
+    }
     else if (url.pathname.includes('/user_progress')) {
       if (route.request().method() === 'POST') {
         assert.match(route.request().headers().prefer, /resolution=ignore-duplicates/);

@@ -1,20 +1,21 @@
-import { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, ArrowRight } from 'lucide-react';
+import { useState, useEffect, useEffectEvent, useRef } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { BookOpen, ArrowRight, CheckCircle2, LoaderCircle, RotateCw } from 'lucide-react';
+import ContentIcon from '../components/ui/ContentIcon';
 import PageShell from '../components/layout/PageShell';
 import StreakCard from '../components/ui/StreakCard';
 import XPBar from '../components/ui/XPBar';
-import ProgressRing from '../components/ui/ProgressRing';
 import LessonCard from '../components/ui/LessonCard';
 import WeekCard from '../components/ui/WeekCard';
 import JournalEntry from '../components/ui/JournalEntry';
-import CelebrationModal from '../components/ui/CelebrationModal';
+import StudySession from '../components/ui/StudySession';
 
 import { useStudy } from '../hooks/useStudy';
 import { useStreak } from '../hooks/useStreak';
 import { useJournal } from '../hooks/useJournal';
 import { useAuth } from '../hooks/useAuth';
 import { useChat } from '../hooks/useChat';
+import { lessonRevision } from '../lib/studyJourney';
 import ujeladitoAvatar from '../assets/ujeladito-avatar.png';
 
 const SOS_RISK_WORDS = [
@@ -27,20 +28,31 @@ function detectRisk(text) {
 }
 
 export default function BibleStudy() {
+  const { user } = useAuth();
+  return <BibleStudyContent key={user?.id || 'guest'} />;
+}
+
+function BibleStudyContent() {
   const { user, profile } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   
   // Hooks
-  const { plan, weeks, lessons, getLessons, getCurrentPlan, getWeeks, getTodayLesson, completeLesson, getUserProgress, loading: studyLoading } = useStudy();
+  const { plan, weeks, lessons, getLessons, getCurrentPlan, getWeeks, getJourney, getLesson, completeLesson, loading: studyLoading, error: studyError } = useStudy();
   const { streakData, getStreak, updateStreak } = useStreak();
   const { entries, getRecentEntries, saveEntry, error: journalError } = useJournal();
-  const { messages: sosMessages, sending: sosSending, error: sosError, createSession: createSosSession, sendMessage: sendSosMessage, currentSession: sosSession, setError: setSosError } = useChat();
+  const { messages: sosMessages, sending: sosSending, error: sosError, createSession: createSosSession, sendMessage: sendSosMessage, currentSession: sosSession } = useChat();
   
   // State
   const [activeView, setActiveView] = useState('dashboard'); // dashboard | plan | lesson | journal | sos
   const [activeLesson, setActiveLesson] = useState(null);
   const [activeWeek, setActiveWeek] = useState(null);
-  const [annualProgress, setAnnualProgress] = useState(0);
+  const [journey, setJourney] = useState(null);
+  const [journeyError, setJourneyError] = useState('');
+  const [journeyLoading, setJourneyLoading] = useState(true);
+  const [openingLesson, setOpeningLesson] = useState(false);
+  const [lessonError, setLessonError] = useState('');
+  const [journalSearch, setJournalSearch] = useState('');
   const [sosInput, setSosInput] = useState('');
   const [showRiskBanner, setShowRiskBanner] = useState(false);
   const sosEndRef = useRef(null);
@@ -50,23 +62,6 @@ export default function BibleStudy() {
   useEffect(() => {
     sosEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [sosMessages, sosSending]);
-
-  // Abrir SOS si viene del Navbar
-  useEffect(() => {
-    if (location.state?.openSOS) {
-      handleOpenSOS();
-      window.history.replaceState({}, '');
-    }
-  }, [location.state]);
-  
-  // Lesson specific state
-  const [answers, setAnswers] = useState({});
-  const [journalContent, setJournalContent] = useState('');
-  const [favoriteVerses, setFavoriteVerses] = useState([]);
-  const [newVerse, setNewVerse] = useState('');
-  const [completing, setCompleting] = useState(false);
-  const [showCelebration, setShowCelebration] = useState(false);
-  const [celebrationData, setCelebrationData] = useState(null);
 
   const handleOpenSOS = async () => {
     setActiveView('sos');
@@ -83,97 +78,76 @@ export default function BibleStudy() {
     }
   };
 
-  // Initial Load
+  const openRequestedSOS = useEffectEvent(() => { handleOpenSOS(); });
   useEffect(() => {
-    if (user) {
-      getStreak();
-      getRecentEntries(3);
-      getCurrentPlan();
+    if (location.state?.openSOS && user) {
+      // Consume an explicit navigation request from the shared mobile menu.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      openRequestedSOS();
+      navigate(location.pathname, { replace: true, state: null });
     }
-  }, [user]);
+  }, [location.state, location.pathname, user, navigate]);
 
   useEffect(() => {
-    if (plan) {
-      getWeeks(plan.id);
-      getUserProgress(plan.id).then(setAnnualProgress);
-    }
-  }, [plan]);
+    if (!user) return;
+    getStreak();
+    getRecentEntries(3);
+    getCurrentPlan();
+  }, [user, getStreak, getRecentEntries, getCurrentPlan]);
 
-  const handleStartTodayLesson = async () => {
-    if (!plan) return;
-    const lesson = await getTodayLesson(plan.id);
-    if (lesson) {
+  useEffect(() => {
+    let active = true;
+    if (!plan || !user) return;
+    getWeeks(plan.id);
+    getJourney(plan.id).then(data => {
+      if (active) { setJourney(data); setJourneyError(''); }
+    }).catch(() => {
+      if (active) setJourneyError('No pudimos cargar tu recorrido. Tu avance se conserva.');
+    }).finally(() => { if (active) setJourneyLoading(false); });
+    return () => { active = false; };
+  }, [plan, user, getWeeks, getJourney]);
+
+  const refreshJourney = async () => {
+    setJourneyLoading(true);
+    try { setJourney(await getJourney(plan.id)); setJourneyError(''); }
+    catch { setJourneyError('No pudimos cargar tu recorrido. Tu avance se conserva.'); }
+    finally { setJourneyLoading(false); }
+  };
+  const openLesson = async lessonId => {
+    if (openingLesson) return;
+    setOpeningLesson(true); setLessonError('');
+    try {
+      const lesson = await getLesson(lessonId);
+      if (!lesson) throw new Error('Missing lesson');
       setActiveLesson(lesson);
       setActiveView('lesson');
-      // Reset forms
-      setAnswers({});
-      setJournalContent('');
-      setFavoriteVerses([]);
+    } catch { setLessonError('No se pudo abrir la lección. Intenta de nuevo.'); }
+    finally { setOpeningLesson(false); }
+  };
+  const handleCompleteLesson = async ({ answers, journalContent, favoriteVerses }) => {
+    const latest = await getLesson(activeLesson.id);
+    if (latest.user_progress?.completed) {
+      await refreshJourney();
+      getWeeks(plan.id);
+      return { notice: 'Esta lección ya estaba completada. Sus respuestas anteriores se conservaron.' };
     }
-  };
-
-  const handleAddVerse = (e) => {
-    if (e.key === 'Enter' && newVerse.trim() !== '') {
-      e.preventDefault();
-      setFavoriteVerses([...favoriteVerses, newVerse.trim()]);
-      setNewVerse('');
+    if (lessonRevision(latest) !== lessonRevision(activeLesson)) {
+      const error = new Error('La lección cambió durante tu estudio. Vuelve a abrirla para revisar la actualización; tu borrador se conserva.');
+      error.code = 'study_content_changed';
+      throw error;
     }
-  };
-
-  const handleRemoveVerse = (index) => {
-    setFavoriteVerses(favoriteVerses.filter((_, i) => i !== index));
-  };
-
-  const handleCompleteLesson = async () => {
-    if (!activeLesson || completing) return;
-    try {
-      setCompleting(true);
-      // Guardar progreso y respuestas
-      const progress = await completeLesson(activeLesson.id, answers);
-      if (!progress) {
-        alert('Esta lección ya estaba completada. Tu avance se conserva.');
-        setActiveView('dashboard');
-        return;
-      }
-      
-      // Guardar diario si hay contenido o versos
-      if (journalContent.trim() || favoriteVerses.length > 0) {
-        try {
-          await saveEntry(activeLesson.id, journalContent, favoriteVerses);
-        } catch {
-          alert('La lección se completó, pero no se pudo guardar el diario.');
-        }
-      }
-      
-      // Calcular XP Base
-      let xp = 10;
-      if (journalContent.trim()) xp += 5;
-      if (favoriteVerses.length > 0) xp += 2;
-      
-      // Actualizar Racha y XP Total
-      const { streak: newStreak, addedXP } = await updateStreak(xp);
-      
-      setCelebrationData({ xp: addedXP, streak: newStreak.current_streak });
-      setShowCelebration(true);
-      
-      // Actualizar data
-      if (plan) {
-        getWeeks(plan.id);
-        getUserProgress(plan.id).then(setAnnualProgress);
-      }
-      getRecentEntries(3);
-
-    } catch (err) {
-      alert("Hubo un error al guardar tu progreso.");
-      console.error(err);
-    } finally {
-      setCompleting(false);
-    }
-  };
-
-  const handleCelebrationClose = () => {
-    setShowCelebration(false);
-    setActiveView('dashboard');
+    // Save the optional journal first so a failed write leaves the study draft retryable.
+    if (journalContent.trim() || favoriteVerses.length) await saveEntry(activeLesson.id, journalContent, favoriteVerses);
+    const progress = await completeLesson(activeLesson.id, answers);
+    let notice = '';
+    if (progress) {
+      try { await updateStreak(10); }
+      catch { notice = 'El estudio está guardado, pero no se pudo actualizar la racha y el XP.'; }
+    } else notice = 'Esta lección ya estaba completada. Tu avance se conserva.';
+    await refreshJourney();
+    getWeeks(plan.id);
+    getRecentEntries(3);
+    return { notice };
   };
 
   if (!user) {
@@ -193,16 +167,16 @@ export default function BibleStudy() {
   }
 
   return (
-    <PageShell activeItem="bible-studies">
+    <PageShell activeItem="bible-studies" withFooter={activeView !== 'lesson'} ambient={activeView !== 'lesson'} className={activeView === 'lesson' ? 'study-session-page' : ''}>
       <main className="flex-grow pt-[120px] pb-section-gap px-margin-mobile md:px-gutter max-w-container-max mx-auto w-full relative z-10">
         
         {/* Top Navigation / Tabs */}
-        <div className="flex gap-4 border-b border-surface-border mb-8 overflow-x-auto no-scrollbar">
+        {activeView !== 'lesson' && <div className="flex gap-4 border-b border-surface-border mb-8 overflow-x-auto no-scrollbar">
           <button 
             className={`pb-3 px-2 text-sm font-medium whitespace-nowrap transition-colors border-b-2 ${activeView === 'dashboard' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant hover:text-white'}`}
             onClick={() => setActiveView('dashboard')}
           >
-            Dashboard
+            Mi estudio
           </button>
           <button 
             className={`pb-3 px-2 text-sm font-medium whitespace-nowrap transition-colors border-b-2 ${activeView === 'plan' || activeView === 'week' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant hover:text-white'}`}
@@ -222,16 +196,12 @@ export default function BibleStudy() {
             onClick={handleOpenSOS}
           >
             <span className="flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-[15px]">volunteer_activism</span>
+              <ContentIcon className="text-[15px]" name="volunteer_activism" />
               Apoyo SOS
             </span>
           </button>
-          {activeView === 'lesson' && (
-            <button className="pb-3 px-2 text-sm font-medium whitespace-nowrap transition-colors border-b-2 border-primary text-primary">
-              Lección Actual
-            </button>
-          )}
-        </div>
+        </div>}
+        {lessonError && <p role="alert" className="study-notice">{lessonError}</p>}
 
         {/* --- VIEW: DASHBOARD --- */}
         {activeView === 'dashboard' && (
@@ -244,25 +214,25 @@ export default function BibleStudy() {
               {/* Left Column */}
               <div className="md:col-span-8 flex flex-col gap-6">
                 
-                {/* Hero / Today's Lesson */}
-                <div className="glass-card rounded-2xl p-8 relative overflow-hidden flex flex-col md:flex-row justify-between items-center gap-6 border-primary/20 bg-primary-container/5">
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-primary-container/10 blur-[80px] rounded-full -z-10"></div>
-                  <div className="flex-1">
-                    <span className="px-3 py-1 bg-primary/20 text-primary text-xs font-bold rounded-full mb-4 inline-block tracking-wider uppercase">Lección de Hoy</span>
-                    <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">{plan?.title || 'Plan Anual'}</h2>
-                    <p className="text-on-surface-variant mb-6 max-w-md">Tu lección diaria está lista. Abre la Biblia, prepara tu corazón y comencemos.</p>
-                    <button 
-                      onClick={handleStartTodayLesson}
-                      className="bg-primary-container hover:bg-inverse-primary text-white font-medium py-3 px-8 rounded-xl transition-all shadow-[0_0_15px_rgba(143,25,55,0.3)] flex items-center gap-2 w-fit"
-                    >
-                      <span className="material-symbols-outlined">menu_book</span>
-                      Empezar Estudio
-                    </button>
-                  </div>
-                  <div className="hidden md:flex justify-center items-center">
-                    <ProgressRing percentage={annualProgress} />
-                  </div>
-                </div>
+                <section className="study-continue" aria-label="Tu siguiente estudio">
+                  <p className="study-eyebrow"><BookOpen size={17} />{plan?.title || 'Tu plan de estudio'}</p>
+                  {studyError && !plan ? <p role="alert" className="study-notice">No se pudo cargar el plan.<button type="button" onClick={getCurrentPlan} aria-label="Reintentar carga del plan"><RotateCw size={18} /></button></p>
+                    : !plan ? <p>{studyLoading ? 'Cargando tu plan...' : 'Todavía no hay un plan disponible.'}</p>
+                    : journeyLoading ? <p role="status">Cargando tu recorrido...</p>
+                    : journeyError ? <><p role="alert" className="study-notice">{journeyError}</p><button type="button" className="study-primary" onClick={refreshJourney}><RotateCw size={17} />Reintentar</button></>
+                    : journey?.nextLesson ? <>
+                      <h2>{journey.nextLesson.title}</h2>
+                      <p>{journey.nextLesson.scripture_ref}</p>
+                      <button type="button" className="study-primary" disabled={openingLesson} onClick={() => openLesson(journey.nextLesson.id)}>
+                        {openingLesson ? <LoaderCircle size={18} className="animate-spin" /> : <BookOpen size={18} />}
+                        Continuar: día {journey.nextLesson.ordinal} de {journey.total}<ArrowRight size={18} />
+                      </button>
+                    </> : journey?.total ? <>
+                      <h2>Completaste tu recorrido</h2><p>Tus {journey.total} estudios y respuestas se conservan.</p>
+                      <button type="button" className="study-primary" onClick={() => setActiveView('plan')}><CheckCircle2 size={18} />Volver a leer</button>
+                    </> : <p>Este plan todavía no tiene lecciones publicadas.</p>}
+                  {!!journey?.total && !journeyError && <div className="study-journey-summary"><progress value={journey.completed} max={journey.total} aria-label="Estudios completados" /><span>{journey.completed} de {journey.total} estudios completados</span></div>}
+                </section>
 
                 {/* Progress / Streaks Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -277,12 +247,12 @@ export default function BibleStudy() {
                 {/* Quick Stats or Junta */}
                 <div className="glass-card rounded-2xl p-6 border-surface-border">
                   <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
-                    <span className="material-symbols-outlined text-secondary">calendar_month</span>
+                    <ContentIcon className="text-secondary" name="calendar_month" />
                     Sesión Trimestral
                   </h3>
                   <div className="bg-surface-container rounded-xl p-4">
                     <p className="text-sm text-on-surface-variant leading-relaxed">
-                      Tu progreso y avances serán revisados oficialmente en la próxima sesión trimestral de UJELADEA.
+                      Un espacio para compartir aprendizajes, conversar sobre tus dudas y seguir estudiando juntos.
                     </p>
                   </div>
                 </div>
@@ -291,10 +261,10 @@ export default function BibleStudy() {
                 <div className="glass-card rounded-2xl p-6 border-surface-border flex-grow">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="font-semibold text-white flex items-center gap-2">
-                      <span className="material-symbols-outlined text-primary">auto_stories</span>
+                      <ContentIcon className="text-primary" name="auto_stories" />
                       Mi Diario
                     </h3>
-                    <button onClick={() => setActiveView('journal')} className="text-xs text-primary hover:text-white">Ver todo</button>
+                    <button onClick={() => { setActiveView('journal'); getRecentEntries(50); }} className="text-xs text-primary hover:text-white">Ver todo</button>
                   </div>
                   <div className="flex flex-col gap-3">
                     {entries.length === 0 ? (
@@ -320,7 +290,7 @@ export default function BibleStudy() {
           <div className="animate-in fade-in duration-500">
             <div className="mb-8">
               <h1 className="text-2xl font-bold text-white mb-2">Plan Anual de Estudio</h1>
-              <p className="text-on-surface-variant">Un camino de 52 semanas a través de las Escrituras.</p>
+              <p className="text-on-surface-variant">El contenido de tu plan, a tu ritmo.</p>
             </div>
             
             {studyLoading ? (
@@ -336,9 +306,10 @@ export default function BibleStudy() {
                     onClick={async (w) => {
                       const loadedLessons = await getLessons(w.id);
                       if (!loadedLessons) {
-                        alert('No se pudieron cargar las lecciones de esta semana.');
+                        setLessonError('No se pudieron cargar las lecciones de esta semana. Intenta de nuevo.');
                         return;
                       }
+                      setLessonError('');
                       setActiveWeek(w);
                       setActiveView('week');
                     }}
@@ -356,7 +327,7 @@ export default function BibleStudy() {
               onClick={() => setActiveView('plan')}
               className="mb-6 flex items-center gap-2 text-on-surface-variant hover:text-white transition-colors text-sm"
             >
-              <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+              <ContentIcon className="text-[18px]" name="arrow_back" />
               Volver al Plan
             </button>
             <h2 className="text-2xl font-bold text-white mb-2">Semana {activeWeek.week_number}: {activeWeek.title}</h2>
@@ -367,164 +338,23 @@ export default function BibleStudy() {
                 <LessonCard 
                   key={lesson.id} 
                   lesson={lesson} 
-                  onClick={(l) => {
-                    setActiveLesson(l);
-                    setActiveView('lesson');
-                    setAnswers({});
-                    setJournalContent('');
-                    setFavoriteVerses([]);
-                  }} 
+                  onClick={lesson => openLesson(lesson.id)}
+                  disabled={openingLesson}
                 />
               ))}
             </div>
           </div>
         )}
 
-        {/* --- VIEW: LECCIÓN --- */}
-        {activeView === 'lesson' && activeLesson && (
-          <div className="animate-in fade-in slide-in-from-bottom-8 duration-500 max-w-3xl mx-auto">
-            <button 
-              onClick={() => setActiveView('dashboard')}
-              className="mb-8 flex items-center gap-2 text-on-surface-variant hover:text-white transition-colors text-sm"
-            >
-              <span className="material-symbols-outlined text-[18px]">arrow_back</span>
-              Salir del estudio
-            </button>
-
-            {/* Versículo Base */}
-            <div className="mb-12 text-center">
-              <span className="px-3 py-1 bg-surface-container-high text-on-surface-variant text-xs font-bold rounded-full mb-6 inline-block tracking-widest uppercase border border-surface-border">
-                Día {activeLesson.day_number}
-              </span>
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-4 font-sora">{activeLesson.title}</h1>
-              <h3 className="text-primary font-semibold text-lg">{activeLesson.scripture_ref}</h3>
-            </div>
-
-            {/* Texto Bíblico o Enseñanza */}
-            <div className="glass-card rounded-3xl p-8 mb-8 border-surface-border prose prose-invert max-w-none font-inter text-on-surface/90 leading-loose">
-              {activeLesson.scripture_text ? (
-                <div dangerouslySetInnerHTML={{ __html: activeLesson.scripture_text }} />
-              ) : (
-                <p className="italic opacity-70">Lee el pasaje correspondiente en tu Biblia antes de continuar con la reflexión.</p>
-              )}
-              {activeLesson.teaching && (
-                <div className="mt-6 border-t border-surface-border pt-6" dangerouslySetInnerHTML={{ __html: activeLesson.teaching }} />
-              )}
-            </div>
-
-            {/* Botón Preguntar a UJELADITO */}
-            <div className="mb-8 p-4 bg-amber-500/8 border border-amber-500/20 rounded-2xl flex items-center gap-4">
-              <img src={ujeladitoAvatar} alt="UJELADITO" className="w-10 h-10 rounded-full object-cover border border-amber-500/30 shrink-0" />
-              <div className="flex-1 min-w-0">
-                <p className="text-white/80 text-sm font-medium">¿Tienes dudas sobre esta lección?</p>
-                <p className="text-white/40 text-xs">UJELADITO puede ayudarte a profundizar.</p>
-              </div>
-              <button
-                onClick={() => {
-                  const extraCtx = `Lección: "${activeLesson.title}"\nReferencia: ${activeLesson.scripture_ref || 'N/A'}\nEnseñanza: ${activeLesson.teaching?.replace(/<[^>]*>/g, '') || 'Ver en la lección'}`.slice(0, 800);
-                  // Abrir el widget flotante con contexto de estudio
-                  // Disparamos un evento personalizado que ChatWidget escucha
-                  window.dispatchEvent(new CustomEvent('ujeladito:open', { detail: { contextType: 'estudio', extraContext: extraCtx } }));
-                }}
-                className="px-4 py-2 rounded-xl text-sm font-medium border transition-colors whitespace-nowrap shrink-0"
-                style={{ color: '#c9a84c', borderColor: 'rgba(201,168,76,0.35)', background: 'rgba(201,168,76,0.1)' }}
-              >
-                Preguntar a UJELADITO
-              </button>
-            </div>
-
-            {/* Preguntas */}
-            {activeLesson.questions && activeLesson.questions.length > 0 && (
-              <div className="mb-8 flex flex-col gap-6">
-                <h3 className="text-xl font-semibold text-white flex items-center gap-2">
-                  <span className="material-symbols-outlined text-secondary">help</span>
-                  Preguntas de Reflexión
-                </h3>
-                {activeLesson.questions.map((q, idx) => (
-                  <div key={idx} className="bg-surface-container rounded-2xl p-6">
-                    <p className="text-white font-medium mb-4">{q.text}</p>
-                    <textarea 
-                      className="w-full bg-surface-container-high border border-surface-border rounded-xl p-4 text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all min-h-[100px] resize-y"
-                      placeholder="Escribe tu respuesta aquí..."
-                      value={answers[idx] || ''}
-                      onChange={(e) => setAnswers({...answers, [idx]: e.target.value})}
-                    ></textarea>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Diario y Versículos Favoritos */}
-            <div className="mb-12 flex flex-col gap-6">
-              <h3 className="text-xl font-semibold text-white flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">auto_stories</span>
-                Diario Personal
-              </h3>
-              
-              <div className="glass-card rounded-2xl p-6 border-primary/30 bg-primary-container/5 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-1 bg-primary h-full"></div>
-                <p className="text-sm text-on-surface-variant mb-4">Escribe lo que Dios te habló hoy, una oración, o una reflexión final.</p>
-                <textarea 
-                  className="w-full bg-surface-container border border-surface-border rounded-xl p-4 text-white placeholder:text-on-surface-variant/50 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all min-h-[150px] resize-y mb-6"
-                  placeholder="Querido Dios, hoy aprendí que..."
-                  value={journalContent}
-                  onChange={(e) => setJournalContent(e.target.value)}
-                ></textarea>
-
-                {/* Favoritos */}
-                <div>
-                  <p className="text-sm text-on-surface-variant mb-2">Versículos que impactaron hoy:</p>
-                  <div className="flex items-center gap-2 mb-3">
-                    <input 
-                      type="text" 
-                      className="flex-1 bg-surface-container border border-surface-border rounded-lg p-2 text-sm text-white focus:border-secondary outline-none"
-                      placeholder="Ej. Juan 3:16"
-                      value={newVerse}
-                      onChange={(e) => setNewVerse(e.target.value)}
-                      onKeyDown={handleAddVerse}
-                    />
-                    <button 
-                      onClick={() => handleAddVerse({ key: 'Enter', preventDefault: ()=>{} })}
-                      className="bg-surface-container-high text-on-surface border border-surface-border p-2 rounded-lg hover:bg-white/10"
-                    >
-                      <span className="material-symbols-outlined text-[20px]">add</span>
-                    </button>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {favoriteVerses.map((verse, idx) => (
-                      <span key={idx} className="pl-3 pr-1 py-1 bg-surface-container border border-surface-border rounded-full text-xs text-white flex items-center gap-1 group">
-                        <span className="material-symbols-outlined text-[14px] text-secondary">bookmark</span>
-                        {verse}
-                        <button onClick={() => handleRemoveVerse(idx)} className="w-5 h-5 rounded-full flex items-center justify-center hover:bg-error/20 text-on-surface-variant hover:text-error transition-colors ml-1">
-                          <span className="material-symbols-outlined text-[14px]">close</span>
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Completar Botón */}
-            <div className="flex justify-end pb-8">
-              <button 
-                onClick={handleCompleteLesson}
-                disabled={completing}
-                className="bg-primary-container hover:bg-inverse-primary disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-4 px-12 rounded-xl transition-all shadow-[0_0_20px_rgba(143,25,55,0.4)] flex items-center gap-2 text-lg"
-              >
-                {completing ? (
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                ) : (
-                  <>
-                    <span className="material-symbols-outlined">done_all</span>
-                    Completar y Guardar
-                  </>
-                )}
-              </button>
-            </div>
-
-          </div>
-        )}
+        {activeView === 'lesson' && activeLesson && <StudySession
+          key={`${user.id}:${activeLesson.id}`}
+          userId={user.id}
+          lesson={activeLesson}
+          ordinal={journey?.items.find(item => item.id === activeLesson.id)?.ordinal}
+          total={journey?.total}
+          onExit={() => { setActiveView('dashboard'); setActiveLesson(null); }}
+          onComplete={handleCompleteLesson}
+        />}
 
         {/* --- VIEW: MI DIARIO --- */}
         {activeView === 'journal' && (
@@ -535,10 +365,13 @@ export default function BibleStudy() {
                 <p className="text-on-surface-variant">Tus reflexiones y aprendizajes guardados.</p>
               </div>
               <div className="relative w-full md:w-64">
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+                <ContentIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" name="search" />
                 <input 
                   type="text" 
-                  placeholder="Buscar en el diario..." 
+                  placeholder="Buscar en el diario..."
+                  aria-label="Buscar en mi diario"
+                  value={journalSearch}
+                  onChange={event => setJournalSearch(event.target.value)}
                   className="w-full bg-surface-container border border-surface-border rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:border-primary outline-none"
                 />
               </div>
@@ -552,12 +385,12 @@ export default function BibleStudy() {
               )}
               {entries.length === 0 ? (
                 <div className="text-center p-12 glass-card rounded-2xl">
-                  <span className="material-symbols-outlined text-4xl text-on-surface-variant/50 mb-4">auto_stories</span>
+                  <ContentIcon className="text-4xl text-on-surface-variant/50 mb-4" name="auto_stories" />
                   <p className="text-on-surface-variant">Aún no tienes entradas en tu diario.</p>
                   <p className="text-sm text-on-surface-variant/70 mt-1">Completa una lección y escribe una reflexión para verla aquí.</p>
                 </div>
               ) : (
-                entries.map(entry => (
+                entries.filter(entry => `${entry.content || ''} ${entry.study_lessons?.title || ''}`.toLocaleLowerCase().includes(journalSearch.toLocaleLowerCase())).map(entry => (
                   <JournalEntry key={entry.id} entry={entry} />
                 ))
               )}
@@ -578,19 +411,19 @@ export default function BibleStudy() {
                     {sosSending ? 'Escribiendo...' : 'Un espacio seguro para hablar sin juicio'}
                   </p>
                 </div>
-                <span className="material-symbols-outlined text-amber-400/60 text-[22px]">volunteer_activism</span>
+                <ContentIcon className="text-amber-400/60 text-[22px]" name="volunteer_activism" />
               </div>
 
               {/* Banner de riesgo */}
               {showRiskBanner && (
                 <div className="shrink-0 bg-amber-500/15 border-b border-amber-500/25 px-5 py-3 flex items-start gap-3">
-                  <span className="material-symbols-outlined text-amber-400 shrink-0 text-[20px]">warning</span>
+                  <ContentIcon className="text-amber-400 shrink-0 text-[20px]" name="warning" />
                   <div className="flex-1">
                     <p className="text-amber-300 text-sm font-semibold">¿Necesitas ayuda urgente?</p>
                     <p className="text-amber-200/70 text-xs mt-0.5">Habla con tu líder de sociedad, pastor o un adulto de confianza. No tienes que pasar por esto solo/a.</p>
                   </div>
                   <button onClick={() => setShowRiskBanner(false)} className="text-amber-400/50 hover:text-amber-400 shrink-0">
-                    <span className="material-symbols-outlined text-[16px]">close</span>
+                    <ContentIcon className="text-[16px]" name="close" />
                   </button>
                 </div>
               )}
@@ -671,7 +504,7 @@ export default function BibleStudy() {
                     {sosSending ? (
                       <span className="w-3.5 h-3.5 border border-amber-400/30 border-t-amber-400 rounded-full animate-spin" />
                     ) : (
-                      <span className="material-symbols-outlined text-amber-400 text-[18px]">send</span>
+                      <ContentIcon className="text-amber-400 text-[18px]" name="send" />
                     )}
                   </button>
                 </div>
@@ -683,11 +516,6 @@ export default function BibleStudy() {
 
       </main>
 
-      <CelebrationModal 
-        show={showCelebration} 
-        data={celebrationData} 
-        onClose={handleCelebrationClose} 
-      />
     </PageShell>
   );
 }

@@ -80,6 +80,7 @@ try {
   await page.goto(base + '/feed', { waitUntil: 'domcontentloaded' });
   await page.getByRole('navigation', { name: 'Navegación móvil' }).getByRole('link', { name: 'Himnario' }).click();
   await page.waitForURL('**/himnario');
+  await page.locator('.mobile-tab-bar a[aria-current="page"]').filter({ hasText: 'Himnario' }).waitFor();
   assert.equal(await page.getByRole('navigation', { name: 'Navegación móvil' }).getByRole('link', { name: 'Himnario' }).getAttribute('aria-current'), 'page');
   await page.getByRole('button', { name: /^Abrir himno 1:/ }).click();
   const hymnClose = page.getByTitle('Cerrar (o botón atrás del cel)', { exact: true });

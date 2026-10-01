@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from './useAuth';
 import { collectPages, progressPercentage } from '../lib/studyTracking';
+import { orderedJourney, missingAnswers } from '../lib/studyJourney';
 
 export function useStudy() {
   const { user } = useAuth();
@@ -101,73 +102,30 @@ export function useStudy() {
     }
   }, [user]);
 
-  const getTodayLesson = useCallback(async (planId) => {
-    if (!planId) return null;
-    
-    // Simplificación: Para la demo, calcular el día del año
-    const now = new Date();
-    const startOfYear = new Date(now.getFullYear(), 0, 1);
-    const diff = now - startOfYear + (startOfYear.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
-    const oneDay = 1000 * 60 * 60 * 24;
-    const dayOfYear = Math.floor(diff / oneDay);
-    
-    const weekNumber = Math.floor(dayOfYear / 7) + 1;
-    const dayOfWeek = (dayOfYear % 7) + 1; // 1-7
+  const getJourney = useCallback(async (planId) => {
+    if (!user || !planId) return null;
+    const data = await collectPages((from, to) => supabase.from('study_lessons')
+      .select('id, day_number, title, scripture_ref, study_weeks!inner(plan_id, week_number), user_progress(user_id, completed)')
+      .eq('study_weeks.plan_id', planId).order('id').range(from, to));
+    return orderedJourney(data, user.id);
+  }, [user]);
 
-    try {
-      setLoading(true);
-      const { data: weekData } = await supabase
-        .from('study_weeks')
-        .select('id')
-        .eq('plan_id', planId)
-        .eq('week_number', weekNumber)
-        .maybeSingle(); // Evita el error 406
-
-      if (weekData) {
-        const { data: lessonData } = await supabase
-          .from('study_lessons')
-          .select('*')
-          .eq('week_id', weekData.id)
-          .eq('day_number', dayOfWeek)
-          .maybeSingle();
-        
-        if (lessonData) return lessonData;
-      }
-
-      // FALLBACK PARA MOCK DATA: Si no existe la semana actual, retorna la primera lección del plan
-      const { data: firstWeek } = await supabase
-        .from('study_weeks')
-        .select('id')
-        .eq('plan_id', planId)
-        .order('week_number', { ascending: true })
-        .limit(1)
-        .maybeSingle();
-        
-      if (firstWeek) {
-        const { data: firstLesson } = await supabase
-          .from('study_lessons')
-          .select('*')
-          .eq('week_id', firstWeek.id)
-          .order('day_number', { ascending: true })
-          .limit(1)
-          .maybeSingle();
-          
-        return firstLesson;
-      }
-
-      return null;
-    } catch (err) {
-      console.error("Error getting today's lesson", err);
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const getLesson = useCallback(async (lessonId) => {
+    if (!user || !lessonId) return null;
+    const { data, error } = await supabase.from('study_lessons')
+      .select('*, user_progress(user_id, completed, answers)')
+      .eq('id', lessonId).single();
+    if (error) throw error;
+    return { ...data, user_progress: data.user_progress?.find(item => item.user_id === user.id) || null };
+  }, [user]);
 
   const completeLesson = useCallback(async (lessonId, answers) => {
     if (!user) throw new Error('Usuario no autenticado');
     try {
       setLoading(true);
+      const lesson = await getLesson(lessonId);
+      if (lesson.user_progress?.completed) return null;
+      if (missingAnswers(lesson, answers).length) throw new Error('Responde las preguntas pendientes antes de guardar.');
       const payload = {
         user_id: user.id,
         lesson_id: lessonId,
@@ -201,7 +159,7 @@ export function useStudy() {
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, getLesson]);
 
   const getUserProgress = useCallback(async (planId) => {
     if (!user || !planId) return 0;
@@ -230,7 +188,8 @@ export function useStudy() {
     getCurrentPlan,
     getWeeks,
     getLessons,
-    getTodayLesson,
+    getJourney,
+    getLesson,
     completeLesson,
     getUserProgress
   };

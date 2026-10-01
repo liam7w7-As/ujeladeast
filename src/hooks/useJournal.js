@@ -35,6 +35,7 @@ export function useJournal() {
     if (!user || !lessonId) return;
     try {
       setSaving(true);
+      setError(null);
       const { data, error } = await supabase
         .from('journal_entries')
         .upsert({
@@ -73,6 +74,7 @@ export function useJournal() {
         
       if (error) throw error;
       setEntries(data || []);
+      setError(null);
       return data;
     } catch (err) {
       console.error('Error fetching journal entries:', err);

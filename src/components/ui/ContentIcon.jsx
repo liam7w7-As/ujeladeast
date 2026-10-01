@@ -1,6 +1,9 @@
 import { AlertCircle, BookOpen, ChevronDown, Church, ClipboardList, Clock, Download, ExternalLink, Eye, FileArchive, FileText, FolderOpen, Grid2X2, Image, Info, List, LoaderCircle, MapPin, Maximize2, Mic, Minimize2, Music2, Music4, Paperclip, Presentation, Search, Table2, UserRound, Video, X } from 'lucide-react';
+import { ArrowLeft, CalendarDays, HeartHandshake, Send, TriangleAlert } from 'lucide-react';
 
 const icons = {
+  arrow_back: ArrowLeft, calendar_month: CalendarDays, auto_stories: BookOpen,
+  volunteer_activism: HeartHandshake, warning: TriangleAlert, send: Send,
   apps: Grid2X2, assignment: ClipboardList, attach_file: Paperclip, church: Church,
   close: X, co_present: Presentation, description: FileText, download: Download,
   error: AlertCircle, expand_more: ChevronDown, folder_open: FolderOpen,
