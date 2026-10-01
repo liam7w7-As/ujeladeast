@@ -33,13 +33,15 @@ try {
   const first = await page.locator('.bible-verse-start[data-reference="GEN.1.1"]').boundingBox();
   const second = await page.locator('.bible-verse-start[data-reference="GEN.1.2"]').boundingBox();
   assert.ok(second.y >= first.y + first.height, 'Verses must occupy separate lines');
-  await page.getByLabel('Opciones del versículo GEN.1.1', { exact: true }).click();
+  await page.locator('.bible-verse-start[data-reference="GEN.1.1"]').click({ position: { x: 60, y: 15 } });
+  assert.equal(await page.getByRole('dialog').count(), 0);
+  assert.equal(await page.locator('.bible-verse-selected[data-reference="GEN.1.1"]').count(), 1);
   await page.getByRole('button', { name: 'Guardar favorito', exact: true }).click();
   await page.getByRole('button', { name: 'Copiar versículo', exact: true }).click();
   await page.getByText('Versículo copiado con su referencia.').waitFor();
-  assert.equal((await page.evaluate(() => navigator.clipboard.readText())).replace(/\r\n/g, '\n'), 'En el principio creó Dios los cielos y la tierra.\n\nGénesis 1:1 (RVR1960)');
+  assert.equal((await page.evaluate(() => navigator.clipboard.readText())).replace(/\r\n/g, '\n'), 'Génesis 1:1 (RVR1960)\n\n«En el principio creó Dios los cielos y la tierra.»');
   await page.screenshot({ path: `${output}/verse-actions.png` });
-  await page.getByRole('dialog').getByLabel('Cerrar ventana').click();
+  await page.getByLabel('Cerrar selección').click();
   await page.reload();
   await page.getByLabel('Marcadores', { exact: true }).click();
   await page.getByRole('tab', { name: /Versículos/ }).click();
@@ -70,9 +72,10 @@ try {
   await page.waitForFunction(previous => [...document.querySelectorAll('.bible-compare-scroll')].every((element, index) => element.scrollTop > previous[index]), beforeKey);
   await scrollToVerse(regions, 2, 1);
   await page.getByRole('region', { name: 'Lectura NVI', exact: true }).getByLabel('Opciones del versículo GEN.1.1', { exact: true }).click();
-  assert.match(await page.getByRole('dialog').innerText(), /Génesis 1:1 \(NVI\)/);
+  assert.match(await page.getByRole('region', { name: 'Versículo seleccionado', exact: true }).innerText(), /Génesis 1:1 \(NVI\)/);
+  assert.equal(await page.getByRole('region', { name: 'Lectura RVR1960', exact: true }).locator('.bible-verse-selected').count(), 0);
   await page.getByRole('button', { name: 'Guardar favorito', exact: true }).click();
-  await page.getByRole('dialog').getByLabel('Cerrar ventana').click();
+  await page.getByLabel('Cerrar selección').click();
   for (const width of [320, 390, 768]) {
     await page.setViewportSize({ width, height: 844 });
     const lineRatio = await regions.first().evaluate(element => {
@@ -141,7 +144,7 @@ try {
   await page.getByRole('button', { name: 'Copiar versículo', exact: true }).click();
   await page.getByLabel('Texto para copiar').waitFor();
   assert.ok((await page.getByLabel('Texto para copiar').inputValue()).includes('(RVR1960)'));
-  await page.getByRole('dialog').getByLabel('Cerrar ventana').click();
+  await page.getByLabel('Cerrar selección').click();
   // Storage failure must not pretend that a favorite was persisted.
   await page.evaluate(() => { const original = Storage.prototype.setItem; Storage.prototype.setItem = function (key, value) { if (key === 'bible:verseFavorites') throw new DOMException('Full', 'QuotaExceededError'); return original.call(this, key, value); }; });
   await page.locator('.bible-verse-action').first().click();
@@ -177,7 +180,7 @@ try {
   await offlinePage.getByRole('region', { name: 'Lectura TLA', exact: true }).getByRole('alert').waitFor();
   assert.ok(await offlinePage.getByRole('region', { name: 'Lectura NTV', exact: true }).locator('.bible-verse-action').count() > 0);
   await offlineContext.close();
-  await page.getByRole('dialog').getByLabel('Cerrar ventana').click();
+  await page.getByLabel('Cerrar selección').click();
   await page.getByLabel('Salir de la Biblia').click();
   await page.getByRole('navigation', { name: 'Navegación móvil' }).waitFor();
   assert.equal(await page.locator('.bible-immersive').count(), 0);

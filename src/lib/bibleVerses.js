@@ -29,4 +29,4 @@ export function chapterVerses(nodes) {
 }
 export const favoriteKey = entry => `${entry.version}:${entry.reference}`;
 export const verseCitation = entry => `${entry.title} ${entry.chapter}:${entry.label} (${entry.version})`;
-export const verseClipboard = entry => `${entry.text}\n\n${verseCitation(entry)}`;
+export const verseClipboard = entry => `${verseCitation(entry)}\n\n«${entry.text.trim()}»`;

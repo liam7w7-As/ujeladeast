@@ -23,9 +23,14 @@ export default function BibleText({ nodes, onNote, onVerse, favorites = [], sele
     if (tag === 'br') return <br key={key} />;
     const Tag = tag;
     const content = <Tag key={key} className={`${classes.map(value => `bible-${value}`).join(' ')} ${verse ? 'bible-verse-row' : ''} ${first ? 'bible-verse-start' : ''} ${verse && reference === selectedReference ? 'bible-verse-selected' : ''}`} data-reference={reference || undefined}
+      onClick={meaningful ? event => {
+        if (event.target.closest('button') || !window.getSelection()?.isCollapsed) return;
+        event.stopPropagation();
+        onVerse(reference);
+      } : undefined}
       colSpan={tag === 'td' || tag === 'th' ? spans?.[0] : undefined} rowSpan={tag === 'td' || tag === 'th' ? spans?.[1] : undefined}>
       {tag === 'br' ? undefined : children.map((child, index) => render(child, `${key}.${index}`))}
-      {first && <button type="button" className={`bible-verse-action ${favorites.includes(reference) ? 'is-favorite' : ''}`} title={`Opciones del versículo ${verseLabel(reference)}`} aria-label={`Opciones del versículo ${reference}`} onClick={() => onVerse(reference)}>{favorites.includes(reference) ? <Heart size={16} fill="currentColor" /> : <MoreHorizontal size={19} />}</button>}
+      {first && <button type="button" className={`bible-verse-action ${favorites.includes(reference) ? 'is-favorite' : ''}`} title={`Seleccionar versículo ${verseLabel(reference)}`} aria-label={`Opciones del versículo ${reference}`} aria-pressed={reference === selectedReference} onClick={() => onVerse(reference)}>{favorites.includes(reference) ? <Heart size={16} fill="currentColor" /> : <MoreHorizontal size={19} />}</button>}
     </Tag>;
     return tag === 'table' ? <div key={key} className="bible-table-scroll" tabIndex={0} role="region" aria-label="Tabla bíblica">{content}</div> : content;
   }

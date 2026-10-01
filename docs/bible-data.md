@@ -184,7 +184,10 @@ texto, version y referencia. `bible:bookmarks` sigue conservando los marcadores
 de capitulos anteriores. No hay migracion destructiva ni sincronizacion de
 favoritos con Supabase. El dialogo de marcadores separa versiculos y capitulos;
 abrir un favorito salta a su referencia y la destaca. La copia incluye cita y
-version. Si el portapapeles esta bloqueado, ofrece texto seleccionable y no
+version, en una primera linea seguida del texto entre comillas angulares.
+Tocar un versiculo lo resalta solo en su version y abre una barra compacta de
+copiar, favorito y cerrar, sin modal ni duplicar el texto. El boton del versiculo
+permite acceso por teclado; Escape cierra la seleccion. Si el portapapeles esta bloqueado, ofrece texto seleccionable y no
 anuncia un exito falso. Los fallos de almacenamiento tambien son visibles.
 
 La Biblia ocupa toda la pantalla, sin navegacion inferior ni avisos globales
@@ -198,11 +201,18 @@ reinicia los paneles. La comparacion funciona offline con versiones descargadas;
 una version ausente no bloquea las demas. Los favoritos de versiones diferentes
 se guardan por separado aunque tengan el mismo numero de versiculo.
 
+Cada panel tiene un boton de cierre: tres paneles pasan a dos, y al quedar uno
+se termina la comparacion y se recupera la version seleccionada antes de comparar,
+manteniendo libro y capitulo. Los fondos por version se configuran en Ajustes,
+con cuatro colores adaptados al tema claro/oscuro. Se guardan localmente en
+`bible:backgrounds`; las preferencias invalidas usan los valores predeterminados.
+
 Pruebas adicionales:
 
 ```powershell
 node --test tests/bibleVerses.test.mjs
 node tests/bibleExperience.browser.mjs
+node tests/bibleCustomization.browser.mjs
 ```
 
 Se verifican fragmentos, rangos, celdas de tablas, cita copiada, persistencia y

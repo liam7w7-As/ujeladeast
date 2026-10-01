@@ -1,6 +1,16 @@
 import catalog from './bibleCatalog.json' with { type: 'json' };
 
 export const versions = catalog.versions;
+export const bibleBackgrounds = [
+  { id: 'neutral', label: 'Neutro', dark: '#111314', light: '#fafcfb' },
+  { id: 'mint', label: 'Menta', dark: '#13231e', light: '#ecf6f0' },
+  { id: 'sky', label: 'Azul', dark: '#17232c', light: '#edf4fb' },
+  { id: 'rose', label: 'Rosa', dark: '#291c23', light: '#fcf0f3' },
+];
+export function versionBackgrounds(saved = {}) {
+  const defaults = { RVR1960: 'neutral', NTV: 'mint', NVI: 'sky', TLA: 'rose' };
+  return Object.fromEntries(versions.map(({ id }) => [id, bibleBackgrounds.some(color => color.id === saved?.[id]) ? saved[id] : defaults[id] || 'neutral']));
+}
 export const normalizeBook = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 export function selection(value = {}) {
   value = value || {};

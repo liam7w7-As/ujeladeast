@@ -1,18 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Check, LoaderCircle, RotateCw, WifiOff } from 'lucide-react';
+import { Check, LoaderCircle, RotateCw, WifiOff, X } from 'lucide-react';
 import BibleText from './BibleText';
 import { loadBibleBook } from '../../lib/bibleLibrary';
 import { versions } from '../../lib/bibleModel';
 import { elementAnchors, positionOffset, readingPosition } from '../../lib/bibleScroll';
 
-function Column({ versionId, bookId, chapterNumber, chapter, error, onRetry, installed, online, onNote, onVerse, favorites, fontSize, redLetters, selectedReference, onScroll, onContentChange }) {
+function Column({ versionId, bookId, chapterNumber, chapter, error, onRetry, installed, online, onNote, onVerse, favorites, fontSize, redLetters, selectedReference, selectedVersion, backgrounds, onCloseVersion, onScroll, onContentChange }) {
   const version = versions.find(entry => entry.id === versionId);
   const book = version.books.find(entry => entry.id === bookId);
   useEffect(() => { onContentChange(); }, [chapter, fontSize, onContentChange]);
-  return <section className="bible-compare-column" aria-label={`Comparación ${versionId}`}>
-    <header><div><strong>{versionId}</strong><span>{book.title} {chapterNumber}</span></div>{installed ? <Check size={16} aria-label="Descargada" /> : !online ? <WifiOff size={16} aria-label="Sin conexión" /> : null}</header>
+  return <section className="bible-compare-column" data-background={backgrounds[versionId]} aria-label={`Comparación ${versionId}`}>
+    <header><div><strong>{versionId}</strong><span>{book.title} {chapterNumber}</span></div><div className="bible-panel-actions">{installed ? <Check size={16} aria-label="Descargada" /> : !online ? <WifiOff size={16} aria-label="Sin conexión" /> : null}<button type="button" className="bible-icon" aria-label={`Cerrar versión ${versionId}`} title={`Cerrar ${versionId}`} onClick={() => onCloseVersion(versionId)}><X size={17} /></button></div></header>
     <div onScroll={onScroll} className={`bible-compare-scroll bible-chapter ${redLetters ? 'bible-red-letters' : ''}`} role="region" aria-label={`Lectura ${versionId}`} tabIndex={0} style={{ '--bible-font-size': `${fontSize}px` }}>
-      {chapter ? <div className="bible-compare-content"><BibleText nodes={chapter.nodes} onNote={nodes => onNote(nodes, versionId)} onVerse={reference => onVerse(reference, versionId, chapter)} favorites={favorites.filter(entry => entry.version === versionId).map(entry => entry.reference)} selectedReference={selectedReference} /><p className="bible-copyright">{version.copyright}</p></div> : error ? <div className="bible-state" role="alert"><WifiOff size={24} /><p>{online ? error : `${versionId} no está descargada en este dispositivo.`}</p><button type="button" className="bible-command" onClick={onRetry}><RotateCw size={16} />Reintentar</button></div> : <div className="bible-state" role="status"><LoaderCircle size={24} className="bible-spin" /><p>Abriendo {versionId}...</p></div>}
+      {chapter ? <div className="bible-compare-content"><BibleText nodes={chapter.nodes} onNote={nodes => onNote(nodes, versionId)} onVerse={reference => onVerse(reference, versionId, chapter)} favorites={favorites.filter(entry => entry.version === versionId).map(entry => entry.reference)} selectedReference={selectedVersion === versionId ? selectedReference : ''} /><p className="bible-copyright">{version.copyright}</p></div> : error ? <div className="bible-state" role="alert"><WifiOff size={24} /><p>{online ? error : `${versionId} no está descargada en este dispositivo.`}</p><button type="button" className="bible-command" onClick={onRetry}><RotateCw size={16} />Reintentar</button></div> : <div className="bible-state" role="status"><LoaderCircle size={24} className="bible-spin" /><p>Abriendo {versionId}...</p></div>}
     </div>
   </section>;
 }
@@ -50,6 +50,7 @@ export default function BibleComparison({ ids, current, primary, installed, ...p
     cancelAnimationFrame(frame.current);
     frame.current = requestAnimationFrame(() => applyPosition());
   }, [applyPosition]);
+  useEffect(() => { contentChanged(); }, [ids.length, contentChanged]);
   const handleScroll = useCallback(event => {
     if (event.target !== event.currentTarget) return;
     const element = event.currentTarget;

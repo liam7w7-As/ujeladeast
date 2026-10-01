@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { gunzipSync } from 'node:zlib';
 import { test } from 'node:test';
 import { chapterVerses, favoriteKey, verseClipboard, verseLabel } from '../src/lib/bibleVerses.js';
-import { versions } from '../src/lib/bibleModel.js';
+import { versionBackgrounds, versions } from '../src/lib/bibleModel.js';
 
 function chapter(versionId, bookId, number) {
   const book = versions.find(version => version.id === versionId).books.find(book => book.id === bookId);
@@ -28,5 +28,12 @@ test('table copies retain both cells and omit editorial column headings', () => 
   assert.ok(!entries.get('NUM.1.5').text.includes('Tribu Jefe'));
 });
 test('copy includes version and human-readable citation', () => {
-  assert.equal(verseClipboard({ text: 'Texto.', title: 'Génesis', chapter: 1, label: '1', version: 'RVR1960' }), 'Texto.\n\nGénesis 1:1 (RVR1960)');
+  assert.equal(verseClipboard({ text: ' Texto. ', title: 'Génesis', chapter: 1, label: '1', version: 'RVR1960' }), 'Génesis 1:1 (RVR1960)\n\n«Texto.»');
+  assert.equal(verseClipboard({ text: 'Texto agrupado.', title: 'Génesis', chapter: 2, label: '1–3', version: 'TLA' }), 'Génesis 2:1–3 (TLA)\n\n«Texto agrupado.»');
+});
+test('version backgrounds have distinct defaults and reject corrupt preferences', () => {
+  assert.equal(new Set(Object.values(versionBackgrounds())).size, 4);
+  assert.deepEqual(versionBackgrounds(null), versionBackgrounds());
+  assert.equal(versionBackgrounds({ NTV: 'rose', NVI: 'invalid' }).NTV, 'rose');
+  assert.equal(versionBackgrounds({ NVI: 'invalid' }).NVI, 'sky');
 });
