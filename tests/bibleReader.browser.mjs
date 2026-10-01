@@ -21,12 +21,12 @@ try {
   for (const width of [320, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `Overflow at ${width}`);
-    if (width < 1280) {
-      const nav = page.getByRole('navigation', { name: 'Navegación móvil' });
-      assert.equal(await nav.getByRole('link', { name: 'Biblia', exact: true }).count(), 1);
-      const sizes = await nav.locator('a, button').evaluateAll(elements => elements.map(element => element.getBoundingClientRect().width));
-      assert.ok(sizes.every(size => size >= 44));
-    }
+    assert.equal(await page.getByRole('navigation', { name: 'Navegación móvil' }).count(), 0);
+    assert.equal(await page.locator('.bible-chapter-nav').count(), 0);
+    assert.ok(await page.getByLabel('Salir de la Biblia').isVisible());
+    const bounds = await page.locator('.bible-immersive').boundingBox();
+    assert.equal(bounds.height, 900);
+    assert.equal(bounds.y, 0);
     await page.screenshot({ path: `${output}/reader-${width}.png` });
   }
   await page.setViewportSize({ width: 390, height: 844 });

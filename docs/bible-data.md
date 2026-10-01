@@ -187,10 +187,13 @@ abrir un favorito salta a su referencia y la destaca. La copia incluye cita y
 version. Si el portapapeles esta bloqueado, ofrece texto seleccionable y no
 anuncia un exito falso. Los fallos de almacenamiento tambien son visibles.
 
-Se pueden comparar dos o tres versiones. Cada columna tiene carga, errores y
-scroll independientes; el libro y capitulo se cambian juntos. En pantallas de
-hasta 1000 px se navega entre columnas mediante pestanas o desplazamiento
-horizontal, manteniendo el scroll vertical de cada una. Cambiar de capitulo
+La Biblia ocupa toda la pantalla, sin navegacion inferior ni avisos globales
+superpuestos; su barra superior permite salir y cambiar de capitulo.
+Se pueden comparar dos o tres versiones, visibles simultaneamente: columnas
+en escritorio y paneles apilados en pantallas de hasta 1000 px. La carga y los
+errores son independientes, pero el scroll se sincroniza desde cualquier panel
+por referencia de versiculo y posicion proporcional, no por pixeles. En rangos
+agrupados se aproxima la posicion sin dividir ni alterar el texto. Cambiar de capitulo
 reinicia los paneles. La comparacion funciona offline con versiones descargadas;
 una version ausente no bloquea las demas. Los favoritos de versiones diferentes
 se guardan por separado aunque tengan el mismo numero de versiculo.
@@ -203,5 +206,5 @@ node tests/bibleExperience.browser.mjs
 ```
 
 Se verifican fragmentos, rangos, celdas de tablas, cita copiada, persistencia y
-salto a favoritos, scroll independiente, anchos moviles, cambios de capitulo,
+salto a favoritos, scroll sincronizado, paneles moviles, cambios de capitulo,
 errores de portapapeles/almacenamiento y comparacion offline parcial y completa.

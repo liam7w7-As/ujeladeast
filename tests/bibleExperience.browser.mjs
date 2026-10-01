@@ -8,6 +8,20 @@ const output = 'test-results/bible-experience';
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ headless: true, channel: 'chrome' });
 const errors = [];
+async function scrollToVerse(regions, index, verse) {
+  await regions.nth(index).evaluate((element, number) => {
+    const anchor = [...element.querySelectorAll('.bible-verse-start')].find(node => node.dataset.reference.split('+').some(ref => Number(ref.split('.').at(-1)) === number));
+    element.scrollTop += anchor.getBoundingClientRect().top - element.getBoundingClientRect().top + 3;
+  }, verse);
+}
+async function assertSynced(page, verse) {
+  await page.waitForFunction(number => [...document.querySelectorAll('.bible-compare-scroll')].every(element => {
+    const origin = element.getBoundingClientRect().top;
+    const anchors = [...element.querySelectorAll('.bible-verse-start')];
+    const anchor = anchors.filter(node => node.getBoundingClientRect().top <= origin + 1).at(-1) || anchors[0];
+    return anchor?.dataset.reference.split('+').some(ref => Number(ref.split('.').at(-1)) === number);
+  }), verse);
+}
 try {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce', permissions: ['clipboard-read', 'clipboard-write'] });
   await context.route('https://**/*', route => route.abort());
@@ -39,13 +53,22 @@ try {
   await page.getByRole('region', { name: 'Lectura NVI', exact: true }).locator('.bible-verse-action').first().waitFor();
   const regions = page.locator('.bible-compare-scroll');
   assert.equal(await regions.count(), 3);
-  await regions.nth(0).evaluate(element => { element.scrollTop = 400; });
-  let scrolls = await regions.evaluateAll(elements => elements.map(element => element.scrollTop));
-  assert.deepEqual(scrolls, [400, 0, 0]);
-  await regions.nth(1).evaluate(element => { element.scrollTop = 220; });
-  scrolls = await regions.evaluateAll(elements => elements.map(element => element.scrollTop));
-  assert.deepEqual(scrolls, [400, 220, 0]);
+  await scrollToVerse(regions, 0, 31);
+  await assertSynced(page, 31);
+  await scrollToVerse(regions, 0, 8);
+  await assertSynced(page, 8);
+  await scrollToVerse(regions, 1, 12);
+  await assertSynced(page, 12);
   await page.screenshot({ path: `${output}/compare-desktop.png` });
+  await regions.nth(1).hover();
+  const beforeWheel = await regions.evaluateAll(elements => elements.map(element => element.scrollTop));
+  await page.mouse.wheel(0, 240);
+  await page.waitForFunction(previous => [...document.querySelectorAll('.bible-compare-scroll')].every((element, index) => element.scrollTop > previous[index]), beforeWheel);
+  await regions.nth(2).focus();
+  const beforeKey = await regions.evaluateAll(elements => elements.map(element => element.scrollTop));
+  await page.keyboard.press('PageDown');
+  await page.waitForFunction(previous => [...document.querySelectorAll('.bible-compare-scroll')].every((element, index) => element.scrollTop > previous[index]), beforeKey);
+  await scrollToVerse(regions, 2, 1);
   await page.getByRole('region', { name: 'Lectura NVI', exact: true }).getByLabel('Opciones del versículo GEN.1.1', { exact: true }).click();
   assert.match(await page.getByRole('dialog').innerText(), /Génesis 1:1 \(NVI\)/);
   await page.getByRole('button', { name: 'Guardar favorito', exact: true }).click();
@@ -53,16 +76,55 @@ try {
   for (const width of [320, 390, 768]) {
     await page.setViewportSize({ width, height: 844 });
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `Overflow at ${width}`);
-    const tabs = page.getByRole('navigation', { name: 'Versiones en comparación' });
-    await tabs.getByRole('button', { name: 'NTV', exact: true }).click();
-    await page.waitForFunction(() => Math.abs(document.querySelector('.bible-compare-track').scrollLeft - document.querySelector('.bible-compare-track').clientWidth) < 2);
-    assert.ok((await regions.nth(0).evaluate(element => element.scrollTop)) > 0, 'Switching columns must preserve scroll');
+    const boxes = await page.locator('.bible-compare-column').evaluateAll(elements => elements.map(element => {
+      const { x, y, width, height } = element.getBoundingClientRect(); return { x, y, width, height };
+    }));
+    assert.ok(boxes.every(box => box.height > 150 && box.x >= 0 && box.x + box.width <= width && box.y + box.height <= 844));
+    assert.ok(boxes[1].y >= boxes[0].y + boxes[0].height - 1 && boxes[2].y >= boxes[1].y + boxes[1].height - 1);
+    await scrollToVerse(regions, 2, 8);
+    await assertSynced(page, 8);
+    await scrollToVerse(regions, 1, 15);
+    await assertSynced(page, 15);
     await page.screenshot({ path: `${output}/compare-${width}.png` });
   }
+  await page.setViewportSize({ width: 320, height: 568 });
+  await scrollToVerse(regions, 0, 31);
+  await assertSynced(page, 31);
+  await page.screenshot({ path: `${output}/compare-short.png` });
+  await page.getByLabel('Comparar versiones', { exact: true }).click();
+  await page.getByRole('checkbox', { name: /NVI/ }).uncheck();
+  await page.getByRole('button', { name: 'Comparar', exact: true }).click();
+  assert.equal(await regions.count(), 2);
+  await scrollToVerse(regions, 1, 8);
+  await assertSynced(page, 8);
+  await page.screenshot({ path: `${output}/compare-two-mobile.png` });
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await assertSynced(page, 8);
+  await page.screenshot({ path: `${output}/compare-two-desktop.png` });
+  await page.getByLabel('Comparar versiones', { exact: true }).click();
+  await page.getByRole('checkbox', { name: /NVI/ }).check();
+  await page.getByRole('button', { name: 'Comparar', exact: true }).click();
   await page.getByRole('button', { name: 'Siguiente', exact: true }).click();
   await page.getByRole('region', { name: 'Lectura NVI', exact: true }).locator('.bible-verse-action').first().waitFor();
   assert.deepEqual(await regions.evaluateAll(elements => elements.map(element => element.scrollTop)), [0, 0, 0]);
   assert.ok((await page.locator('.bible-compare-column > header').allTextContents()).every(text => text.includes('2')));
+  await page.getByLabel('Comparar versiones', { exact: true }).click();
+  await page.getByRole('checkbox', { name: /NVI/ }).uncheck();
+  await page.getByRole('checkbox', { name: /TLA/ }).check();
+  await page.getByRole('button', { name: 'Comparar', exact: true }).click();
+  await page.getByRole('region', { name: 'Lectura TLA', exact: true }).locator('.bible-verse-action').first().waitFor();
+  await scrollToVerse(regions, 0, 2);
+  await assertSynced(page, 2);
+  await scrollToVerse(regions, 2, 8);
+  await assertSynced(page, 8);
+  await page.getByLabel('Ajustes de lectura').click();
+  await page.getByLabel('Aumentar texto').click();
+  await page.getByLabel('Tema claro').click();
+  await page.getByRole('dialog').getByLabel('Cerrar ventana').click();
+  await assertSynced(page, 8);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await assertSynced(page, 8);
+  await page.screenshot({ path: `${output}/compare-light-grouped.png` });
   await page.getByLabel('Cerrar comparación').click();
   await page.getByLabel('Marcadores', { exact: true }).click();
   assert.equal(await page.locator('.bible-favorite-row').count(), 2);
@@ -111,6 +173,11 @@ try {
   await offlinePage.getByRole('region', { name: 'Lectura TLA', exact: true }).getByRole('alert').waitFor();
   assert.ok(await offlinePage.getByRole('region', { name: 'Lectura NTV', exact: true }).locator('.bible-verse-action').count() > 0);
   await offlineContext.close();
+  await page.getByRole('dialog').getByLabel('Cerrar ventana').click();
+  await page.getByLabel('Salir de la Biblia').click();
+  await page.getByRole('navigation', { name: 'Navegación móvil' }).waitFor();
+  assert.equal(await page.locator('.bible-immersive').count(), 0);
+  assert.notEqual(await page.evaluate(() => getComputedStyle(document.body).overflow), 'hidden');
   assert.deepEqual(errors, []);
-  console.log('PASS: separate verses, copy/citation, favorites persist and jump, independent comparison scroll, responsive tabs, chapter changes, version-scoped favorites, clipboard denial, storage failure and offline comparison with per-column errors.');
+  console.log('PASS: separate verses, copy/citation, favorites persist and jump, synchronized comparison, visible stacked mobile panels, two/three versions, chapter changes, version-scoped favorites, clipboard denial, storage failure and offline comparison with per-column errors.');
 } finally { await browser.close(); }

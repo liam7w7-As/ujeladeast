@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Download } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 
 export default function InstallPrompt() {
+  const { pathname } = useLocation();
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showPrompt, setShowPrompt] = useState(false);
 
@@ -60,6 +62,7 @@ export default function InstallPrompt() {
     localStorage.setItem('pwa-prompt-dismissed', 'true');
   };
 
+  if (pathname === '/biblia') return null;
   return (
     <AnimatePresence>
       {showPrompt && (

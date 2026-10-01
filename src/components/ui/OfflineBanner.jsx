@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 export default function OfflineBanner() {
+  const { pathname } = useLocation();
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function OfflineBanner() {
     };
   }, []);
 
-  if (isOnline) return null;
+  if (isOnline || pathname === '/biblia') return null;
 
   return (
     <div className="bg-amber-500/20 border-b border-amber-500/30 px-4 py-2 flex items-center justify-center gap-2 w-full z-[100] relative">

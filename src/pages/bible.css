@@ -200,3 +200,49 @@
   .bible-verse-row { padding-right: 32px; }
   .bible-verse-action { width: 40px; height: 44px; right: -8px; }
 }
+
+body:has(.bible-immersive) { overflow: hidden; }
+.bible-immersive { position: fixed; inset: 0; z-index: 60; height: 100dvh; overflow: hidden; }
+.bible-immersive .bible-layout { display: flex; flex-direction: column; width: 100%; max-width: none; height: 100%; padding: env(safe-area-inset-top, 0px) max(16px, env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) max(16px, env(safe-area-inset-left, 0px)); }
+.bible-immersive .bible-heading { flex-shrink: 0; height: 60px; padding: 0; }
+.bible-reader-brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.bible-immersive .bible-heading h1 { font-size: 18px; gap: 8px; }
+.bible-immersive .bible-connection { margin-top: 3px; }
+.bible-toolbar-divider { height: 24px; border-left: 1px solid var(--reader-line); margin: 0 6px; }
+.bible-immersive .bible-workspace { flex: 1; min-height: 0; gap: 24px; }
+.bible-immersive .bible-sidebar { position: static; height: 100%; min-height: 0; display: flex; flex-direction: column; padding-top: 18px; }
+.bible-immersive .bible-sidebar .bible-book-list { flex: 1; max-height: none; }
+.bible-immersive .bible-reading-area { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.bible-immersive .bible-controls { flex-shrink: 0; height: 54px; min-height: 54px; }
+.bible-immersive .bible-notice { flex-shrink: 0; min-height: 0; margin: 0; padding: 0; }
+.bible-immersive .bible-notice:not(:empty) { padding: 6px 0; }
+.bible-immersive .bible-reading-area > .bible-chapter { flex: 1; min-height: 0; overflow-y: auto; width: 100%; max-width: 880px; margin: 0 auto; padding: 24px 18px 40px; overscroll-behavior: contain; scrollbar-width: thin; }
+.bible-immersive.bible-comparing .bible-sidebar { display: none; }
+.bible-immersive .bible-comparison { flex: 1; min-height: 0; }
+.bible-immersive .bible-compare-track { display: grid; height: 100%; min-height: 0; grid-template-columns: repeat(var(--comparison-count), minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr); overflow: hidden; scroll-snap-type: none; }
+.bible-immersive .bible-compare-column { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.bible-immersive .bible-compare-column > header { flex-shrink: 0; height: 40px; padding: 4px 16px; background: #8f1937; color: #fff; border-top: 0; border-bottom: 1px solid #ffffff20; }
+.bible-immersive .bible-compare-column > header span { color: #ffe5ec; }
+.bible-immersive .bible-compare-column > header > svg { color: #c8ebd8; }
+.bible-immersive .bible-compare-scroll.bible-chapter { flex: 1; height: auto; min-height: 0; padding: 10px 18px 24px; scroll-behavior: auto; overflow-anchor: none; }
+.bible-compare-content > .bible-label { display: none; }
+.bible-immersive .bible-compare-scroll::after { content: ''; display: block; height: 100%; }
+.bible-immersive .bible-compare-scroll .bible-state { min-height: 0; padding: 20px 0; gap: 10px; }
+@media (max-width: 1000px) {
+  .bible-immersive .bible-compare-track { grid-template-columns: minmax(0, 1fr); grid-template-rows: repeat(var(--comparison-count), minmax(0, 1fr)); }
+  .bible-immersive .bible-compare-column { flex: none; scroll-snap-align: none; border: 0; }
+  .bible-immersive .bible-compare-column > header { padding-left: 12px; padding-right: 12px; height: 36px; }
+  .bible-immersive .bible-compare-scroll.bible-chapter { padding-left: 12px; padding-right: 16px; line-height: 1.65; }
+}
+@media (max-width: 767px) {
+  .bible-immersive .bible-layout { padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
+  .bible-immersive .bible-workspace { display: block; }
+  .bible-immersive .bible-sidebar { display: none; }
+  .bible-immersive .bible-heading { height: 52px; padding: 0 8px; gap: 0; }
+  .bible-immersive .bible-reader-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .bible-immersive .bible-header-actions { gap: 0; }
+  .bible-immersive .bible-toolbar-divider { margin: 0 2px; }
+  .bible-immersive .bible-controls { padding: 0 12px; height: 52px; min-height: 52px; }
+  .bible-immersive .bible-reading-area > .bible-chapter { padding: 20px 16px 36px; }
+  .bible-immersive .bible-notice:not(:empty) { padding: 6px 12px; }
+}

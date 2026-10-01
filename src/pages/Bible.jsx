@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { ArrowLeft, ArrowRight, BookOpen, BookMarked, Bookmark, Check, ChevronDown, Columns3, Copy, Download, HardDriveDownload, Heart, LoaderCircle, Minus, Moon, Plus, RotateCw, Search, Settings2, Sun, Trash2, WifiOff, X } from 'lucide-react';
-import PageShell from '../components/layout/PageShell';
 import AppDialog from '../components/ui/AppDialog';
 import BibleText from '../components/ui/BibleText';
 import BibleComparison from '../components/ui/BibleComparison';
@@ -156,11 +155,11 @@ export default function Bible() {
   const matchingBooks = version.books.filter(book => normalizeBook(book.title).includes(normalizeBook(query.trim())));
   const chosenBook = version.books.find(book => book.id === pickerBook) || bookInfo;
 
-  return <PageShell activeItem="bible" withFooter={false} ambient={false} className={`bible-page bible-theme-${theme} ${comparison.length ? 'bible-comparing' : ''}`}>
+  return <div className={`bible-page bible-immersive bible-theme-${theme} ${comparison.length ? 'bible-comparing' : ''}`}>
     <main className="bible-layout">
       <header className="bible-heading">
-        <div><h1><BookOpen size={25} />Biblia</h1><span className="bible-connection">{installed ? <><Check size={13} />{online ? 'Disponible sin conexión' : 'Leyendo sin conexión'}</> : online ? 'Lectura en línea' : <><WifiOff size={13} />Sin conexión</>}</span></div>
-        <div className="bible-header-actions"><IconButton label="Marcadores" onClick={() => setDialog('bookmarks')}><BookMarked size={21} /></IconButton><IconButton label="Descargas" onClick={() => setDialog('downloads')}><HardDriveDownload size={21} />{library.operation && <span className="bible-busy-dot" />}</IconButton><IconButton label="Ajustes de lectura" onClick={() => setDialog('settings')}><Settings2 size={21} /></IconButton></div>
+        <div className="bible-reader-brand"><Link to="/feed" className="bible-icon" title="Salir de la Biblia" aria-label="Salir de la Biblia"><ArrowLeft size={21} /></Link><div className="bible-reader-title"><h1><BookOpen size={20} />Biblia</h1><span className="bible-connection">{installed ? <><Check size={13} />{online ? 'Disponible sin conexión' : 'Leyendo sin conexión'}</> : online ? 'Lectura en línea' : <><WifiOff size={13} />Sin conexión</>}</span></div></div>
+        <div className="bible-header-actions"><IconButton label="Anterior" disabled={!previous} onClick={() => go(previous)}><ArrowLeft size={19} /></IconButton><IconButton label="Siguiente" disabled={!next} onClick={() => go(next)}><ArrowRight size={19} /></IconButton><span className="bible-toolbar-divider" /><IconButton label="Marcadores" onClick={() => setDialog('bookmarks')}><BookMarked size={21} /></IconButton><IconButton label="Descargas" onClick={() => setDialog('downloads')}><HardDriveDownload size={21} />{library.operation && <span className="bible-busy-dot" />}</IconButton><IconButton label="Ajustes de lectura" onClick={() => setDialog('settings')}><Settings2 size={21} /></IconButton></div>
       </header>
       <div className="bible-workspace">
         <aside className="bible-sidebar" aria-label="Libros de la Biblia">
@@ -184,7 +183,6 @@ export default function Bible() {
               {chapter && <p className="bible-copyright">{version.copyright}</p>}
             </motion.article>
           </AnimatePresence>}
-          <nav className="bible-chapter-nav" aria-label="Navegación de capítulos"><button type="button" disabled={!previous} onClick={() => go(previous)}><ArrowLeft size={19} /><span>Anterior</span></button><button type="button" onClick={openPicker} aria-label="Seleccionar capítulo">{chapterNumber} <span>/ {bookInfo.chapters}</span></button><button type="button" disabled={!next} onClick={() => go(next)}><span>Siguiente</span><ArrowRight size={19} /></button></nav>
         </div>
       </div>
     </main>
@@ -215,5 +213,5 @@ export default function Bible() {
         return <section className="bible-download-row" key={entry.id}><div className="bible-download-info"><strong>{entry.id}</strong><span>{entry.title}</span><small>{downloaded ? <><Check size={13} />{currentDownload ? 'Disponible sin conexión' : 'Actualización disponible'}</> : `${(entry.archive.bytes / 1e6).toFixed(2)} MB`}</small></div><div className="bible-download-actions">{operation ? <>{operation.phase === 'download' ? <IconButton label={`Cancelar descarga de ${entry.id}`} onClick={cancelBibleDownload}><X size={19} /></IconButton> : <LoaderCircle size={22} className="bible-spin" />}</> : <>{(!downloaded || !currentDownload) && <IconButton label={`Descargar ${entry.id}`} disabled={!online || Boolean(library.operation) || !library.ready} onClick={() => downloadBible(entry)}><Download size={21} /></IconButton>}{downloaded && <IconButton label={`Eliminar descarga de ${entry.id}`} disabled={Boolean(library.operation)} onClick={() => setConfirmDelete(entry.id)}><Trash2 size={19} /></IconButton>}</>}</div>{operation && <div className="bible-download-progress" role="status"><progress max="100" value={operation.progress} aria-label={`Descarga ${entry.id}`} /><span>{operation.phase === 'save' ? 'Guardando y verificando...' : operation.phase === 'delete' ? 'Eliminando...' : `${operation.progress}%`}</span></div>}{confirmDelete === entry.id && <div className="bible-confirm"><p>¿Eliminar {entry.id} de este dispositivo? Tus marcadores se conservarán.</p><div><button type="button" className="bible-command" onClick={() => setConfirmDelete('')}>Cancelar</button><button type="button" className="bible-command" disabled={Boolean(library.operation)} onClick={() => { setConfirmDelete(''); removeBible(entry); }}><Trash2 size={16} />Eliminar</button></div></div>}</section>;
       })}</div>
     </AppDialog>
-  </PageShell>;
+  </div>;
 }
