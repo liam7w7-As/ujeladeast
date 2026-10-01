@@ -21,5 +21,5 @@ Female: Matching young-adult woman portrait with warm brown skin, shoulder-lengt
 `node --test tests/feed.test.mjs`
 
 `node tests/feed.browser.mjs` uses Playwright, installed Chrome and a local Vite
-server on port 5175 (override with `FEED_TEST_URL`). It mocks Supabase, never writes
+server on port 5176 (override with `FEED_TEST_URL`). It mocks Supabase, never writes
 production records, and saves screenshots to `FEED_TEST_OUTPUT` or `test-results`.

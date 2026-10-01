@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { Check, Copy, MessageCircle, Share2, ThumbsUp } from 'lucide-react';
+import { Check, Copy, MessageCircle, Send, Share2, ThumbsUp } from 'lucide-react';
 
-export default function ShareButton({ post, className = 'flex items-center gap-2 text-white/60 hover:text-white' }) {
+export default function ShareButton({ post, className = 'flex items-center gap-2 text-white/60 hover:text-white', iconOnly = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState('');
@@ -71,16 +71,17 @@ export default function ShareButton({ post, className = 'flex items-center gap-2
       <button 
         type="button"
         aria-label="Compartir publicación"
+        title="Compartir publicación"
         aria-expanded={isOpen}
         onClick={handleShareClick}
         className={className}
       >
-        <Share2 size={18} />
-        <span className="text-xs font-medium">Compartir</span>
+        {iconOnly ? <Send size={24} strokeWidth={1.7} /> : <Share2 size={18} />}
+        {!iconOnly && <span className="text-xs font-medium">Compartir</span>}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 bottom-full mb-2 w-48 bg-[#25292c] border border-white/15 rounded-lg shadow-xl overflow-hidden z-20">
+        <div className={`absolute ${iconOnly ? 'left-0' : 'right-0'} bottom-full mb-2 w-48 bg-[#25292c] border border-white/15 rounded-lg shadow-xl overflow-hidden z-20`}>
           <div className="p-1 flex flex-col">
             <button 
               onClick={copyToClipboard}

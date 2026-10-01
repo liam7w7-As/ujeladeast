@@ -2,7 +2,7 @@ import { createRequire } from 'node:module';
 import { mkdir } from 'node:fs/promises';
 import assert from 'node:assert/strict';
 const { chromium } = createRequire(import.meta.url)('playwright');
-const baseURL = process.env.FEED_TEST_URL || 'http://127.0.0.1:5175';
+const baseURL = process.env.FEED_TEST_URL || 'http://127.0.0.1:5176';
 const output = process.env.FEED_TEST_OUTPUT || 'test-results';
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ headless: true, channel: 'chrome' });
@@ -11,7 +11,7 @@ const now = new Date().toISOString();
 const profile = { id: userId, full_name: 'Gabriel Fernandez', church_name: 'Iglesia Central', avatar_url: '/avatars/hombre.webp', role: 'user' };
 const author = { full_name: 'Valentina Alejandra Fernandez de la comunidad de El Alto', church_name: 'Sociedad de Jovenes de la Iglesia Central', avatar_url: '/avatars/mujer.webp' };
 const posts = [
-  { id: 'post-1', user_id: userId, profiles: author, created_at: now, category: 'reflexion', content: 'Hoy compartimos un tiempo de gratitud. Que nuestra fe se vea en las pequenas cosas: escuchar, acompanar y servir.\n\nQue motivo de gratitud tienes hoy?', image_url: '/logo-ujeladea.png', likes_count: 12, comments_count: 0 },
+  { id: 'post-1', user_id: 'member-2', profiles: author, created_at: now, category: 'reflexion', content: 'Hoy compartimos un tiempo de gratitud. Que nuestra fe se vea en las pequenas cosas: escuchar, acompanar y servir.\n\nQue motivo de gratitud tienes hoy?', image_url: '/logo-ujeladea.png', likes_count: 12, comments_count: 0 },
   { id: 'post-2', user_id: userId, profiles: profile, created_at: now, category: 'devocional', content: 'Una nueva oportunidad para crecer juntos. '.repeat(30), likes_count: 2, comments_count: 0 },
 ];
 let failPublish = true, failLike = false, failFeed = false;
@@ -66,15 +66,29 @@ try {
   await page.goto(`${baseURL}/feed`, { waitUntil: 'domcontentloaded' });
   const first = page.getByRole('article').filter({ hasText: author.full_name });
   await first.waitFor();
-  await page.getByRole('img', { name: `Avatar de ${author.full_name}`, exact: true }).waitFor();
-  for (const width of [320, 390, 768, 1024, 1440]) {
+  await first.getByRole('img', { name: `Avatar de ${author.full_name}`, exact: true }).waitFor();
+  await page.evaluate(() => document.fonts.ready);
+  assert.equal(await page.evaluate(() => document.fonts.check('600 14px "Plus Jakarta Sans"')), true);
+  assert.match(await page.locator('body').evaluate(el => getComputedStyle(el).fontFamily), /Plus Jakarta Sans/);
+  for (const width of [320, 390, 768, 900, 1024, 1280, 1440]) {
     await page.setViewportSize({ width, height: 1000 });
-    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.getByRole('article').last().scrollIntoViewIfNeeded();
+    await page.getByRole('article').first().scrollIntoViewIfNeeded();
+    await page.waitForFunction(() => [...document.querySelectorAll('.feed-post')].every(el => Number(getComputedStyle(el).opacity) === 1));
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
     await page.screenshot({ path: `${output}/feed-${width}.png`, fullPage: true });
+    if (width === 390 || width === 1440) await page.screenshot({ path: `${output}/feed-viewport-${width}.png` });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `overflow at ${width}`);
     const overflow = await page.locator('.feed-post, .feed-post-actions, .feed-compose').evaluateAll(nodes => nodes.filter(el => el.scrollWidth > el.clientWidth + 1).map(el => el.className));
     assert.deepEqual(overflow, [], `content overflow at ${width}`);
+    assert.equal(await page.getByRole('button', { name: 'Crear publicación', exact: true }).count(), 1, `one visible create action at ${width}`);
   }
+  await page.getByRole('button', { name: 'Notificaciones', exact: true }).click();
+  const notifications = page.getByRole('region', { name: 'Notificaciones recibidas' });
+  await notifications.waitFor();
+  const notificationBounds = await notifications.boundingBox();
+  assert.ok(notificationBounds.x >= 220 && notificationBounds.x + notificationBounds.width <= 1440);
+  await page.keyboard.press('Escape');
   assert.equal(await first.locator('.feed-post-media img').evaluate(el => el.naturalWidth > 0 && getComputedStyle(el).objectFit === 'contain'), true);
   await page.setViewportSize({ width: 390, height: 844 });
   await first.getByRole('button', { name: 'Ampliar imagen de la publicación' }).click();
@@ -83,7 +97,14 @@ try {
   await page.getByRole('dialog').waitFor({ state: 'hidden' });
   await first.getByRole('button', { name: 'Me gusta', exact: true }).click();
   await first.getByRole('button', { name: 'Quitar me gusta' }).waitFor();
-  assert.match(await first.getByRole('button', { name: 'Quitar me gusta' }).innerText(), /13/);
+  assert.equal(await first.locator('.feed-like-count').innerText(), '13 me gusta');
+  await first.getByRole('button', { name: 'Quitar me gusta' }).click();
+  await first.getByRole('button', { name: 'Me gusta', exact: true }).waitFor();
+  await first.locator('.feed-post-media').dblclick();
+  await first.getByRole('button', { name: 'Quitar me gusta' }).waitFor();
+  assert.equal(await first.locator('.feed-like-count').innerText(), '13 me gusta');
+  await first.locator('.feed-post-media').dblclick();
+  assert.equal(await first.locator('.feed-like-count').innerText(), '13 me gusta', 'double tap never unlikes');
   await first.getByRole('button', { name: 'Quitar me gusta' }).click();
   await first.getByRole('button', { name: 'Me gusta', exact: true }).waitFor();
   failLike = true;
@@ -100,6 +121,14 @@ try {
   page.once('dialog', dialog => dialog.accept());
   await first.getByRole('button', { name: 'Eliminar comentario' }).click();
   await first.getByText('Gracias por compartir!', { exact: true }).waitFor({ state: 'hidden' });
+  await page.getByRole('button', { name: `Ver publicaciones de ${author.full_name}` }).click();
+  assert.equal(await page.getByRole('article').count(), 1);
+  await page.getByRole('button', { name: 'Ver todas las personas' }).click();
+  assert.equal(await page.getByRole('article').count(), 2);
+  await page.getByRole('button', { name: 'Más opciones' }).click();
+  await page.getByRole('dialog').getByRole('link', { name: 'Himnario' }).waitFor();
+  await page.keyboard.press('Escape');
+  await page.getByRole('dialog').waitFor({ state: 'hidden' });
   await page.getByRole('button', { name: 'Crear publicación', exact: true }).click();
   const dialog = page.getByRole('dialog');
   await dialog.getByLabel('Contenido de la publicación').fill('Mi reflexion de hoy');
@@ -114,6 +143,10 @@ try {
   console.log('Checking publish retry and filters');
   await dialog.getByRole('button', { name: 'Publicar', exact: true }).click();
   await dialog.waitFor({ state: 'hidden' });
+  const toast = page.getByRole('status').filter({ hasText: 'Publicación compartida' });
+  await toast.waitFor();
+  const toastBounds = await toast.boundingBox();
+  assert.ok(toastBounds.x >= 0 && toastBounds.x + toastBounds.width <= 390);
   await page.getByText('Mi reflexion de hoy', { exact: true }).waitFor();
   assert.equal(posts[0].category, 'devocional');
   await page.getByRole('button', { name: 'Anuncios', exact: true }).click();
@@ -127,10 +160,13 @@ try {
   failFeed = false;
   await page.getByRole('button', { name: 'Reintentar', exact: true }).click();
   await page.getByText('Mi reflexion de hoy', { exact: true }).waitFor();
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   profile.avatar_url = null;
   await page.reload({ waitUntil: 'domcontentloaded' });
   await page.waitForResponse(response => response.url().includes('/profiles?') && response.request().method() === 'PATCH');
   assert.equal(profile.avatar_url, '/avatars/hombre.webp', 'first authenticated visit synchronizes selected avatar');
+  await page.getByRole('article').first().waitFor();
+  assert.equal(await page.getByRole('article').first().evaluate(el => getComputedStyle(el).transform), 'none');
   await context.close();
   console.log('Checking registration');
 
@@ -159,5 +195,5 @@ try {
   await register.waitForURL('**/login');
   await guest.close();
   assert.deepEqual(pageErrors, []);
-  console.log('PASS: feed layouts 320/390/768/1024/1440, images, reactions, comments, filters, errors, publish draft, avatar signup and guest login.');
+  console.log('PASS: 7 responsive layouts, local Jakarta font, reduced motion, double-tap reactions, author/category filters, notifications, comments, draft retry, signup and guest login.');
 } finally { await browser.close(); }

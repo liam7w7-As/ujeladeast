@@ -148,7 +148,7 @@ export default function ChatWidget({ contextType: externalContextType, extraCont
     }
   };
 
-  if (pathname === '/register' || pathname === '/login') return null;
+  if (pathname === '/register' || pathname === '/login' || pathname === '/feed') return null;
 
   return (
     <>
