@@ -1,62 +1,43 @@
 import sharp from 'sharp';
-import fs from 'fs';
-import path from 'path';
+import { Buffer } from 'node:buffer';
+import process from 'node:process';
+import { writeFile } from 'node:fs/promises';
+import path from 'node:path';
 
-const sourceImage = path.resolve('public/logo-ujeladea.png');
 const publicDir = path.resolve('public');
+const background = '#8f1937';
 
 async function generate() {
-  if (!fs.existsSync(sourceImage)) {
-    console.error('Source image not found:', sourceImage);
-    process.exit(1);
+  // Preserve the source mark; only its installation-icon canvas changes.
+  const logo = await sharp(path.join(publicDir, 'logo-ujeladea.png'))
+    .resize(1024, 1024, { fit: 'inside' }).png().toBuffer();
+  const variants = [
+    ['pwa-192x192-v2.png', 192, 0.84],
+    ['pwa-512x512-v2.png', 512, 0.84],
+    ['pwa-maskable-192x192-v2.png', 192, 0.62],
+    ['pwa-maskable-512x512-v2.png', 512, 0.62],
+    ['apple-touch-icon-v2.png', 180, 0.82],
+    ['favicon-v2.png', 64, 0.88],
+  ];
+  for (const [name, size, ratio] of variants) {
+    const mark = await sharp(logo).resize(Math.round(size * ratio), Math.round(size * ratio), { fit: 'inside' }).png().toBuffer();
+    await sharp({ create: { width: size, height: size, channels: 3, background } })
+      .composite([{ input: mark, gravity: 'centre' }])
+      .flatten({ background }).removeAlpha().png().toFile(path.join(publicDir, name));
+    console.log(`Generated ${name} (${size}x${size}, opaque)`);
   }
 
-  console.log('Generating PWA icons from:', sourceImage);
-  const metadata = await sharp(sourceImage).metadata();
-  console.log('Source dimensions:', metadata.width, 'x', metadata.height);
-
-  const bg = { r: 9, g: 9, b: 11, alpha: 1 }; // #09090b
-
-  // 1. 192x192 PNG (Standard)
-  await sharp(sourceImage)
-    .resize(192, 192, { fit: 'contain', background: bg })
-    .png()
-    .toFile(path.join(publicDir, 'pwa-192x192.png'));
-  console.log('Generated: pwa-192x192.png (192x192)');
-
-  // 2. 512x512 PNG (Standard)
-  await sharp(sourceImage)
-    .resize(512, 512, { fit: 'contain', background: bg })
-    .png()
-    .toFile(path.join(publicDir, 'pwa-512x512.png'));
-  console.log('Generated: pwa-512x512.png (512x512)');
-
-  // 3. Apple Touch Icon (180x180)
-  await sharp(sourceImage)
-    .resize(180, 180, { fit: 'contain', background: bg })
-    .png()
-    .toFile(path.join(publicDir, 'apple-touch-icon.png'));
-  console.log('Generated: apple-touch-icon.png (180x180)');
-
-  // 4. Favicon PNGs (32x32 & 48x48) & favicon.ico (or PNG fallback)
-  await sharp(sourceImage)
-    .resize(64, 64, { fit: 'contain', background: bg })
-    .png()
-    .toFile(path.join(publicDir, 'favicon.png'));
-  console.log('Generated: favicon.png (64x64)');
-
-  // 5. Also create favicon.ico as a PNG-container or copy
-  // Modern browsers and PWA work great with PNG favicons or 48x48
-  await sharp(sourceImage)
-    .resize(48, 48, { fit: 'contain', background: bg })
-    .png()
-    .toFile(path.join(publicDir, 'favicon.ico'));
-  console.log('Generated: favicon.ico (48x48)');
-
-  console.log('All icons generated successfully!');
+  // A real ICO container for clients requesting /favicon.ico directly.
+  const favicon = await sharp(path.join(publicDir, 'favicon-v2.png')).resize(32, 32).png().toBuffer();
+  const header = Buffer.alloc(22);
+  header.writeUInt16LE(1, 2);
+  header.writeUInt16LE(1, 4);
+  header[6] = 32; header[7] = 32;
+  header.writeUInt16LE(1, 10);
+  header.writeUInt16LE(32, 12);
+  header.writeUInt32LE(favicon.length, 14);
+  header.writeUInt32LE(22, 18);
+  await writeFile(path.join(publicDir, 'favicon.ico'), Buffer.concat([header, favicon]));
 }
 
-generate().catch(err => {
-  console.error('Error generating icons:', err);
-  process.exit(1);
-});
+generate().catch(error => { console.error(error); process.exitCode = 1; });
