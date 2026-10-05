@@ -1,0 +1,99 @@
+.study-page, .study-page * { letter-spacing: 0; }
+.study-main { max-width: 1120px; margin: 0 auto; width: 100%; padding: 128px 32px 48px; position: relative; z-index: 10; }
+.study-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: min(100%, 520px); border-bottom: 1px solid #ffffff16; margin-bottom: 32px; }
+.study-tabs button { min-height: 50px; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 8px; font-size: 13px; color: #a4a9b0; border-bottom: 2px solid transparent; }
+.study-tabs button[aria-current='page'] { color: #f0b4c4; border-color: #da6484; }
+.study-tabs svg { width: 18px; flex-shrink: 0; }
+.study-main button:focus-visible, .study-main a:focus-visible { outline: 2px solid #e6aabc; outline-offset: 4px; }
+.study-home-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 28px; }
+.study-home-heading p { color: #a9aeb5; font-size: 12px; margin-bottom: 6px; }
+.study-home-heading h1 { font-size: 28px; line-height: 1.3; font-weight: 750; }
+.study-home-heading > button { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid #ffffff20; border-radius: 8px; color: #dab4c0; }
+.study-home-grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 48px; }
+.study-home-main, .study-home-aside { min-width: 0; }
+.study-home-aside { grid-column: 2; grid-row: 1 / 3; }
+.study-discovery { grid-column: 1; min-width: 0; margin-top: -32px; }
+.study-section-label { display: flex; align-items: center; gap: 9px; font-size: 12px; color: #a5c8ba; }
+.study-section-label svg { flex-shrink: 0; }
+.study-section-label h2 { font-size: 12px; font-weight: 600; }
+.study-next { padding: 24px 0; border-top: 1px solid #ffffff1a; }
+.study-next-day { font-size: 13px; font-weight: 650; color: #f0bac9; margin-top: 28px; }
+.study-next-day span { font-weight: 400; color: #969da6; }
+.study-next h2 { font-size: 28px; font-weight: 750; line-height: 1.35; margin: 12px 0; overflow-wrap: anywhere; max-width: 580px; }
+.study-next-reference { font-size: 14px; color: #bdc6cf; }
+.study-next > .study-primary { margin: 24px 0 0; min-height: 50px; }
+.study-primary:disabled { opacity: .5; cursor: not-allowed; }
+.study-total-progress { display: grid; gap: 10px; margin-top: 25px; font-size: 11px; color: #9da8b0; }
+.study-total-progress progress, .study-xp progress { appearance: none; width: 100%; height: 4px; border: 0; border-radius: 0; background: #ffffff12; accent-color: #a1d2bc; }
+.study-total-progress progress::-webkit-progress-bar, .study-xp progress::-webkit-progress-bar { background: #ffffff12; }
+.study-total-progress progress::-webkit-progress-value, .study-xp progress::-webkit-progress-value { background: #a1d2bc; }
+.study-this-week { border-bottom: 1px solid #ffffff1a; padding: 10px 0 28px; }
+.study-this-week header, .study-diary-preview header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.study-this-week header p { font-size: 11px; color: #929ca5; margin-bottom: 3px; }
+.study-this-week h2 { font-size: 16px; font-weight: 650; }
+.study-this-week header button { display: flex; align-items: center; gap: 2px; min-height: 44px; font-size: 12px; color: #b8c1c9; }
+.study-this-week ol { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+.study-this-week li { min-width: 0; }
+.study-this-week li button { display: flex; flex-direction: column; align-items: center; width: 100%; min-height: 68px; gap: 9px; font-size: 13px; }
+.study-this-week li button > span { width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid #ffffff25; border-radius: 8px; }
+.study-this-week small { font-size: 10px; color: #9da7b0; }
+.study-this-week .is-done > span { color: #a1d2bc; border-color: #7ac5a355; background: #7ac5a312; }
+.study-this-week [aria-current='step'] > span { background: #a93353; border-color: #da6484; color: #fff; }
+.study-home-aside > section[aria-label='Tu racha'] { background: #121418; }
+.study-xp { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 18px 0 24px; font-size: 12px; color: #adb5bf; }
+.study-xp strong { color: #edb5c6; }
+.study-xp progress { grid-column: 1 / -1; }
+.study-daily { padding: 28px 0 0; }
+.study-daily h3 { margin-top: 17px; font-size: 19px; font-weight: 650; line-height: 1.5; }
+.study-daily > p { color: #b7c0c7; font-size: 14px; line-height: 1.8; margin-top: 10px; }
+.study-daily > a { color: #a5d5c2; font-size: 12px; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
+.study-daily-question { display: flex; align-items: flex-start; gap: 12px; border-top: 1px solid #ffffff12; padding-top: 18px; margin-top: 8px; }
+.study-daily-question img { width: 40px; height: 40px; object-fit: cover; border-radius: 50%; flex-shrink: 0; }
+.study-daily-question span { font-size: 10px; color: #b1b5c3; }
+.study-daily-question p { font-size: 13px; line-height: 1.7; margin-top: 4px; color: #d8dde2; }
+.study-diary-preview { border-top: 1px solid #ffffff1a; padding: 22px 0; }
+.study-diary-preview h2 { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 650; }
+.study-diary-preview header button { display: grid; place-items: center; width: 40px; height: 40px; }
+.study-diary-preview > p { font-size: 12px; line-height: 1.7; color: #959fa9; }
+.study-diary-preview > button { width: 100%; position: relative; text-align: left; padding: 14px 25px 14px 0; border-bottom: 1px solid #ffffff12; }
+.study-diary-preview time { font-size: 10px; color: #acb8c6; }
+.study-diary-preview > button p { font-size: 12px; line-height: 1.7; color: #cbd0d6; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; }
+.study-diary-preview > button > svg { position: absolute; right: 0; top: 24px; }
+.study-view-heading { margin-bottom: 24px; }
+.study-view-heading h1, .study-view-heading h2 { font-size: 25px; font-weight: 700; line-height: 1.4; }
+.study-view-heading p { font-size: 13px; line-height: 1.8; color: #a6afba; margin-top: 8px; }
+.study-weeks-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.study-week-row { width: 100%; min-height: 108px; display: flex; align-items: center; gap: 16px; padding: 18px; border: 1px solid #ffffff16; border-radius: 8px; background: #101215; text-align: left; }
+.study-week-row:disabled { cursor: not-allowed; color: #818995; background: transparent; }
+.study-week-row.is-current { border-color: #c0577470; background: #a933530b; }
+.study-week-row.is-finished .study-week-number { color: #a1d2bc; }
+.study-week-number { flex-shrink: 0; width: 36px; display: grid; place-items: center; font-size: 21px; color: #b8bcc6; }
+.study-week-info { display: flex; flex-direction: column; gap: 6px; min-width: 0; flex: 1; }
+.study-week-info strong { font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+.study-week-info > span { font-size: 10px; color: #929eaa; line-height: 1.5; }
+.study-week-info .study-week-label { font-size: 11px; color: #bbc4ce; }
+.study-week-row.is-current .study-week-label { color: #efb2c3; }
+.study-loading { display: flex; align-items: center; gap: 10px; color: #aab4bf; padding: 24px 0; font-size: 13px; }
+.study-lesson-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 767px) {
+  .study-main { padding-left: 18px; padding-right: 18px; padding-bottom: 28px; }
+  .study-tabs { width: 100%; margin-bottom: 24px; }
+  .study-tabs button { font-size: 12px; gap: 6px; }
+  .study-home-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .study-home-heading { margin-bottom: 22px; }
+  .study-home-heading h1 { font-size: 24px; }
+  .study-next { padding: 20px 0; }
+  .study-next h2 { font-size: 25px; }
+  .study-next > .study-primary { width: 100%; }
+  .study-this-week ol { gap: 3px; }
+  .study-this-week li button > span { width: 34px; height: 38px; }
+  .study-this-week li button { min-height: 64px; }
+  .study-weeks-grid, .study-lesson-grid { grid-template-columns: minmax(0, 1fr); }
+  .study-week-row { gap: 12px; padding: 16px 12px; }
+  .study-view-heading h1, .study-view-heading h2 { font-size: 23px; }
+  .study-home-aside { display: grid; grid-template-columns: minmax(0, 1fr); grid-column: 1; grid-row: auto; }
+  .study-discovery { margin-top: -28px; }
+}
+@media (max-width: 479px) {
+  .study-tabs button { flex-direction: column; gap: 4px; min-height: 58px; padding: 6px; white-space: nowrap; font-size: 11px; }
+}

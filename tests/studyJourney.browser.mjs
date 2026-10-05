@@ -2,6 +2,7 @@ import { createRequire } from 'node:module';
 import { mkdir } from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import { studyDay } from '../src/lib/studyTracking.js';
+import { dailyBibleFact } from '../src/lib/dailyBibleFact.js';
 const { chromium } = createRequire(import.meta.url)('playwright');
 const base = process.env.STUDY_TEST_URL || 'http://127.0.0.1:5177';
 const output = process.env.STUDY_TEST_OUTPUT || 'test-results/study';
@@ -27,6 +28,7 @@ let holdSave = false, releaseSave;
 const statusSnapshot = () => ({ ...streak, atomic: true, today_completed: true, recent_days: Array.from({ length: 7 }, (_, index) => ({ date: new Date((studyDay(new Date()) - 6 + index) * 86400000).toISOString().slice(0, 10), completed: index > 4 })) });
 const withProgress = lesson => ({ ...lesson, user_progress: progress.has(lesson.id) ? [progress.get(lesson.id)] : [] });
 async function mock(context) {
+  await context.route('**/api/daily-bible-fact', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ ...dailyBibleFact(), ai: true, question: '¿A quién puedes escuchar hoy con atención?' }) }));
   await context.addInitScript(session => localStorage.setItem('sb-placeholder-auth-token', JSON.stringify(session)), session);
   await context.route('https://fonts.googleapis.com/**', route => route.abort());
   await context.route('https://fonts.gstatic.com/**', route => route.abort());
@@ -108,11 +110,19 @@ try {
     await page.getByText('Hoy completado', { exact: true }).waitFor();
   }
   await settled(page);
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  assert.equal(await page.locator('footer').isVisible(), false, 'No footer in the mobile app');
+  await page.getByRole('region', { name: 'Dato bíblico del día' }).waitFor();
+  await page.getByText('Pregunta de Ujeladito · IA', { exact: true }).waitFor();
   await page.screenshot({ path: `${output}/dashboard-mobile.png`, fullPage: true });
   if (atomic) {
     for (const width of [320, 768, 1440]) {
       await page.setViewportSize({ width, height: 900 });
       assert.ok(await page.getByRole('region', { name: 'Tu racha' }).evaluate(element => element.scrollWidth <= element.clientWidth));
+      assert.equal(await page.locator('footer').isVisible(), width >= 1280);
+      if (width >= 1280) assert.equal(await page.locator('footer img').evaluate(img => img.complete && img.naturalWidth > 0), true, 'Footer shows the real logo');
+      await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+      await page.screenshot({ path: `${output}/home-viewport-${width}.png` });
       await page.screenshot({ path: `${output}/streak-${width}.png`, fullPage: true });
     }
     await page.setViewportSize({ width: 390, height: 844 });
@@ -210,7 +220,10 @@ try {
   await page.getByRole('button', { name: 'Volver a mi estudio', exact: true }).click();
   await page.getByRole('button', { name: 'Continuar: día 4 de 365', exact: true }).waitFor();
   await page.getByRole('button', { name: 'Plan Anual', exact: true }).click();
-  await page.getByRole('button', { name: /Semana 1 Semana de estudio 1/ }).click();
+  await page.getByRole('button', { name: /Semana 2\b.*Semana de estudio 2\b/ }).waitFor();
+  assert.equal(await page.getByRole('button', { name: /Semana 2\b.*Semana de estudio 2\b/ }).isDisabled(), true);
+  await page.screenshot({ path: `${output}/plan-mobile.png` });
+  await page.getByRole('button', { name: /Semana 1\b.*Semana de estudio 1\b/ }).click();
   await page.getByRole('button', { name: /Estudio 1 Santiago/ }).click();
   for (let index = 0; index < 4; index++) await page.getByRole('button', { name: 'Continuar', exact: true }).click();
   await page.getByText('Respuesta anterior conservada', { exact: true }).waitFor();
@@ -239,6 +252,29 @@ try {
   }
   assert.equal(progress.has('lesson-4'), true);
   failStreak = false;
+  progress.set('lesson-10', { user_id: id, completed: true, answers: { 0: 'Historica' } });
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.getByRole('button', { name: 'Continuar: día 5 de 365', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Plan Anual', exact: true }).click();
+  await page.getByRole('button', { name: /Semana 2\b.*Semana de estudio 2\b/ }).click();
+  assert.equal(await page.getByRole('button', { name: /Estudio 8 Santiago/ }).isDisabled(), true);
+  assert.equal(await page.getByRole('button', { name: /Estudio 10 Santiago/ }).isDisabled(), false);
+  for (const lesson of lessons.slice(4, 6)) progress.set(lesson.id, { user_id: id, completed: true, answers: {} });
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await start(page, 7);
+  await page.getByRole('button', { name: 'Continuar', exact: true }).click();
+  await page.getByRole('button', { name: 'Continuar', exact: true }).click();
+  await page.getByLabel('¿Qué enseñanza encuentras en el pasaje?', { exact: true }).fill('Una respuesta para cerrar la semana.');
+  await page.getByRole('button', { name: 'Continuar', exact: true }).click();
+  await page.getByLabel('¿Cómo la aplicarías en una conversación?', { exact: true }).fill('Escuchando con paciencia.');
+  await page.getByRole('button', { name: 'Continuar', exact: true }).click();
+  await page.getByRole('button', { name: 'Guardar estudio', exact: true }).click();
+  await page.getByText('¡Semana 2 desbloqueada! Completaste la semana 1.', { exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Volver a mi estudio', exact: true }).click();
+  await page.getByRole('button', { name: 'Continuar: día 8 de 365', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Plan Anual', exact: true }).click();
+  assert.equal(await page.getByRole('button', { name: /Semana 2\b.*Semana de estudio 2\b/ }).isDisabled(), false);
+  assert.equal(await page.getByRole('button', { name: /Semana 3\b.*Semana de estudio 3\b/ }).isDisabled(), true);
   for (const lesson of lessons.slice(0, 364)) progress.set(lesson.id, { user_id: id, completed: true, answers: {} });
   await page.reload({ waitUntil: 'domcontentloaded' });
   await page.getByRole('button', { name: 'Continuar: día 365 de 365', exact: true }).waitFor();
@@ -254,6 +290,8 @@ try {
   await page.getByRole('heading', { name: 'Completaste tu recorrido' }).waitFor();
   emptyPlan = true;
   await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.getByText('Este plan todavía no tiene lecciones publicadas.', { exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Plan Anual', exact: true }).click();
   await page.getByText('Este plan todavía no tiene lecciones publicadas.', { exact: true }).waitFor();
   await context.close();
   emptyPlan = false;

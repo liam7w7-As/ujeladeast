@@ -8,6 +8,9 @@
 .study-reference { display: flex; align-items: center; gap: 8px; color: #efb1c0; font-size: 14px; margin-top: 14px; }
 .study-reference svg { flex-shrink: 0; }
 .study-step-progress { margin: 30px 0; }
+.study-session-stages { display: flex; justify-content: space-between; gap: 8px; padding-bottom: 20px; }
+.study-session-stages li { font-size: 11px; color: #929da8; }
+.study-session-stages li[aria-current='step'] { color: #f1bccb; font-weight: 650; }
 .study-step-progress > div { display: flex; justify-content: space-between; font-size: 12px; color: #b3c0b9; margin-bottom: 8px; }
 .study-step-progress progress { display: block; width: 100%; height: 4px; border: 0; background: #242b29; accent-color: #b2d6c3; }
 .study-step-progress progress::-webkit-progress-bar { background: #242b29; }
@@ -15,7 +18,7 @@
 .study-step-progress progress::-moz-progress-bar { background: #b2d6c3; }
 .study-step > h2 { font-size: 19px; font-weight: 650; margin-bottom: 22px; }
 .study-step h2:focus, .study-finished h1:focus { outline: none; }
-.study-reading { font-size: 16px; line-height: 1.95; color: #d5ddd8; overflow-wrap: anywhere; white-space: pre-wrap; }
+.study-reading { font-size: 16px; line-height: 1.8; color: #d5ddd8; overflow-wrap: anywhere; white-space: pre-wrap; }
 .study-reading p, .study-reading ul, .study-reading ol, .study-reading blockquote { margin-bottom: 18px; }
 .study-reading h1, .study-reading h2, .study-reading h3 { font-size: 20px; font-weight: 700; margin: 18px 0 10px; }
 .study-reading ul { list-style: disc; padding-left: 24px; }

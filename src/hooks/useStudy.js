@@ -25,6 +25,7 @@ export function useStudy() {
       
       if (error && error.code !== 'PGRST116') throw error;
       setPlan(data);
+      setError(null);
       return data;
     } catch (err) {
       console.error('Error fetching plan:', err);
@@ -40,36 +41,21 @@ export function useStudy() {
       setLoading(true);
       const { data, error } = await supabase
         .from('study_weeks')
-        .select(`
-          *,
-          study_lessons (
-            id, day_number, title, scripture_ref,
-            user_progress ( completed, user_id )
-          )
-        `)
+        .select('id, plan_id, week_number, title')
         .eq('plan_id', planId)
         .order('week_number', { ascending: true });
         
       if (error) throw error;
       
-      // Filtrar el progreso para que sea solo del usuario actual
-      const processedData = data.map(week => ({
-        ...week,
-        study_lessons: week.study_lessons.map(lesson => ({
-          ...lesson,
-          user_progress: lesson.user_progress?.find(p => p.user_id === user?.id) || null,
-          completed: lesson.user_progress?.some(p => p.user_id === user?.id && p.completed) || false
-        }))
-      }));
-      
-      setWeeks(processedData);
-      return processedData;
+      setWeeks(data || []);
+      setError(null);
+      return data || [];
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, []);
 
   const getLessons = useCallback(async (weekId) => {
     if (!weekId) return;
@@ -95,6 +81,7 @@ export function useStudy() {
       });
       
       setLessons(processedData);
+      setError(null);
       return processedData;
     } catch (err) {
       setError(err.message);
@@ -106,7 +93,7 @@ export function useStudy() {
   const getJourney = useCallback(async (planId) => {
     if (!user || !planId) return null;
     const data = await collectPages((from, to) => supabase.from('study_lessons')
-      .select('id, day_number, title, scripture_ref, study_weeks!inner(plan_id, week_number), user_progress(user_id, completed)')
+      .select('id, week_id, day_number, title, scripture_ref, study_weeks!inner(plan_id, week_number), user_progress(user_id, completed)')
       .eq('study_weeks.plan_id', planId).order('id').range(from, to));
     return orderedJourney(data, user.id);
   }, [user]);

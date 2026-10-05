@@ -1,8 +1,38 @@
 # Guided study on the existing annual plan
 
-This first stage keeps the existing study_plans, study_weeks, study_lessons,
+The guided study keeps the existing study_plans, study_weeks, study_lessons,
 user_progress and journal_entries records. It does not seed, rewrite or delete
-lessons, alter existing completed answers, or require a SQL migration.
+lessons or alter existing completed answers. Weekly completion enforcement and
+shared daily AI now have additional migrations; see `supabase/README.md`.
+
+## Weekly progression and daily discovery
+
+The home view prioritizes the next study, the current week's lesson buttons,
+the streak, journal and daily discovery. The public footer is desktop-only
+(1280px and above), uses the real logo and links to existing routes.
+
+The earliest unfinished week is open, along with earlier weeks. Each following
+week opens after all lessons of all preceding weeks in the same plan are done.
+This is progress-based, not a calendar gate. Lessons within an open week may be
+done in any order; empty weeks do not block the journey. Old completions in later
+weeks remain available as read-only entries but do not unlock their neighbors.
+The trigger in `202610050002_study_week_unlocks.sql` enforces this on completion
+even for old clients. Existing read RLS is not changed; this is progression
+control, not a confidentiality restriction on the lesson catalog.
+
+Daily discovery currently rotates 12 editorial facts with Bible references.
+Its optional AI question is shared, server-generated and labeled as AI. The
+model cannot replace the fact or reference. No answers, journal text, profile
+or chat history are sent to generate it. Date rollover is America/La_Paz.
+Unavailable AI or missing configuration leaves the editorial question usable,
+including offline. There is at most one generation attempt per server day,
+including failed/time-out attempts, and a 150 output-token limit. This cap is
+only for daily discovery, not the existing chat; monetary cost depends on the
+configured OpenRouter model.
+
+`tests/studyWeeks.sql.mjs` checks triggers and daily-claim privileges using
+PGlite. `tests/dailyBibleFact.test.mjs` mocks the provider and cache to check
+parallel requests, authorization, invalid output, failure and midnight.
 
 ## Experience
 

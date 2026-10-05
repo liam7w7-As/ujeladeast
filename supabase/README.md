@@ -1,5 +1,48 @@
 # Seguimiento de estudios
 
+## Activar semanas y dato diario (rediseño del 5 de octubre)
+
+El guardado atomico anterior ya debe estar instalado. Para este rediseño:
+
+1. Ejecutar completo `migrations/202610050002_study_week_unlocks.sql` en el
+   SQL Editor. Impide completar una semana si quedan lecciones anteriores del
+   mismo plan. No cambia respuestas, fechas, XP ni rachas guardadas. La interfaz
+   tambien bloquea las semanas, pero el SQL es necesario para imponer la regla
+   a clientes antiguos. No hace falta volver a ejecutar `atomic_study`.
+2. Ejecutar completo `migrations/202610050003_daily_bible_fact.sql`. Crea la
+   cache diaria con RLS y una reserva exclusiva por fecha. Solo `service_role`
+   puede reservar/generar; los usuarios no escriben preguntas ni eligen fechas.
+3. En Vercel, variables de entorno de Production, configurar:
+   - `SUPABASE_URL`: URL del proyecto (tambien admite la existente `VITE_SUPABASE_URL`).
+   - `SUPABASE_SERVICE_ROLE_KEY`: clave privada del servidor, NUNCA con prefijo VITE.
+   - `OPENROUTER_API_KEY`: clave privada para este endpoint, sin prefijo VITE.
+   - `OPENROUTER_DAILY_MODEL`: identificador de un modelo de OpenRouter que admita
+     `response_format: json_object`. Elegir el modelo/cuota en la cuenta del propietario.
+4. Volver a desplegar en Vercel al cambiar variables. La primera visita autenticada
+   del dia genera la pregunta; todos los demas leen la misma cache. No hay cron
+   ni llamadas a IA cuando nadie visita. Si faltan variables o falla el modelo,
+   se muestra el dato y pregunta editoriales, sin bloquear el estudio.
+
+Limite: un intento por dia boliviano, con 150 tokens maximos de salida y espera
+de 12 segundos al proveedor. Un timeout no se reintenta durante ese dia para
+evitar consumos duplicados; la base editorial sigue disponible. No se envia
+informacion personal al modelo. Los hechos y referencias son editoriales;
+la IA solo propone una pregunta, que puede ser imperfecta y aparece identificada.
+
+La IA del chat anterior todavia usa `VITE_OPENROUTER_API_KEY`, que se incluye
+en el JavaScript publico. El nuevo endpoint no usa esa variable ni resuelve
+la exposicion preexistente del chat. Migrar ese chat al servidor y rotar la
+clave expuesta requiere un cambio separado; no reutilizar una clave privada
+de Supabase como variable VITE ni compartirla en el chat.
+
+No se ejecutaron estas migraciones en produccion ni llamadas reales a la IA.
+Las pruebas usan PostgreSQL/PGlite aislado y proveedores simulados. Verificar
+despues en produccion con dos cuentas que la semana se desbloquea, que existe
+una unica fila diaria y que los usuarios normales no pueden modificarla.
+
+Referencias de implementacion: [Vercel Node runtime](https://vercel.com/docs/functions/runtimes/node-js)
+y [OpenRouter chat completions](https://openrouter.ai/docs/api/api-reference/chat/send-chat-completion-request).
+
 ## Activar el guardado atomico (5 de octubre de 2026)
 
 El frontend detecta `get_study_status` y `complete_study_lesson`. Antes de

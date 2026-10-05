@@ -8,8 +8,25 @@ export function orderedJourney(lessons, userId) {
     ordinal: index + 1,
     completed: lesson.user_progress?.some(item => item.user_id === userId && item.completed === true) || false,
   }));
+  const currentWeek = items.find(item => !item.completed)?.study_weeks?.week_number;
+  for (const item of items) {
+    item.locked = !item.completed && currentWeek != null && Number(item.study_weeks?.week_number) > Number(currentWeek);
+  }
   return { items, total: items.length, completed: items.filter(item => item.completed).length,
     nextLesson: items.find(item => !item.completed) || null };
+}
+
+export function journeyWeeks(journey, weeks = []) {
+  if (!journey) return [];
+  return weeks.map(week => {
+    const items = journey.items.filter(item => item.week_id ? item.week_id === week.id : Number(item.study_weeks?.week_number) === Number(week.week_number));
+    const completed = items.filter(item => item.completed).length;
+    const locked = items.some(item => item.locked);
+    return { ...week, items, total: items.length, completed, locked,
+      canOpen: items.some(item => !item.locked),
+      current: items.some(item => item.id === journey.nextLesson?.id),
+      finished: items.length > 0 && completed === items.length };
+  }).sort((a, b) => Number(a.week_number) - Number(b.week_number));
 }
 
 export function lessonQuestions(lesson) {

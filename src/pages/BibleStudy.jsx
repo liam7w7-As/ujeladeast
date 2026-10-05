@@ -1,10 +1,9 @@
 import { useState, useEffect, useEffectEvent, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { BookOpen, ArrowRight, CheckCircle2, LoaderCircle, RotateCw } from 'lucide-react';
+import { BookOpen, ArrowRight, CalendarDays, NotebookPen, LoaderCircle, RotateCw } from 'lucide-react';
 import ContentIcon from '../components/ui/ContentIcon';
 import PageShell from '../components/layout/PageShell';
-import StreakCard from '../components/ui/StreakCard';
-import XPBar from '../components/ui/XPBar';
+import StudyDashboard from '../components/ui/StudyDashboard';
 import LessonCard from '../components/ui/LessonCard';
 import WeekCard from '../components/ui/WeekCard';
 import JournalEntry from '../components/ui/JournalEntry';
@@ -15,7 +14,8 @@ import { useStreak } from '../hooks/useStreak';
 import { useJournal } from '../hooks/useJournal';
 import { useAuth } from '../hooks/useAuth';
 import { useChat } from '../hooks/useChat';
-import { lessonRevision } from '../lib/studyJourney';
+import { journeyWeeks, lessonRevision } from '../lib/studyJourney';
+import './study.css';
 import ujeladitoAvatar from '../assets/ujeladito-avatar.png';
 
 const SOS_RISK_WORDS = [
@@ -57,6 +57,10 @@ function BibleStudyContent() {
   const [showRiskBanner, setShowRiskBanner] = useState(false);
   const sosEndRef = useRef(null);
   const sosInputRef = useRef(null);
+  const unlockedWeeks = journeyWeeks(journeyError ? null : journey, weeks);
+  const journalMatches = entries.filter(entry => `${entry.content || ''} ${entry.study_lessons?.title || ''}`.toLocaleLowerCase().includes(journalSearch.toLocaleLowerCase()));
+
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, [activeView]);
   
   // Auto-scroll en SOS
   useEffect(() => {
@@ -109,12 +113,28 @@ function BibleStudyContent() {
 
   const refreshJourney = async () => {
     setJourneyLoading(true);
-    try { setJourney(await getJourney(plan.id)); setJourneyError(''); }
+    try { const refreshed = await getJourney(plan.id); setJourney(refreshed); setJourneyError(''); return refreshed; }
     catch { setJourneyError('No pudimos cargar tu recorrido. Tu avance se conserva.'); }
     finally { setJourneyLoading(false); }
   };
+  const openWeek = async week => {
+    if (!week.canOpen || openingLesson) return;
+    setOpeningLesson(true);
+    try {
+      const loaded = await getLessons(week.id);
+      if (!loaded) throw new Error('Week unavailable');
+      setLessonError(''); setActiveWeek(week); setActiveView('week');
+    } catch { setLessonError('No se pudieron cargar las lecciones de esta semana. Intenta de nuevo.'); }
+    finally { setOpeningLesson(false); }
+  };
+  const openJournal = () => { setActiveView('journal'); getRecentEntries(50); };
   const openLesson = async lessonId => {
     if (openingLesson) return;
+    const item = journey?.items.find(item => item.id === lessonId);
+    if (journeyError || !item || item.locked) {
+      setLessonError('Completa las semanas anteriores antes de abrir esta lección.');
+      return;
+    }
     setOpeningLesson(true); setLessonError('');
     try {
       const lesson = await getLesson(lessonId);
@@ -148,7 +168,12 @@ function BibleStudyContent() {
       try { await updateStreak(10); }
       catch { notice = 'El estudio está guardado, pero no se pudo actualizar la racha y el XP.'; }
     } else notice = 'Esta lección ya estaba completada. Tu avance se conserva.';
-    await refreshJourney();
+    const refreshed = await refreshJourney();
+    const completedWeek = journey?.items.find(item => item.id === activeLesson.id)?.study_weeks?.week_number;
+    const nextWeek = refreshed?.nextLesson?.study_weeks?.week_number;
+    if (nextWeek && Number(nextWeek) > Number(completedWeek)) {
+      notice = [notice, `¡Semana ${nextWeek} desbloqueada! Completaste la semana ${completedWeek}.`].filter(Boolean).join(' ');
+    }
     getWeeks(plan.id);
     getRecentEntries(3);
     return { notice };
@@ -171,158 +196,32 @@ function BibleStudyContent() {
   }
 
   return (
-    <PageShell activeItem="bible-studies" withFooter={activeView !== 'lesson'} ambient={activeView !== 'lesson'} className={activeView === 'lesson' ? 'study-session-page' : ''}>
-      <main className="flex-grow pt-[120px] pb-section-gap px-margin-mobile md:px-gutter max-w-container-max mx-auto w-full relative z-10">
+    <PageShell activeItem="bible-studies" withFooter={activeView !== 'lesson'} ambient={false} className={`study-page ${activeView === 'lesson' ? 'study-session-page' : ''}`}>
+      <main className="study-main">
         
-        {/* Top Navigation / Tabs */}
-        {activeView !== 'lesson' && <div className="flex gap-4 border-b border-surface-border mb-8 overflow-x-auto no-scrollbar">
-          <button 
-            className={`pb-3 px-2 text-sm font-medium whitespace-nowrap transition-colors border-b-2 ${activeView === 'dashboard' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant hover:text-white'}`}
-            onClick={() => setActiveView('dashboard')}
-          >
-            Mi estudio
-          </button>
-          <button 
-            className={`pb-3 px-2 text-sm font-medium whitespace-nowrap transition-colors border-b-2 ${activeView === 'plan' || activeView === 'week' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant hover:text-white'}`}
-            onClick={() => setActiveView('plan')}
-          >
-            Plan Anual
-          </button>
-          <button 
-            className={`pb-3 px-2 text-sm font-medium whitespace-nowrap transition-colors border-b-2 ${activeView === 'journal' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant hover:text-white'}`}
-            onClick={() => { setActiveView('journal'); getRecentEntries(50); }}
-          >
-            Mi Diario
-          </button>
-          <button 
-            className={`pb-3 px-2 text-sm font-medium whitespace-nowrap transition-colors border-b-2 ${activeView === 'sos' ? 'border-amber-400 text-amber-400' : 'border-transparent hover:text-white'}`}
-            style={{ color: activeView === 'sos' ? '#c9a84c' : undefined }}
-            onClick={handleOpenSOS}
-          >
-            <span className="flex items-center gap-1.5">
-              <ContentIcon className="text-[15px]" name="volunteer_activism" />
-              Apoyo SOS
-            </span>
-          </button>
-        </div>}
+        {activeView !== 'lesson' && <nav className="study-tabs" aria-label="Secciones del estudio">
+          <button type="button" aria-current={activeView === 'dashboard' ? 'page' : undefined} onClick={() => setActiveView('dashboard')}><BookOpen />Mi estudio</button>
+          <button type="button" aria-current={['plan', 'week'].includes(activeView) ? 'page' : undefined} onClick={() => setActiveView('plan')}><CalendarDays />Plan Anual</button>
+          <button type="button" aria-current={activeView === 'journal' ? 'page' : undefined} onClick={openJournal}><NotebookPen />Mi Diario</button>
+        </nav>}
         {lessonError && <p role="alert" className="study-notice">{lessonError}</p>}
 
-        {/* --- VIEW: DASHBOARD --- */}
-        {activeView === 'dashboard' && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h1 className="text-3xl font-bold text-white mb-2">¡Hola, {profile?.full_name?.split(' ')[0] || 'Estudiante'}!</h1>
-            <p className="text-on-surface-variant mb-8">Continúa creciendo en la Palabra de Dios hoy.</p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-              
-              {/* Left Column */}
-              <div className="md:col-span-8 flex flex-col gap-6">
-                
-                <section className="study-continue" aria-label="Tu siguiente estudio">
-                  <p className="study-eyebrow"><BookOpen size={17} />{plan?.title || 'Tu plan de estudio'}</p>
-                  {studyError && !plan ? <p role="alert" className="study-notice">No se pudo cargar el plan.<button type="button" onClick={getCurrentPlan} aria-label="Reintentar carga del plan"><RotateCw size={18} /></button></p>
-                    : !plan ? <p>{studyLoading ? 'Cargando tu plan...' : 'Todavía no hay un plan disponible.'}</p>
-                    : journeyLoading ? <p role="status">Cargando tu recorrido...</p>
-                    : journeyError ? <><p role="alert" className="study-notice">{journeyError}</p><button type="button" className="study-primary" onClick={refreshJourney}><RotateCw size={17} />Reintentar</button></>
-                    : journey?.nextLesson ? <>
-                      <h2>{journey.nextLesson.title}</h2>
-                      <p>{journey.nextLesson.scripture_ref}</p>
-                      <button type="button" className="study-primary" disabled={openingLesson} onClick={() => openLesson(journey.nextLesson.id)}>
-                        {openingLesson ? <LoaderCircle size={18} className="animate-spin" /> : <BookOpen size={18} />}
-                        Continuar: día {journey.nextLesson.ordinal} de {journey.total}<ArrowRight size={18} />
-                      </button>
-                    </> : journey?.total ? <>
-                      <h2>Completaste tu recorrido</h2><p>Tus {journey.total} estudios y respuestas se conservan.</p>
-                      <button type="button" className="study-primary" onClick={() => setActiveView('plan')}><CheckCircle2 size={18} />Volver a leer</button>
-                    </> : <p>Este plan todavía no tiene lecciones publicadas.</p>}
-                  {!!journey?.total && !journeyError && <div className="study-journey-summary"><progress value={journey.completed} max={journey.total} aria-label="Estudios completados" /><span>{journey.completed} de {journey.total} estudios completados</span></div>}
-                </section>
+        {activeView === 'dashboard' && <StudyDashboard
+          name={profile?.full_name?.split(' ')[0] || 'Estudiante'} plan={plan} journey={journey} weeks={unlockedWeeks}
+          loading={journeyLoading} error={journeyError} planError={studyError} planLoading={studyLoading}
+          retryPlan={getCurrentPlan} retryJourney={refreshJourney} openingLesson={openingLesson}
+          openLesson={openLesson} openWeek={openWeek} openPlan={() => setActiveView('plan')}
+          streak={streakData} streakLoading={streakLoading} streakError={streakError} retryStreak={getStreak}
+          entries={entries} openJournal={openJournal} openSOS={handleOpenSOS}
+        />}
 
-                {/* Progress / Streaks Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <StreakCard data={streakData} loading={streakLoading} error={streakError} onRetry={getStreak} />
-                  {streakData && !streakError && <XPBar xp={streakData.total_xp} />}
-                </div>
-              </div>
-
-              {/* Right Column */}
-              <div className="md:col-span-4 flex flex-col gap-6">
-                
-                {/* Quick Stats or Junta */}
-                <div className="glass-card rounded-2xl p-6 border-surface-border">
-                  <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
-                    <ContentIcon className="text-secondary" name="calendar_month" />
-                    Sesión Trimestral
-                  </h3>
-                  <div className="bg-surface-container rounded-xl p-4">
-                    <p className="text-sm text-on-surface-variant leading-relaxed">
-                      Un espacio para compartir aprendizajes, conversar sobre tus dudas y seguir estudiando juntos.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Recent Journals Mini */}
-                <div className="glass-card rounded-2xl p-6 border-surface-border flex-grow">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="font-semibold text-white flex items-center gap-2">
-                      <ContentIcon className="text-primary" name="auto_stories" />
-                      Mi Diario
-                    </h3>
-                    <button onClick={() => { setActiveView('journal'); getRecentEntries(50); }} className="text-xs text-primary hover:text-white">Ver todo</button>
-                  </div>
-                  <div className="flex flex-col gap-3">
-                    {entries.length === 0 ? (
-                      <p className="text-sm text-on-surface-variant italic">No has escrito nada recientemente.</p>
-                    ) : (
-                      entries.slice(0,3).map(entry => (
-                        <div key={entry.id} className="bg-surface-container rounded-lg p-3 cursor-pointer hover:bg-surface-container-high transition-colors">
-                          <p className="text-xs text-white line-clamp-2">{entry.content}</p>
-                          <span className="text-[10px] text-on-surface-variant mt-2 block">{new Date(entry.created_at).toLocaleDateString()}</span>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* --- VIEW: PLAN ANUAL --- */}
-        {activeView === 'plan' && (
-          <div className="animate-in fade-in duration-500">
-            <div className="mb-8">
-              <h1 className="text-2xl font-bold text-white mb-2">Plan Anual de Estudio</h1>
-              <p className="text-on-surface-variant">El contenido de tu plan, a tu ritmo.</p>
-            </div>
-            
-            {studyLoading ? (
-              <div className="flex justify-center p-12">
-                <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {weeks.map(week => (
-                  <WeekCard 
-                    key={week.id} 
-                    week={week} 
-                    onClick={async (w) => {
-                      const loadedLessons = await getLessons(w.id);
-                      if (!loadedLessons) {
-                        setLessonError('No se pudieron cargar las lecciones de esta semana. Intenta de nuevo.');
-                        return;
-                      }
-                      setLessonError('');
-                      setActiveWeek(w);
-                      setActiveView('week');
-                    }}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+        {activeView === 'plan' && <section>
+          <header className="study-view-heading"><h1>Plan Anual de Estudio</h1><p>Una semana a la vez. La siguiente se abre al completar las anteriores.</p></header>
+          {studyLoading || (plan && journeyLoading) ? <p role="status" className="study-loading"><LoaderCircle size={20} className="animate-spin" />Cargando semanas...</p>
+            : journeyError || studyError ? <><p role="alert" className="study-notice">{journeyError || 'No pudimos cargar todas las semanas.'}</p><button type="button" className="study-primary" onClick={() => { if (!plan) { getCurrentPlan(); return; } refreshJourney(); getWeeks(plan.id); }}><RotateCw size={17} />Reintentar</button></>
+            : !plan || !journey?.total ? <p className="study-loading">Este plan todavía no tiene lecciones publicadas.</p>
+            : <div className="study-weeks-grid">{unlockedWeeks.map(week => <WeekCard key={week.id} week={week} onClick={openWeek} disabled={openingLesson} />)}</div>}
+        </section>}
 
         {/* --- VIEW: SEMANA (LESSONS) --- */}
         {activeView === 'week' && activeWeek && (
@@ -334,16 +233,16 @@ function BibleStudyContent() {
               <ContentIcon className="text-[18px]" name="arrow_back" />
               Volver al Plan
             </button>
-            <h2 className="text-2xl font-bold text-white mb-2">Semana {activeWeek.week_number}: {activeWeek.title}</h2>
-            <p className="text-on-surface-variant mb-8">Elige la lección del día para comenzar tu estudio.</p>
+            <header className="study-view-heading"><h2>Semana {activeWeek.week_number}: {activeWeek.title}</h2><p>{activeWeek.locked ? 'Tus estudios anteriores siguen disponibles para releer.' : `${activeWeek.completed} de ${activeWeek.total} estudios completados`}</p></header>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="study-lesson-grid">
               {lessons.map(lesson => (
                 <LessonCard 
                   key={lesson.id} 
                   lesson={lesson} 
                   onClick={lesson => openLesson(lesson.id)}
                   disabled={openingLesson}
+                  locked={journey?.items.find(item => item.id === lesson.id)?.locked ?? true}
                 />
               ))}
             </div>
@@ -388,15 +287,15 @@ function BibleStudyContent() {
                 </div>
               )}
               {entries.length === 0 ? (
-                <div className="text-center p-12 glass-card rounded-2xl">
+                <div className="text-center py-12 border-t border-surface-border">
                   <ContentIcon className="text-4xl text-on-surface-variant/50 mb-4" name="auto_stories" />
                   <p className="text-on-surface-variant">Aún no tienes entradas en tu diario.</p>
                   <p className="text-sm text-on-surface-variant/70 mt-1">Completa una lección y escribe una reflexión para verla aquí.</p>
                 </div>
               ) : (
-                entries.filter(entry => `${entry.content || ''} ${entry.study_lessons?.title || ''}`.toLocaleLowerCase().includes(journalSearch.toLocaleLowerCase())).map(entry => (
+                journalMatches.length ? journalMatches.map(entry => (
                   <JournalEntry key={entry.id} entry={entry} />
-                ))
+                )) : <p role="status" className="text-sm text-on-surface-variant py-8">No hay reflexiones que coincidan con tu búsqueda.</p>
               )}
             </div>
           </div>

@@ -1,6 +1,26 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { orderedJourney, lessonQuestions, lessonSteps, missingAnswers, restoreDraft, serializeDraft, draftKey } from '../src/lib/studyJourney.js';
+import { orderedJourney, journeyWeeks, lessonQuestions, lessonSteps, missingAnswers, restoreDraft, serializeDraft, draftKey } from '../src/lib/studyJourney.js';
+
+test('weeks open in order, preserve old answers and skip empty weeks', () => {
+  const weeks = [1, 2, 4].map(n => ({ id: `w${n}`, week_number: n }));
+  const lessons = [1, 2, 4].flatMap(n => [1, 2].map(day => ({ id: `${n}-${day}`, week_id: `w${n}`, day_number: day, study_weeks: { week_number: n }, user_progress: [] })));
+  lessons[4].user_progress = [{ user_id: 'me', completed: true }];
+  let journey = orderedJourney(lessons, 'me');
+  let groups = journeyWeeks(journey, weeks);
+  assert.deepEqual(groups.map(week => [week.current, week.canOpen, week.locked]), [[true, true, false], [false, false, true], [false, true, true]]);
+  assert.equal(journey.items[4].locked, false, 'Historical completions stay readable');
+  assert.equal(journey.items[5].locked, true, 'Historical completion does not unlock its neighbors');
+  lessons[0].user_progress = lessons[1].user_progress = [{ user_id: 'me', completed: true }];
+  journey = orderedJourney(lessons, 'me');
+  groups = journeyWeeks(journey, weeks);
+  assert.equal(groups[1].canOpen, true);
+  assert.equal(groups[1].current, true);
+  assert.equal(journey.nextLesson.id, '2-1');
+  lessons[2].user_progress = lessons[3].user_progress = [{ user_id: 'me', completed: true }];
+  assert.equal(orderedJourney(lessons, 'me').items[5].locked, false);
+  assert.deepEqual(journeyWeeks(null, weeks), [], 'Never unlock weeks on failed loading');
+});
 
 test('365 lessons follow actual plan order and find gaps, not the calendar', () => {
   const lessons = Array.from({ length: 365 }, (_, index) => ({ id: `lesson-${index}`, day_number: index % 7 + 1,

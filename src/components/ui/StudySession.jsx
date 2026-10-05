@@ -80,7 +80,7 @@ export default function StudySession({ userId, lesson, ordinal, total, onExit, o
       clearDraft();
       setResult(saved || {});
     } catch (err) {
-      setError(err.code === 'study_content_changed' ? err.message : 'No pudimos guardar el estudio completo. Tus respuestas siguen aquí; revisa la conexión e intenta de nuevo.');
+      setError(['study_content_changed', 'study_week_locked'].includes(err.code) ? err.message : 'No pudimos guardar el estudio completo. Tus respuestas siguen aquí; revisa la conexión e intenta de nuevo.');
     } finally { lock.current = false; setBusy(false); }
   };
   const exit = () => storageError && !readOnly && !result ? setConfirmExit(true) : onExit();
@@ -106,6 +106,7 @@ export default function StudySession({ userId, lesson, ordinal, total, onExit, o
         {lesson.scripture_ref && <p className="study-reference"><BookOpen size={17} />{lesson.scripture_ref}</p>}
       </header>
       <div className="study-step-progress" aria-label={`Paso ${stepIndex + 1} de ${steps.length}: ${step.label}`}>
+        <ol className="study-session-stages" aria-label="Etapas del estudio">{['Leer', ...(lesson.teaching?.trim() ? ['Comprender'] : []), ...(questions.length ? ['Reflexionar'] : []), 'Cerrar'].map(label => <li key={label} aria-current={step.label === label ? 'step' : undefined}>{label}</li>)}</ol>
         <div><span>{step.label}</span><span>{stepIndex + 1} / {steps.length}</span></div>
         <progress value={stepIndex + 1} max={steps.length} />
       </div>

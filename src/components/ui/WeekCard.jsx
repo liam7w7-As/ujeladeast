@@ -1,46 +1,10 @@
-import { CheckCircle2 } from 'lucide-react';
+import { Check, ChevronRight, LockKeyhole } from 'lucide-react';
+import { motion } from 'motion/react';
 
-export default function WeekCard({ week, onClick }) {
-  const { week_number, title, study_lessons } = week;
-  
-  // Calcular progreso de la semana
-  const totalLessons = study_lessons?.length || 0;
-  const completedLessons = study_lessons?.filter(l => l.completed).length || 0;
-  const isCompleted = totalLessons > 0 && completedLessons === totalLessons;
-  const inProgress = completedLessons > 0 && completedLessons < totalLessons;
-
-  return (
-    <button type="button"
-      onClick={() => onClick(week)}
-      className={`glass-card rounded-lg p-5 text-left cursor-pointer transition-all hover:scale-[1.02] ${
-        isCompleted 
-          ? 'border-green-500/30 bg-green-500/5' 
-          : inProgress 
-            ? 'border-primary-container/50 bg-primary-container/10 shadow-[0_0_15px_rgba(143,25,55,0.1)]' 
-            : 'border-surface-border hover:border-white/20'
-      }`}
-    >
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <span className="text-xs font-semibold text-on-surface-variant tracking-wider uppercase mb-1 block">
-            Semana {week_number}
-          </span>
-          <h4 className="text-sm font-medium text-white line-clamp-2">{title}</h4>
-        </div>
-        {isCompleted && (
-          <CheckCircle2 size={20} className="text-green-400 shrink-0" />
-        )}
-      </div>
-
-      <div className="w-full bg-surface-container rounded-full h-1.5 mb-2">
-        <div 
-          className={`h-1.5 rounded-full ${isCompleted ? 'bg-green-500' : 'bg-primary'}`} 
-          style={{ width: `${totalLessons ? (completedLessons / totalLessons) * 100 : 0}%` }}
-        ></div>
-      </div>
-      <div className="text-right text-[10px] text-on-surface-variant">
-        {completedLessons}/{totalLessons} completadas
-      </div>
-    </button>
-  );
+export default function WeekCard({ week, onClick, disabled }) {
+  return <motion.button type="button" disabled={disabled || !week.canOpen} onClick={() => onClick(week)} whileTap={{ scale: 0.99 }} className={`study-week-row ${week.current ? 'is-current' : ''} ${week.finished ? 'is-finished' : ''}`}>
+    <span className="study-week-number">{week.finished ? <Check size={21} /> : week.locked ? <LockKeyhole size={18} /> : String(week.week_number).padStart(2, '0')}</span>
+    <span className="study-week-info"><span className="study-week-label">Semana {week.week_number}{week.current ? ' · En curso' : ''}</span><strong>{week.title}</strong><span>{week.total ? `${week.completed}/${week.total} completadas` : 'Sin lecciones'}{week.locked ? week.canOpen ? ' · Relecturas disponibles' : ' · Bloqueada' : week.finished ? ' · Completada' : ''}</span></span>
+    {week.canOpen && <ChevronRight size={18} className="shrink-0" />}
+  </motion.button>;
 }
