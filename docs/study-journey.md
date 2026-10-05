@@ -34,17 +34,26 @@ their question text/index are restored. Changes detected during final submission
 require reopening the lesson before saving.
 
 The journal is saved before completion; any failure keeps the draft retryable.
-Existing unique user/lesson constraints and conditional progress updates prevent
-duplicate completion from overwriting earlier answers. XP/streak writes remain
-separate from completion: if that update fails, the UI reports it without undoing
-the saved study or pretending the reward succeeded. These writes are not one
-database transaction.
+After installing `202610050001_atomic_study.sql`, progress, XP, streak and milestone
+notifications commit in one server transaction. The server locks per user, stamps
+the date, validates the content revision and required answers, and preserves the
+first completion across retries. A lost response can be retried without extra XP.
+The active streak and seven-day history come from saved completion dates in Bolivia.
+Read failures show an error/retry instead of a zero; returning online or to the
+window refreshes the status, as does a visible-page one-minute timer.
+
+Until that SQL is installed the frontend retains the previous separate-write
+path for deployment compatibility, including its existing warning on partial
+success. Only an explicitly missing RPC allows this path, not failed or ambiguous
+save responses. Vercel does not install SQL; see `supabase/README.md` for rollout.
 
 ## Boundaries
 
-Required-answer validation is in the application and its study hook, not a new
-database authorization rule. Existing Supabase RLS remains in force. This feature
-does not claim that nonempty answers prove learning or resist direct API abuse.
+Required-answer validation is in both the application and, once installed, the
+atomic RPC. The migration revokes direct progress/streak writes from API roles.
+Existing read RLS and protection of profile roles/lesson editing must be verified
+in production. Nonempty answers do not prove learning. Historic timestamps/XP are
+not rewritten automatically; missing/incorrect historical data needs review.
 Reviewed answer criteria, scheduled recall and learning analytics are a later
 content-review stage. The admin tracking view continues to measure activity.
 
@@ -54,9 +63,13 @@ content-review stage. The admin tracking view continues to measure activity.
 node --test tests/studyJourney.test.mjs tests/studyTracking.test.mjs
 node tests/studyJourney.browser.mjs
 node tests/adminStudyTracking.browser.mjs
+node tests/studyAtomic.sql.mjs
 ```
 
 Browser tests require Playwright and Chrome. The new suite defaults to port 5177;
 override STUDY_TEST_URL and STUDY_TEST_OUTPUT for its URL and screenshots. For the
 admin suite use TRACKING_TEST_URL and TRACKING_TEST_OUTPUT. All backend responses
 are mocked; the 365-day fixture is test data, not a production data export.
+Set STUDY_ATOMIC_TEST=1 for atomic saves, response loss/retry and status errors;
+leave it unset for legacy compatibility. SQL tests require PGlite in NODE_PATH
+and use a disposable schema, not a production database or concurrency load test.

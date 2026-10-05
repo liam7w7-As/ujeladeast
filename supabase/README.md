@@ -1,5 +1,58 @@
 # Seguimiento de estudios
 
+## Activar el guardado atomico (5 de octubre de 2026)
+
+El frontend detecta `get_study_status` y `complete_study_lesson`. Antes de
+instalar el SQL conserva temporalmente el flujo anterior, con sus limitaciones
+de guardado separado. No se debe dar por resuelta la racha en produccion hasta
+aplicar y verificar `migrations/202610050001_atomic_study.sql` en Supabase.
+Un push a Vercel NO ejecuta esa migracion. No hay credenciales de produccion
+en este repositorio y las pruebas SQL usan un esquema aislado.
+
+Orden de despliegue:
+1. Desplegar este frontend compatible y comprobar que Vercel finaliza.
+2. Revisar una copia/backup del esquema y datos. La migracion requiere IDs UUID,
+   `user_progress.completed_at` timestamptz, claves unicas user/lesson y user en
+   `user_streaks`, y las columnas existentes de lecciones/notificaciones/perfiles.
+   Rechaza fechas sin zona horaria: no convierte historia ambigua automaticamente.
+3. Ejecutar el SQL completo en el SQL Editor. Es transaccional y repetible.
+4. Recargar la app/PWA en los dispositivos: clientes antiguos ya no pueden escribir
+   progreso/racha directamente. El nuevo frontend usa las RPC al detectarlas.
+5. Con dos cuentas de prueba, verificar lectura propia, preguntas requeridas,
+   guardar/reintentar la misma leccion, fallo de red, racha y XP. Comprobar que
+   el REST directo no permite escribir/borrar/truncar progreso ni modificar XP.
+
+La finalizacion bloquea por usuario dentro de una transaccion. Fecha, racha y
+XP son del servidor; la misma leccion conserva su primera fecha/respuestas y
+no vuelve a premiarse. Diferentes lecciones del mismo dia dan XP, no dias extra.
+Se mantienen bonos de 7 y 30 dias. El diario opcional sigue siendo independiente,
+guardado antes del estudio: si falla, se conserva el borrador para reintentar.
+No hay envio automatico offline: se requiere conexion al confirmar, y las
+respuestas permanecen en el borrador local si no se recibe confirmacion.
+
+La racha visible del joven y del administrador se calcula de fechas reales de
+`user_progress`, agrupadas por America/La_Paz, sin reinicio semanal. Se ignoran
+filas sin fecha o futuras. La lectura no modifica respuestas, fechas ni XP
+historicos. No se inventan dias perdidos ni se reasignan XP antiguos; revisar
+esos casos por separado antes de usar el contador para los premios. El record
+tambien se deriva de la historia, y puede diferir de contadores antiguos.
+Las politicas existentes deben impedir editar roles propios o lecciones como
+usuario normal. La funcion administrativa conserva su control de rol admin.
+
+Si la RPC falla por red/permisos, NO se intenta un guardado alternativo. Solo
+una RPC inexistente permite la compatibilidad previa a la migracion. Un fallo
+de lectura oculta el contador sin mostrar un cero falso y permite reintentar.
+Se refresca al reconectar, volver a la ventana y cada minuto visible.
+
+Pruebas:
+- `node tests/studyAtomic.sql.mjs` con PGlite en NODE_PATH: rollback, reintento,
+  permisos, validacion, bonos, historia, medianoche y fin de semana. El motor
+  aislado serializa consultas: no sustituye una prueba de carga concurrente
+  contra un proyecto Supabase de staging con el esquema real.
+- `STUDY_ATOMIC_TEST=1 node tests/studyJourney.browser.mjs`: RPC simuladas,
+  error de lectura, error de guardado y respuesta perdida sin doble XP.
+- Sin esa variable, la misma suite verifica compatibilidad pre-migracion.
+
 ## Avisos del administrador
 
 Ejecutar tambien `migrations/202609300002_admin_notifications.sql` en el SQL
@@ -55,7 +108,7 @@ real de lecciones publicadas en cada plan. Cambiar el contenido del plan puede
 cambiar su porcentaje. La ultima actividad mostrada es una finalizacion de
 leccion, no una visita o inicio de sesion.
 
-No se reconstruyen fechas historicas ya sobrescritas ni XP duplicado anterior.
+En el flujo anterior a la migracion atomica no se reconstruyen fechas historicas ya sobrescritas ni XP duplicado anterior.
 La finalizacion conserva la primera fecha registrada y evita repetir XP desde
 el flujo de la app. Progreso, diario y racha siguen siendo escrituras separadas:
 una transaccion de servidor seria necesaria para garantizar su atomicidad ante

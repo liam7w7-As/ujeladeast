@@ -2,7 +2,8 @@ import { useState, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from './useAuth';
 import { collectPages, progressPercentage } from '../lib/studyTracking';
-import { orderedJourney, missingAnswers } from '../lib/studyJourney';
+import { orderedJourney, missingAnswers, lessonRevision } from '../lib/studyJourney';
+import { missingStudyRpc, studySaveError } from '../lib/studyApi';
 
 export function useStudy() {
   const { user } = useAuth();
@@ -119,11 +120,22 @@ export function useStudy() {
     return { ...data, user_progress: data.user_progress?.find(item => item.user_id === user.id) || null };
   }, [user]);
 
-  const completeLesson = useCallback(async (lessonId, answers) => {
+  const completeLesson = useCallback(async (lessonId, answers, expectedContent) => {
     if (!user) throw new Error('Usuario no autenticado');
     try {
       setLoading(true);
-      const lesson = await getLesson(lessonId);
+      let lesson = expectedContent ? null : await getLesson(lessonId);
+      const { data: result, error: rpcError } = await supabase.rpc('complete_study_lesson', {
+        p_lesson_id: lessonId, p_answers: answers || {},
+        p_content: JSON.parse(expectedContent || lessonRevision(lesson)),
+      });
+      if (!rpcError) {
+        if (!result?.completed || !result?.status?.atomic) throw new Error('No se pudo confirmar el estudio.');
+        return result;
+      }
+      if (!missingStudyRpc(rpcError)) throw studySaveError(rpcError);
+      // Temporary compatibility until the atomic migration is installed in Supabase.
+      lesson ||= await getLesson(lessonId);
       if (lesson.user_progress?.completed) return null;
       if (missingAnswers(lesson, answers).length) throw new Error('Responde las preguntas pendientes antes de guardar.');
       const payload = {

@@ -1,9 +1,11 @@
 import { createRequire } from 'node:module';
 import { mkdir } from 'node:fs/promises';
 import assert from 'node:assert/strict';
+import { studyDay } from '../src/lib/studyTracking.js';
 const { chromium } = createRequire(import.meta.url)('playwright');
 const base = process.env.STUDY_TEST_URL || 'http://127.0.0.1:5177';
 const output = process.env.STUDY_TEST_OUTPUT || 'test-results/study';
+const atomic = process.env.STUDY_ATOMIC_TEST === '1';
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ headless: true, channel: 'chrome' });
 const id = '00000000-0000-0000-0000-000000000001';
@@ -20,6 +22,8 @@ const progress = new Map([['lesson-1', { user_id: id, completed: true, answers: 
 const writes = [], journalWrites = [], streakWrites = [], errors = [];
 let failJourney = false, emptyPlan = false, failProgress = false, failJournal = false, failStreak = false;
 let streak = { user_id: id, current_streak: 2, max_streak: 2, total_xp: 20, last_study_date: new Date().toISOString() };
+let loseResponse = false;
+const statusSnapshot = () => ({ ...streak, atomic: true, today_completed: true, recent_days: Array.from({ length: 7 }, (_, index) => ({ date: new Date((studyDay(new Date()) - 6 + index) * 86400000).toISOString().slice(0, 10), completed: index > 4 })) });
 const withProgress = lesson => ({ ...lesson, user_progress: progress.has(lesson.id) ? [progress.get(lesson.id)] : [] });
 async function mock(context) {
   await context.addInitScript(session => localStorage.setItem('sb-placeholder-auth-token', JSON.stringify(session)), session);
@@ -29,7 +33,23 @@ async function mock(context) {
     const request = route.request(), url = new URL(request.url()), table = url.pathname.split('/').at(-1);
     const method = request.method();
     let body = [], status = 200;
-    if (table === 'profiles') body = { id, full_name: 'Ana Prueba', church_name: 'Central', role: 'user', avatar_url: '/avatars/mujer.webp' };
+    if (['get_study_status', 'complete_study_lesson'].includes(table)) {
+      if (!atomic) { status = 404; body = { code: 'PGRST202', message: 'Migration not installed' }; }
+      else if (failStreak || (table === 'complete_study_lesson' && failProgress)) { status = 503; body = { message: 'Unavailable' }; }
+      else if (table === 'get_study_status') body = statusSnapshot();
+      else {
+        const input = request.postDataJSON();
+        const already = progress.has(input.p_lesson_id);
+        if (!already) {
+          const data = { user_id: id, lesson_id: input.p_lesson_id, completed: true, answers: input.p_answers, completed_at: new Date().toISOString() };
+          progress.set(data.lesson_id, data); writes.push(data);
+          streak = { ...streak, total_xp: streak.total_xp + 10 }; streakWrites.push(streak);
+        }
+        body = { completed: true, already_completed: already, added_xp: already ? 0 : 10, status: statusSnapshot() };
+        if (loseResponse) { loseResponse = false; await route.abort('failed'); return; }
+      }
+    }
+    else if (table === 'profiles') body = { id, full_name: 'Ana Prueba', church_name: 'Central', role: 'user', avatar_url: '/avatars/mujer.webp' };
     else if (table === 'user') body = user;
     else if (table === 'study_plans') body = { id: 'plan-a', title: 'Estudio de 365 días' };
     else if (table === 'study_weeks') body = emptyPlan ? [] : Array.from({ length: 53 }, (_, index) => ({ id: `week-${index + 1}`, week_number: index + 1, title: `Semana de estudio ${index + 1}`, study_lessons: lessons.filter(lesson => lesson.week_id === `week-${index + 1}`).map(withProgress) }));
@@ -39,6 +59,7 @@ async function mock(context) {
       else if (failJourney) { status = 503; body = { message: 'Unavailable' }; }
       else { const offset = Number(url.searchParams.get('offset') || 0); body = emptyPlan ? [] : lessons.slice(offset, offset + 80).map(withProgress); }
     } else if (table === 'user_progress' && method !== 'GET') {
+      assert.equal(atomic, false, 'Atomic mode must never write progress directly');
       const data = request.postDataJSON();
       if (failProgress) { status = 503; body = { message: 'Unavailable' }; }
       else if (!progress.has(data.lesson_id)) { progress.set(data.lesson_id, data); writes.push(data); body = [data]; }
@@ -47,6 +68,7 @@ async function mock(context) {
       else { const data = request.postDataJSON(); journalWrites.push(data); body = { ...data, id: 'journal-one' }; }
     } else if (table === 'user_streaks') {
       if (method === 'PATCH') {
+        assert.equal(atomic, false, 'Atomic mode must never write streaks directly');
         if (failStreak) { status = 503; body = { message: 'Unavailable' }; }
         else { const data = request.postDataJSON(); streakWrites.push(data); streak = { ...streak, ...data }; body = streak; }
       } else body = streak;
@@ -71,8 +93,26 @@ try {
   page.on('pageerror', error => errors.push(error.message));
   await page.goto(base + '/estudios', { waitUntil: 'domcontentloaded' });
   await page.getByText('2 de 365 estudios completados', { exact: true }).waitFor();
+  if (atomic) {
+    await page.getByText('Hoy completado', { exact: true }).waitFor();
+    failStreak = true;
+    await page.evaluate(() => window.dispatchEvent(new Event('online')));
+    await page.getByText('No pudimos confirmar tu racha. Tu avance no se ha borrado.').waitFor();
+    assert.equal(await page.getByRole('region', { name: 'Tu racha' }).locator('strong').count(), 0);
+    failStreak = false;
+    await page.getByRole('button', { name: 'Reintentar racha' }).click();
+    await page.getByText('Hoy completado', { exact: true }).waitFor();
+  }
   await settled(page);
   await page.screenshot({ path: `${output}/dashboard-mobile.png`, fullPage: true });
+  if (atomic) {
+    for (const width of [320, 768, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      assert.ok(await page.getByRole('region', { name: 'Tu racha' }).evaluate(element => element.scrollWidth <= element.clientWidth));
+      await page.screenshot({ path: `${output}/streak-${width}.png`, fullPage: true });
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+  }
   await start(page, 2);
   assert.match(await page.locator('.study-reading').innerText(), /Texto original conservado/);
   for (const width of [320, 390, 768, 1024, 1440]) {
@@ -166,8 +206,21 @@ try {
   await page.getByRole('button', { name: 'Continuar', exact: true }).click();
   failStreak = true;
   await page.getByRole('button', { name: 'Guardar estudio', exact: true }).click();
+  if (atomic) {
+    await page.getByRole('alert').filter({ hasText: 'No pudimos guardar' }).waitFor();
+    assert.equal(progress.has('lesson-4'), false, 'A failed atomic call cannot confirm a lesson');
+    failStreak = false; loseResponse = true;
+    await page.getByRole('button', { name: 'Guardar estudio', exact: true }).click();
+    await page.getByRole('alert').filter({ hasText: 'No pudimos guardar' }).waitFor();
+    assert.equal(progress.has('lesson-4'), true, 'Simulated committed save with lost response');
+    const xp = streak.total_xp;
+    await page.getByRole('button', { name: 'Guardar estudio', exact: true }).click();
+    await page.getByRole('heading', { name: 'Estudio guardado', exact: true }).waitFor();
+    assert.equal(streak.total_xp, xp, 'Recovering the response must not award XP again');
+  } else {
   await page.getByRole('heading', { name: 'Estudio guardado', exact: true }).waitFor();
   await page.getByText('El estudio está guardado, pero no se pudo actualizar la racha y el XP.', { exact: true }).waitFor();
+  }
   assert.equal(progress.has('lesson-4'), true);
   failStreak = false;
   for (const lesson of lessons.slice(0, 364)) progress.set(lesson.id, { user_id: id, completed: true, answers: {} });

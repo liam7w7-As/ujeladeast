@@ -1,44 +1,18 @@
-import { motion } from 'motion/react';
+import { Check, Flame, LoaderCircle, RotateCw } from 'lucide-react';
+import { daysSince, studyDay } from '../../lib/studyTracking';
 
-export default function StreakCard({ streak, lastStudy }) {
-  const isHot = streak >= 1;
-  
-  return (
-    <motion.div 
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className="glass-card rounded-2xl p-6 flex items-center justify-between relative overflow-hidden border border-surface-border hover:border-orange-500/30 transition-colors"
-    >
-      {isHot && (
-        <div className="absolute -right-4 -top-4 w-28 h-28 bg-orange-500/20 blur-2xl rounded-full animate-pulse"></div>
-      )}
-      <div className="flex flex-col z-10">
-        <span className="text-on-surface-variant text-sm font-semibold mb-1">Racha Actual</span>
-        <div className="flex items-end gap-2">
-          <motion.span 
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            className="text-4xl font-black text-white"
-          >
-            {streak}
-          </motion.span>
-          <span className="text-on-surface-variant text-sm font-medium mb-1">días</span>
-        </div>
-        {lastStudy && (
-          <span className="text-xs text-on-surface-variant mt-2 opacity-70">
-            Último: {new Date(lastStudy).toLocaleDateString()}
-          </span>
-        )}
-      </div>
-      <motion.div 
-        animate={isHot ? { scale: [1, 1.15, 1], rotate: [0, 5, -5, 0] } : {}}
-        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-        className={`text-5xl z-10 select-none ${isHot ? 'drop-shadow-[0_0_20px_rgba(255,120,0,0.8)]' : 'grayscale opacity-40'}`}
-      >
-        🔥
-      </motion.div>
-    </motion.div>
-  );
+export default function StreakCard({ data, loading, error, onRetry }) {
+  const confirmed = data && !error;
+  const today = confirmed && (data.atomic ? data.today_completed : daysSince(data.last_study_date) === 0);
+  const dateLabel = value => new Intl.DateTimeFormat('es-BO', { timeZone: 'UTC', day: 'numeric', month: 'short' }).format(new Date(studyDay(value) * 86400000));
+  return <section className="rounded-lg border border-surface-border p-5" aria-label="Tu racha" aria-busy={loading}>
+    <div className="flex items-center justify-between gap-3"><h2 className="text-sm font-semibold text-on-surface-variant">Racha activa</h2><Flame size={23} className="text-amber-300" /></div>
+    {error ? <div role="alert" className="mt-4"><p className="text-sm text-on-surface-variant">{error}</p><button type="button" className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm" onClick={onRetry} disabled={loading}><RotateCw size={17} />Reintentar racha</button></div>
+      : !data ? <p role="status" className="mt-4 flex items-center gap-2 text-sm"><LoaderCircle size={18} className="animate-spin" />Consultando racha...</p>
+        : <><p className="mt-2"><strong className="text-4xl font-bold text-white">{data.current_streak}</strong><span className="ml-2 text-sm text-on-surface-variant">días</span></p>
+          <p className={`mt-3 flex items-center gap-2 text-sm ${today ? 'text-emerald-300' : 'text-on-surface-variant'}`}>{today && <Check size={16} />}{today ? 'Hoy completado' : 'Hoy pendiente'}</p>
+          {!!data.recent_days?.length && <ol className="mt-4 grid grid-cols-7 gap-1" aria-label="Últimos siete días">{data.recent_days.map(day => <li key={day.date} title={`${dateLabel(day.date)}: ${day.completed ? 'completado' : 'sin completar'}`} className="min-w-0 text-center"><span className="block text-[10px] text-on-surface-variant">{new Intl.DateTimeFormat('es-BO', { weekday: 'narrow', timeZone: 'UTC' }).format(new Date(`${day.date}T12:00:00Z`))}</span><span className={`mx-auto mt-1 flex h-7 w-7 items-center justify-center rounded-full text-xs ${day.completed ? 'bg-emerald-400/15 text-emerald-300' : 'bg-white/5 text-on-surface-variant'}`} aria-label={`${dateLabel(day.date)}: ${day.completed ? 'completado' : 'sin completar'}`}>{day.completed ? <Check size={15} /> : Number(day.date.slice(-2))}</span></li>)}</ol>}
+          {data.last_study_date && <p className="mt-3 text-xs text-on-surface-variant">Último estudio: {dateLabel(data.last_study_date)}</p>}
+        </>}
+  </section>;
 }
-

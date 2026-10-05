@@ -39,7 +39,7 @@ function BibleStudyContent() {
   
   // Hooks
   const { plan, weeks, lessons, getLessons, getCurrentPlan, getWeeks, getJourney, getLesson, completeLesson, loading: studyLoading, error: studyError } = useStudy();
-  const { streakData, getStreak, updateStreak } = useStreak();
+  const { streakData, getStreak, updateStreak, acceptStatus, loading: streakLoading, error: streakError } = useStreak();
   const { entries, getRecentEntries, saveEntry, error: journalError } = useJournal();
   const { messages: sosMessages, sending: sosSending, error: sosError, createSession: createSosSession, sendMessage: sendSosMessage, currentSession: sosSession } = useChat();
   
@@ -127,6 +127,7 @@ function BibleStudyContent() {
   const handleCompleteLesson = async ({ answers, journalContent, favoriteVerses }) => {
     const latest = await getLesson(activeLesson.id);
     if (latest.user_progress?.completed) {
+      await getStreak();
       await refreshJourney();
       getWeeks(plan.id);
       return { notice: 'Esta lección ya estaba completada. Sus respuestas anteriores se conservaron.' };
@@ -138,9 +139,12 @@ function BibleStudyContent() {
     }
     // Save the optional journal first so a failed write leaves the study draft retryable.
     if (journalContent.trim() || favoriteVerses.length) await saveEntry(activeLesson.id, journalContent, favoriteVerses);
-    const progress = await completeLesson(activeLesson.id, answers);
+    const progress = await completeLesson(activeLesson.id, answers, lessonRevision(activeLesson));
     let notice = '';
-    if (progress) {
+    if (progress?.status?.atomic) {
+      acceptStatus(progress.status);
+      if (progress.already_completed) notice = 'Este estudio ya estaba guardado. Tu racha está confirmada, sin duplicar puntos.';
+    } else if (progress) {
       try { await updateStreak(10); }
       catch { notice = 'El estudio está guardado, pero no se pudo actualizar la racha y el XP.'; }
     } else notice = 'Esta lección ya estaba completada. Tu avance se conserva.';
@@ -236,8 +240,8 @@ function BibleStudyContent() {
 
                 {/* Progress / Streaks Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <StreakCard streak={streakData?.current_streak} lastStudy={streakData?.last_study_date} />
-                  <XPBar xp={streakData?.total_xp} />
+                  <StreakCard data={streakData} loading={streakLoading} error={streakError} onRetry={getStreak} />
+                  {streakData && !streakError && <XPBar xp={streakData.total_xp} />}
                 </div>
               </div>
 
