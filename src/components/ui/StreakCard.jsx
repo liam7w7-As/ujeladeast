@@ -1,12 +1,15 @@
-import { Check, Flame, LoaderCircle, RotateCw } from 'lucide-react';
+import { Check, LoaderCircle, RotateCw } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
 import { daysSince, studyDay } from '../../lib/studyTracking';
 
 export default function StreakCard({ data, loading, error, onRetry }) {
   const confirmed = data && !error;
+  const reduced = useReducedMotion();
+  const burning = confirmed && data.current_streak > 0;
   const today = confirmed && (data.atomic ? data.today_completed : daysSince(data.last_study_date) === 0);
   const dateLabel = value => new Intl.DateTimeFormat('es-BO', { timeZone: 'UTC', day: 'numeric', month: 'short' }).format(new Date(studyDay(value) * 86400000));
   return <section className="rounded-lg border border-surface-border p-5" aria-label="Tu racha" aria-busy={loading}>
-    <div className="flex items-center justify-between gap-3"><h2 className="text-sm font-semibold text-on-surface-variant">Racha activa</h2><Flame size={23} className="text-amber-300" /></div>
+    <div className="flex items-center justify-between gap-3"><h2 className="text-sm font-semibold text-on-surface-variant">Racha activa</h2><motion.span aria-hidden="true" className={`flex h-16 w-16 shrink-0 items-center justify-center text-5xl leading-none ${burning ? '' : 'grayscale opacity-40'}`} style={{ fontFamily: '"Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif', transformOrigin: '50% 85%' }} animate={burning && !reduced ? { scale: [1, 1.1, 1], rotate: [0, 4, -3, 0] } : { scale: 1, rotate: 0 }} transition={{ duration: 2.4, repeat: burning && !reduced ? Infinity : 0, ease: 'easeInOut' }}>{'\u{1F525}'}</motion.span></div>
     {error ? <div role="alert" className="mt-4"><p className="text-sm text-on-surface-variant">{error}</p><button type="button" className="mt-3 inline-flex min-h-11 items-center gap-2 text-sm" onClick={onRetry} disabled={loading}><RotateCw size={17} />Reintentar racha</button></div>
       : !data ? <p role="status" className="mt-4 flex items-center gap-2 text-sm"><LoaderCircle size={18} className="animate-spin" />Consultando racha...</p>
         : <><p className="mt-2"><strong className="text-4xl font-bold text-white">{data.current_streak}</strong><span className="ml-2 text-sm text-on-surface-variant">días</span></p>

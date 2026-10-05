@@ -23,6 +23,7 @@ const writes = [], journalWrites = [], streakWrites = [], errors = [];
 let failJourney = false, emptyPlan = false, failProgress = false, failJournal = false, failStreak = false;
 let streak = { user_id: id, current_streak: 2, max_streak: 2, total_xp: 20, last_study_date: new Date().toISOString() };
 let loseResponse = false;
+let holdSave = false, releaseSave;
 const statusSnapshot = () => ({ ...streak, atomic: true, today_completed: true, recent_days: Array.from({ length: 7 }, (_, index) => ({ date: new Date((studyDay(new Date()) - 6 + index) * 86400000).toISOString().slice(0, 10), completed: index > 4 })) });
 const withProgress = lesson => ({ ...lesson, user_progress: progress.has(lesson.id) ? [progress.get(lesson.id)] : [] });
 async function mock(context) {
@@ -32,6 +33,9 @@ async function mock(context) {
   await context.route('https://placeholder.supabase.co/**', async route => {
     const request = route.request(), url = new URL(request.url()), table = url.pathname.split('/').at(-1);
     const method = request.method();
+    if (holdSave && method !== 'GET' && ['complete_study_lesson', 'user_progress'].includes(table)) {
+      await new Promise(resolve => { releaseSave = resolve; });
+    }
     let body = [], status = 200;
     if (['get_study_status', 'complete_study_lesson'].includes(table)) {
       if (!atomic) { status = 404; body = { code: 'PGRST202', message: 'Migration not installed' }; }
@@ -181,7 +185,19 @@ try {
   await page.getByRole('alert').filter({ hasText: 'No pudimos guardar' }).waitFor();
   assert.equal(writes.length, 0);
   failJournal = false; failProgress = true;
+  holdSave = true;
   await page.getByRole('button', { name: 'Guardar estudio', exact: true }).click();
+  await page.getByRole('button', { name: 'Guardando...', exact: true }).waitFor();
+  const savingGuard = await page.evaluate(() => {
+    const event = new CustomEvent('ujeladea:before-update', { cancelable: true, detail: { reason: '' } });
+    window.dispatchEvent(event);
+    return { blocked: event.defaultPrevented, reason: event.detail.reason };
+  });
+  assert.equal(savingGuard.blocked, true, 'A pending save must block PWA activation');
+  assert.match(savingGuard.reason, /está guardando/);
+  while (!releaseSave) await new Promise(resolve => setTimeout(resolve, 20));
+  holdSave = false;
+  releaseSave();
   await page.getByRole('button', { name: 'Guardar estudio', exact: true }).waitFor();
   assert.equal(writes.length, 0);
   failProgress = false;
@@ -261,6 +277,13 @@ try {
   await reduced.getByRole('button', { name: 'Continuar', exact: true }).click();
   await reduced.getByLabel('¿Qué enseñanza encuentras en el pasaje?', { exact: true }).fill('La respuesta sigue disponible.');
   await reduced.getByRole('alert').filter({ hasText: 'No se pudo guardar el borrador' }).waitFor();
+  const updateGuard = await reduced.evaluate(() => {
+    const event = new CustomEvent('ujeladea:before-update', { cancelable: true, detail: { reason: '' } });
+    window.dispatchEvent(event);
+    return { blocked: event.defaultPrevented, reason: event.detail.reason };
+  });
+  assert.equal(updateGuard.blocked, true, 'An unsaved draft must block PWA updates');
+  assert.match(updateGuard.reason, /Guarda el estudio/);
   await reduced.getByRole('button', { name: 'Mi estudio', exact: true }).click();
   await reduced.getByRole('dialog').getByRole('heading', { name: 'El borrador no está guardado' }).waitFor();
   await reduced.getByRole('button', { name: 'Seguir estudiando', exact: true }).click();

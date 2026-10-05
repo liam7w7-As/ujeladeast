@@ -9,6 +9,33 @@ explicit labels, password visibility controls and reduced-motion preferences.
 Registration has two steps and keeps the draft when navigating between them.
 Existing avatars and profile storage remain unchanged. No SQL migration needed.
 
+## Installed app updates
+
+Production builds use a waiting service worker and an explicit update dialog.
+Each Vercel commit changes the embedded build ID; local builds use a timestamp.
+An update becomes available after deployment and successful precaching, not at
+the moment of the Git push. The installed app checks on focus, visibility,
+reconnection and every minute while visible and online. Dismissed updates can
+be offered again after five minutes or on the next opening.
+
+Accepting activates the downloaded worker and reloads that tab. Other tabs ask
+separately before reloading. Study sessions block activation/reload during a
+save or when local draft storage has failed. Other unsaved forms should be
+finished before accepting; the dialog warns about the reload. Local storage,
+IndexedDB Bible downloads and the hymnal runtime cache are not cleared.
+
+The first transition from the previous `autoUpdate` client can require closing
+all app windows and browser tabs on this origin, then reopening after the new
+worker has downloaded. That old client cannot display the new prompt until it
+receives the updated code. No cache deletion, reinstall or SQL migration is
+needed. Subsequent deployments use the dialog.
+
+Run `node tests/pwaUpdate.browser.mjs` with Playwright and Chrome available.
+It builds two production versions and serves them on a temporary local port,
+then checks real service-worker activation, small/large popup layouts, delayed
+updates, reload guards, independent tab consent, storage preservation and
+offline activation/reload. Artifacts go to `test-results/pwa-update`.
+
 ## Password recovery configuration
 
 In Supabase Auth URL Configuration, allow the production callback

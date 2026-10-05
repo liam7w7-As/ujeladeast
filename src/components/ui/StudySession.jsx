@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { ArrowLeft, ArrowRight, BookOpen, Check, CheckCircle2, CircleAlert, CloudCheck, LoaderCircle, MessageCircle, Plus, X } from 'lucide-react';
 import { lessonQuestions, lessonSteps, missingAnswers } from '../../lib/studyJourney';
 import { useStudyDraft } from '../../hooks/useStudyDraft';
+import { BEFORE_APP_UPDATE } from '../../lib/appUpdate';
 import AppDialog from './AppDialog';
 import ujeladitoAvatar from '../../assets/ujeladito-avatar.png';
 import './study-session.css';
@@ -25,6 +26,18 @@ export default function StudySession({ userId, lesson, ordinal, total, onExit, o
   const lock = useRef(false);
   const heading = useRef(null);
   const reduced = useReducedMotion();
+  useEffect(() => {
+    const protectStudy = event => {
+      if (lock.current || (storageError && !readOnly && !result)) {
+        event.preventDefault();
+        event.detail.reason = lock.current
+          ? 'Tu estudio se está guardando. Espera a que termine y vuelve a actualizar.'
+          : 'Tu borrador no está guardado. Guarda el estudio antes de actualizar.';
+      }
+    };
+    window.addEventListener(BEFORE_APP_UPDATE, protectStudy);
+    return () => window.removeEventListener(BEFORE_APP_UPDATE, protectStudy);
+  }, [storageError, readOnly, result]);
   useEffect(() => {
     heading.current?.focus({ preventScroll: true });
     window.scrollTo({ top: 0, behavior: 'instant' });

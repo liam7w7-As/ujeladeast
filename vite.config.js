@@ -2,14 +2,18 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
+import { env } from 'node:process'
 
 // https://vite.dev/config/
 export default defineConfig({
+  define: {
+    'import.meta.env.APP_BUILD_ID': JSON.stringify(env.VERCEL_GIT_COMMIT_SHA || new Date().toISOString()),
+  },
   plugins: [
     react(),
     tailwindcss(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       includeAssets: ['favicon.ico', 'favicon-v2.png', 'apple-touch-icon-v2.png', 'masked-icon.svg'],
       manifest: {
         id: '/',
@@ -50,7 +54,7 @@ export default defineConfig({
         ]
       },
       workbox: {
-        skipWaiting: true,
+        skipWaiting: false,
         clientsClaim: true,
         globPatterns: ['**/*.{js,css,html,ico,png,webp,svg,woff2}'],
         runtimeCaching: [
