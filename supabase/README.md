@@ -12,10 +12,18 @@ en este repositorio y las pruebas SQL usan un esquema aislado.
 Orden de despliegue:
 1. Desplegar este frontend compatible y comprobar que Vercel finaliza.
 2. Revisar una copia/backup del esquema y datos. La migracion requiere IDs UUID,
-   `user_progress.completed_at` timestamptz, claves unicas user/lesson y user en
+   `user_progress.completed_at` timestamp (UTC) o timestamptz, claves unicas user/lesson y user en
    `user_streaks`, y las columnas existentes de lecciones/notificaciones/perfiles.
-   Rechaza fechas sin zona horaria: no convierte historia ambigua automaticamente.
-3. Ejecutar el SQL completo en el SQL Editor. Es transaccional y repetible.
+   Produccion tiene timestamp sin zona: el propietario confirmo que no hubo
+   importaciones y todos los registros proceden de Date.toISOString() de la app.
+   Por eso se convierten explicitamente con AT TIME ZONE 'UTC', conservando el
+   instante original. No usar esa conversion para datos importados en hora local.
+   `user_streaks.last_study_date` puede seguir siendo date; no se cambia su tipo.
+3. Ejecutar SOLO `202610050001_atomic_study.sql` completo y actualizado en el SQL
+   Editor para esta mejora. Ya incluye admin_study_tracking: no requiere ejecutar
+   primero la migracion administrativa anterior. Es transaccional y repetible;
+   si ya hay timestamptz, no vuelve a convertirlo. El error de tipo de la primera
+   version detuvo la ejecucion antes de cambiar tablas o funciones.
 4. Recargar la app/PWA en los dispositivos: clientes antiguos ya no pueden escribir
    progreso/racha directamente. El nuevo frontend usa las RPC al detectarlas.
 5. Con dos cuentas de prueba, verificar lectura propia, preguntas requeridas,
@@ -49,6 +57,9 @@ Pruebas:
   permisos, validacion, bonos, historia, medianoche y fin de semana. El motor
   aislado serializa consultas: no sustituye una prueba de carga concurrente
   contra un proyecto Supabase de staging con el esquema real.
+- Repetir con `STUDY_LEGACY_SCHEMA=1` para el esquema real timestamp sin zona +
+  date: comprueba la conversion UTC, precision, medianoche boliviana y reejecucion
+  sin desplazamientos, incluso con otra zona horaria de sesion.
 - `STUDY_ATOMIC_TEST=1 node tests/studyJourney.browser.mjs`: RPC simuladas,
   error de lectura, error de guardado y respuesta perdida sin doble XP.
 - Sin esa variable, la misma suite verifica compatibilidad pre-migracion.

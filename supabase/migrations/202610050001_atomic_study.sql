@@ -1,11 +1,17 @@
 begin;
 
--- Refuse ambiguous timestamp conversions rather than rewriting historical dates.
+-- Legacy production rows came exclusively from the app's Date.toISOString() (UTC).
+-- Confirmed with the owner on 2026-10-05; do not reuse for local-time imports.
 do $$
+declare v_type text;
 begin
-  if not exists (select 1 from information_schema.columns where table_schema = 'public'
-    and table_name = 'user_progress' and column_name = 'completed_at' and data_type = 'timestamp with time zone') then
-    raise exception 'Verificar user_progress.completed_at: se requiere timestamptz antes de aplicar esta migracion';
+  select data_type into v_type from information_schema.columns where table_schema = 'public'
+    and table_name = 'user_progress' and column_name = 'completed_at';
+  if v_type = 'timestamp without time zone' then
+    alter table public.user_progress alter column completed_at type timestamptz
+      using completed_at at time zone 'UTC';
+  elsif v_type is distinct from 'timestamp with time zone' then
+    raise exception 'Tipo no compatible para user_progress.completed_at: %', coalesce(v_type, 'columna ausente');
   end if;
 end;
 $$;

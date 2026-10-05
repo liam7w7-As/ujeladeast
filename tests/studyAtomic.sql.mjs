@@ -1,8 +1,11 @@
 import { createRequire } from 'node:module';
 import { readFile } from 'node:fs/promises';
 import assert from 'node:assert/strict';
+import process from 'node:process';
 const { PGlite } = createRequire(import.meta.url)('@electric-sql/pglite');
 const db = new PGlite();
+const legacy = process.env.STUDY_LEGACY_SCHEMA === '1';
+const historic = '00000000-0000-0000-0000-000000000003';
 const user = '00000000-0000-0000-0000-000000000001';
 const other = '00000000-0000-0000-0000-000000000002';
 const lesson = n => `10000000-0000-0000-0000-${String(n).padStart(12, '0')}`;
@@ -17,16 +20,33 @@ try {
     create table public.profiles(id uuid primary key, full_name text, church_name text, avatar_url text, role text);
     create table public.study_weeks(id uuid primary key, plan_id uuid);
     create table public.study_lessons(id uuid primary key, week_id uuid, scripture_ref text, scripture_text text, teaching text, questions jsonb);
-    create table public.user_progress(user_id uuid, lesson_id uuid references public.study_lessons(id), completed boolean, answers jsonb, completed_at timestamptz, unique(user_id,lesson_id));
-    create table public.user_streaks(user_id uuid primary key, current_streak integer, max_streak integer, total_xp integer, last_study_date timestamptz);
+    create table public.user_progress(user_id uuid, lesson_id uuid references public.study_lessons(id), completed boolean, answers jsonb, completed_at ${legacy ? 'timestamp without time zone' : 'timestamptz'}, unique(user_id,lesson_id));
+    create table public.user_streaks(user_id uuid primary key, current_streak integer, max_streak integer, total_xp integer, last_study_date ${legacy ? 'date' : 'timestamptz'});
     create table public.notifications(id uuid default gen_random_uuid(), user_id uuid, title text, message text, type text, action_url text);
     grant all on public.user_progress, public.user_streaks to authenticated;
     grant update(current_streak) on public.user_streaks to authenticated;
   `);
   for (let i = 1; i <= 45; i++) await db.query('insert into public.study_lessons(id, scripture_ref, scripture_text, teaching, questions) values($1,$2,$3,$4,$5)', [lesson(i), ...content.slice(0, 3), JSON.stringify(content[3])]);
+  await db.exec("set timezone = 'Asia/Tokyo';");
+  for (const [n, date] of [[40, '2026-10-04T03:59:00.401'], [41, '2026-10-05T03:59:00.401']]) {
+    await db.query("insert into public.user_progress values($1,$2,true,'{\"0\":\"Original\"}',$3)", [historic, lesson(n), legacy ? date : `${date}Z`]);
+  }
+  await db.query("insert into public.user_progress values($1,$2,false,'{}',null)", [historic, lesson(42)]);
+  await db.query("insert into public.user_streaks values($1,2,2,20,'2026-10-04')", [historic]);
+  const oldDate = (await db.query('select last_study_date::text as value from public.user_streaks where user_id=$1', [historic])).rows[0].value;
   const migration = await readFile(new URL('../supabase/migrations/202610050001_atomic_study.sql', import.meta.url), 'utf8');
   await db.exec(migration);
   await db.exec(migration);
+  assert.equal((await db.query("select data_type from information_schema.columns where table_name='user_progress' and column_name='completed_at'")).rows[0].data_type, 'timestamp with time zone');
+  const converted = (await db.query('select extract(epoch from completed_at) as epoch, answers from public.user_progress where user_id=$1 and lesson_id=$2', [historic, lesson(41)])).rows[0];
+  assert.equal(Number(converted.epoch), Date.parse('2026-10-05T03:59:00.401Z') / 1000);
+  assert.equal(converted.answers[0], 'Original');
+  assert.equal((await db.query('select last_study_date::text as value from public.user_streaks where user_id=$1', [historic])).rows[0].value, oldDate);
+  assert.equal((await db.query('select completed_at from public.user_progress where user_id=$1 and lesson_id=$2', [historic, lesson(42)])).rows[0].completed_at, null);
+  const historicStatus = (await db.query("select public.study_streak_summary($1,'2026-10-05T04:01:00Z') as result", [historic])).rows[0].result;
+  assert.equal(historicStatus.current_streak, 2);
+  assert.equal(historicStatus.last_study_date, '2026-10-04');
+  assert.equal(historicStatus.today_completed, false);
   await db.exec('set role anon;');
   await assert.rejects(status(), e => e.code === '42501');
   await assert.rejects(save(1), e => e.code === '42501');
@@ -43,6 +63,10 @@ try {
   assert.equal(first.added_xp, 10);
   assert.equal(first.status.today_completed, true);
   assert.equal(first.status.recent_days.length, 7);
+  await db.exec('reset role;');
+  const dateCheck = (await db.query("select (last_study_date::date = (now() at time zone 'America/La_Paz')::date) as correct from public.user_streaks where user_id=$1", [user])).rows[0];
+  if (legacy) assert.equal(dateCheck.correct, true, 'DATE streak column uses Bolivia, not the session timezone');
+  await asUser(user);
   const repeat = await save(1, { 0: 'Replacement' });
   assert.equal(repeat.already_completed, true);
   assert.equal(repeat.status.total_xp, 10);
