@@ -47,9 +47,9 @@ export default function MobileNavigation({ onCreate }) {
     </header>
     <nav className="mobile-tab-bar" aria-label="Navegación móvil">
       {tabs.map(({ to, label, Icon }) => <Link key={to} to={to} className="mobile-tab" aria-current={pathname === to ? 'page' : undefined}>
-        <span className="mobile-tab-icon">{pathname === to && <motion.span className="mobile-tab-active" layoutId="mobile-tab-active" transition={{ duration: reduced ? 0 : 0.2 }} />}<Icon size={22} strokeWidth={pathname === to ? 2.2 : 1.7} /></span><span>{label}</span>
+        <span className="mobile-tab-icon">{pathname === to && !open && <motion.span aria-hidden="true" className="mobile-tab-active" layoutId="mobile-tab-active" transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 450, damping: 35 }} />}<Icon size={22} strokeWidth={pathname === to ? 2.2 : 1.7} /></span><span>{label}</span>
       </Link>)}
-      <button type="button" className="mobile-tab" aria-label="Más opciones" aria-expanded={open} aria-pressed={moreActive} onClick={() => setOpen(true)}><span className="mobile-tab-icon">{user ? <ProfileAvatar profile={profile} metadata={user.user_metadata} className="h-6 w-6" /> : <Grid2X2 size={22} strokeWidth={1.7} />}</span><span>Más</span></button>
+      <button type="button" className="mobile-tab" aria-label="Más opciones" aria-expanded={open} aria-pressed={moreActive || open} onClick={() => setOpen(true)}><span className="mobile-tab-icon">{(moreActive || open) && <motion.span aria-hidden="true" className="mobile-tab-active" layoutId="mobile-tab-active" transition={{ duration: reduced ? 0 : 0.2 }} />}{user ? <ProfileAvatar profile={profile} metadata={user.user_metadata} className="h-6 w-6" /> : <Grid2X2 size={22} strokeWidth={1.7} />}</span><span>Más</span></button>
     </nav>
     <AppDialog open={open} onClose={() => setOpen(false)} title="Tu comunidad" busy={busy}>
       <div className="mobile-more-content">

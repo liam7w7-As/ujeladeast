@@ -5,10 +5,10 @@ import { loadBibleBook } from '../../lib/bibleLibrary';
 import { versions } from '../../lib/bibleModel';
 import { elementAnchors, positionOffset, readingPosition } from '../../lib/bibleScroll';
 
-function Column({ versionId, bookId, chapterNumber, chapter, error, onRetry, installed, online, onNote, onVerse, favorites, fontSize, redLetters, selectedReference, selectedVersion, backgrounds, onCloseVersion, onScroll, onContentChange }) {
+function Column({ versionId, bookId, chapterNumber, chapter, error, onRetry, installed, online, onNote, onVerse, favorites, fontSize, fontFamily, redLetters, selectedReference, selectedVersion, backgrounds, onCloseVersion, onScroll, onContentChange }) {
   const version = versions.find(entry => entry.id === versionId);
   const book = version.books.find(entry => entry.id === bookId);
-  useEffect(() => { onContentChange(); }, [chapter, fontSize, onContentChange]);
+  useEffect(() => { onContentChange(); }, [chapter, fontSize, fontFamily, onContentChange]);
   return <section className="bible-compare-column" data-background={backgrounds[versionId]} aria-label={`Comparación ${versionId}`}>
     <header><div><strong>{versionId}</strong><span>{book.title} {chapterNumber}</span></div><div className="bible-panel-actions">{installed ? <Check size={16} aria-label="Descargada" /> : !online ? <WifiOff size={16} aria-label="Sin conexión" /> : null}<button type="button" className="bible-icon" aria-label={`Cerrar versión ${versionId}`} title={`Cerrar ${versionId}`} onClick={() => onCloseVersion(versionId)}><X size={17} /></button></div></header>
     <div onScroll={onScroll} className={`bible-compare-scroll bible-chapter ${redLetters ? 'bible-red-letters' : ''}`} role="region" aria-label={`Lectura ${versionId}`} tabIndex={0} style={{ '--bible-font-size': `${fontSize}px` }}>
