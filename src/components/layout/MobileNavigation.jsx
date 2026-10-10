@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpen, BookMarked, Compass, Home, Music2, Grid2X2, Library, Users, MessageCircle, LogIn, LogOut, PlusSquare, HeartHandshake, Shield } from 'lucide-react';
+import { BookOpenText, HouseHeart, MessagesSquare, Music4, NotebookPen, PanelsTopLeft, Library, Users, MessageCircle, LogIn, LogOut, PlusSquare, HeartHandshake, Shield } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { useAuth } from '../../hooks/useAuth';
 import ProfileAvatar from '../ui/ProfileAvatar';
@@ -9,11 +9,11 @@ import AppDialog from '../ui/AppDialog';
 import './mobile-navigation.css';
 
 const tabs = [
-  { to: '/', label: 'Inicio', Icon: Home },
-  { to: '/feed', label: 'Comunidad', Icon: Compass },
-  { to: '/himnario', label: 'Himnario', Icon: Music2 },
-  { to: '/biblia', label: 'Biblia', Icon: BookMarked },
-  { to: '/estudios', label: 'Estudios', Icon: BookOpen },
+  { to: '/', label: 'Inicio', kind: 'home', Icon: HouseHeart },
+  { to: '/feed', label: 'Comunidad', kind: 'community', Icon: MessagesSquare },
+  { to: '/himnario', label: 'Himnario', kind: 'music', Icon: Music4 },
+  { to: '/biblia', label: 'Biblia', kind: 'bible', Icon: BookOpenText },
+  { to: '/estudios', label: 'Estudios', kind: 'study', Icon: NotebookPen },
 ];
 const extraLinks = [
   { to: '/sociedades', label: 'Sociedades', Icon: Users },
@@ -46,10 +46,11 @@ export default function MobileNavigation({ onCreate }) {
       </div>
     </header>
     <nav className="mobile-tab-bar" aria-label="Navegación móvil">
-      {tabs.map(({ to, label, Icon }) => <Link key={to} to={to} className="mobile-tab" aria-current={pathname === to ? 'page' : undefined}>
-        <span className="mobile-tab-icon">{pathname === to && !open && <motion.span aria-hidden="true" className="mobile-tab-active" layoutId="mobile-tab-active" transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 450, damping: 35 }} />}<Icon size={22} strokeWidth={pathname === to ? 2.2 : 1.7} /></span><span>{label}</span>
+      {tabs.map(({ to, label, kind, Icon }) => <Link key={to} to={to} title={label} className="mobile-tab" data-kind={kind} data-active={pathname === to && !open} aria-current={pathname === to ? 'page' : undefined}>
+        {pathname === to && !open && <motion.span aria-hidden="true" className="mobile-tab-active" layoutId="mobile-tab-active" transition={reduced ? { duration: 0 } : { type: 'spring', stiffness: 450, damping: 35 }} />}
+        <span className="mobile-tab-icon"><Icon size={28} strokeWidth={1.65} aria-hidden="true" /></span><span className="mobile-tab-label">{label}</span>
       </Link>)}
-      <button type="button" className="mobile-tab" aria-label="Más opciones" aria-expanded={open} aria-pressed={moreActive || open} onClick={() => setOpen(true)}><span className="mobile-tab-icon">{(moreActive || open) && <motion.span aria-hidden="true" className="mobile-tab-active" layoutId="mobile-tab-active" transition={{ duration: reduced ? 0 : 0.2 }} />}{user ? <ProfileAvatar profile={profile} metadata={user.user_metadata} className="h-6 w-6" /> : <Grid2X2 size={22} strokeWidth={1.7} />}</span><span>Más</span></button>
+      <button type="button" className="mobile-tab" data-kind="more" data-active={moreActive || open} title="Más opciones" aria-label="Más opciones" aria-haspopup="dialog" aria-expanded={open} aria-pressed={moreActive || open} onClick={() => setOpen(true)}>{(moreActive || open) && <motion.span aria-hidden="true" className="mobile-tab-active" layoutId="mobile-tab-active" transition={{ duration: reduced ? 0 : 0.2 }} />}<span className="mobile-tab-icon"><PanelsTopLeft size={28} strokeWidth={1.65} aria-hidden="true" /></span><span className="mobile-tab-label">Más</span></button>
     </nav>
     <AppDialog open={open} onClose={() => setOpen(false)} title="Tu comunidad" busy={busy}>
       <div className="mobile-more-content">

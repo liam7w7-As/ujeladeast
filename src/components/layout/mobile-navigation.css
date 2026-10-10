@@ -16,7 +16,7 @@
 .mobile-guest-actions a + a { background: #ffffff07; }
 .mobile-account-action { display: flex; align-items: center; gap: 12px; padding: 18px 0 4px; font-size: 13px; color: #f3b3c2; min-height: 48px; }
 @media (max-width: 1279px) {
-  :root { --mobile-top: calc(60px + env(safe-area-inset-top, 0px)); --mobile-bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
+  :root { --mobile-top: calc(60px + env(safe-area-inset-top, 0px)); --mobile-bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
   .mobile-navigation { display: block; position: relative; z-index: 50; }
   .mobile-app-header { position: fixed; top: 0; left: 0; right: 0; height: var(--mobile-top); display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: env(safe-area-inset-top, 0px) 16px 0; border-bottom: 1px solid #ffffff12; background: #0b0c0e; }
   .mobile-app-brand { display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 800; letter-spacing: 0; }
@@ -25,14 +25,24 @@
   .mobile-app-actions { display: flex; align-items: center; gap: 4px; }
   .mobile-icon { width: 44px; height: 44px; display: grid; place-items: center; }
   .mobile-signin { display: inline-flex; align-items: center; gap: 7px; padding: 10px 0 10px 8px; font-size: 12px; font-weight: 600; color: #f2a1b2; }
-  .mobile-tab-bar { position: fixed; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); left: max(8px, env(safe-area-inset-left, 0px)); right: max(8px, env(safe-area-inset-right, 0px)); max-width: 720px; margin: 0 auto; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); height: 72px; padding: 5px 4px; background: #1a191e; border: 1px solid #ffffff24; border-radius: 18px; box-shadow: 0 8px 28px #00000055, 0 1px 0 #ffffff08 inset; }
-  .mobile-tab { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px; min-width: 0; min-height: 44px; border-radius: 8px; font-size: 9px; font-weight: 500; line-height: 1.3; color: #afb2ba; letter-spacing: 0; transition: color .18s; -webkit-tap-highlight-color: transparent; }
-  .mobile-tab-icon { position: relative; width: 44px; height: 32px; display: grid; place-items: center; }
-  .mobile-tab-icon > :not(.mobile-tab-active) { position: relative; z-index: 1; }
-  .mobile-tab-active { position: absolute; inset: 0; border: 1px solid #d2618040; border-radius: 8px; background: #902b4a; box-shadow: 0 2px 5px #00000024; }
-  .mobile-tab[aria-current], .mobile-tab[aria-pressed='true'] { color: #fff0f5; font-weight: 700; }
-  .mobile-tab[aria-current] > span:last-child, .mobile-tab[aria-pressed='true'] > span:last-child { color: #f4b1c6; }
-  .mobile-tab:active .mobile-tab-icon { transform: scale(.94); }
+  .mobile-tab-bar { position: fixed; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); left: max(8px, env(safe-area-inset-left, 0px)); right: max(8px, env(safe-area-inset-right, 0px)); max-width: 720px; margin: 0 auto; display: grid; grid-template-columns: minmax(44px, 1fr) minmax(54px, 1.12fr) repeat(4, minmax(44px, 1fr)); height: 76px; padding: 4px; background: #1a191e; border: 1px solid #ffffff24; border-radius: 18px; box-shadow: 0 8px 28px #00000055, 0 1px 0 #ffffff08 inset; }
+  .mobile-tab { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 3px; min-width: 0; min-height: 44px; padding-bottom: 5px; border-radius: 8px; font-size: 9px; font-weight: 500; line-height: 1.3; color: #afb2ba; letter-spacing: 0; transition: color .18s, transform .12s; -webkit-tap-highlight-color: transparent; }
+  .mobile-tab[data-kind=home] { --tab-color: #f3a5bd; --tab-tint: #d2527833; }
+  .mobile-tab[data-kind=community] { --tab-color: #9edac5; --tab-tint: #6dc6a633; }
+  .mobile-tab[data-kind=music] { --tab-color: #efd09c; --tab-tint: #cfa95b55; }
+  .mobile-tab[data-kind=bible] { --tab-color: #9dc6f0; --tab-tint: #719dd333; }
+  .mobile-tab[data-kind=study] { --tab-color: #c9b5ee; --tab-tint: #af89dd55; }
+  .mobile-tab[data-kind=more] { --tab-color: #c1c9d5; --tab-tint: #91a0b433; }
+  .mobile-tab-icon { position: relative; width: 44px; height: 34px; display: grid; place-items: center; color: var(--tab-color); opacity: .83; transition: opacity .18s; }
+  .mobile-tab-icon svg { overflow: visible; }
+  .mobile-tab[data-kind=home] svg path:last-child, .mobile-tab[data-kind=community] svg path:first-child, .mobile-tab[data-kind=music] svg circle, .mobile-tab[data-kind=bible] svg path:nth-child(4), .mobile-tab[data-kind=study] svg path:last-child, .mobile-tab[data-kind=more] svg rect { fill: var(--tab-tint); transition: fill .2s; }
+  .mobile-tab[data-kind=home] svg path:first-child { fill: var(--tab-color); stroke-width: 1.2; }
+  .mobile-tab-active { position: absolute; bottom: 1px; left: calc(50% - 9px); width: 18px; height: 3px; border-radius: 2px; background: var(--tab-color); }
+  .mobile-tab[data-active=true] { color: #faf6f8; font-weight: 700; }
+  .mobile-tab[data-active=true] .mobile-tab-icon { opacity: 1; animation: mobile-glyph-pop .46s ease-out; }
+  .mobile-tab[data-active=true][data-kind=music] .mobile-tab-icon { animation-name: mobile-glyph-sway; }
+  .mobile-tab[data-active=true][data-kind=study] svg path:last-child { transform-box: fill-box; transform-origin: center; animation: mobile-pencil .5s ease-out; }
+  .mobile-tab:active { transform: scale(.94); }
   .mobile-tab:hover { color: #fff0f5; }
   .mobile-tab:focus-visible, .mobile-icon:focus-visible { outline: 2px solid #f2a1b2; outline-offset: -2px; }
   .desktop-navbar { display: none !important; }
@@ -52,4 +62,7 @@
   .chat-page-frame { top: var(--mobile-top) !important; bottom: var(--mobile-bottom) !important; padding-top: 0 !important; }
   .mobile-navigation section[aria-label='Notificaciones recibidas'] { position: fixed; top: calc(var(--mobile-top) + 8px); left: 12px; right: 12px; width: auto; max-width: 420px; margin-left: auto; max-height: calc(100dvh - var(--mobile-top) - var(--mobile-bottom) - 24px); }
 }
-@media (prefers-reduced-motion: reduce) { .mobile-navigation *, .public-page * { transition: none !important; animation: none !important; } }
+@keyframes mobile-glyph-pop { 0% { transform: translateY(2px) scale(.88); } 45% { transform: translateY(-3px) scale(1.1); } 75% { transform: translateY(1px) scale(.98); } 100% { transform: none; } }
+@keyframes mobile-glyph-sway { 0% { transform: rotate(-12deg) scale(.9); } 45% { transform: rotate(9deg) translateY(-2px); } 75% { transform: rotate(-4deg); } 100% { transform: none; } }
+@keyframes mobile-pencil { 0%, 100% { transform: rotate(0); } 40% { transform: rotate(-15deg); } 70% { transform: rotate(5deg); } }
+@media (prefers-reduced-motion: reduce) { .mobile-navigation *, .public-page * { transition: none !important; animation: none !important; } .mobile-tab:active { transform: none; } }

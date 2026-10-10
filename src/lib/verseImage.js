@@ -2,6 +2,9 @@ import { verseCitation } from './bibleVerses.js';
 import { readingFont } from './bibleTypography.js';
 
 export const verseImageThemes = [
+  { id: 'mountains', label: 'Montañas', image: '/verse-backgrounds/mountains-v1.webp', thumbnail: '/verse-backgrounds/mountains-v1-thumb.webp', text: '#ffffff', accent: '#ffffff', line: '#ffffff55' },
+  { id: 'forest', label: 'Bosque', image: '/verse-backgrounds/forest-v1.webp', thumbnail: '/verse-backgrounds/forest-v1-thumb.webp', text: '#ffffff', accent: '#ffffff', line: '#ffffff55' },
+  { id: 'sea', label: 'Mar', image: '/verse-backgrounds/sea-v1.webp', thumbnail: '/verse-backgrounds/sea-v1-thumb.webp', text: '#ffffff', accent: '#ffffff', line: '#ffffff55' },
   { id: 'wine', label: 'Granate', background: '#781d39', text: '#fff6f8', accent: '#efb9cb', line: '#a6506a' },
   { id: 'paper', label: 'Papel', background: '#f2f5f1', text: '#263e36', accent: '#567666', line: '#c3d1c7' },
   { id: 'night', label: 'Noche', background: '#17191e', text: '#f6f3ed', accent: '#d8bf83', line: '#494334' },
@@ -40,6 +43,32 @@ export function fitImageText(text, measureAtSize, { width, height, maxSize = 64,
 export const verseImageName = (verse, format) => `ujeladea-${verse.book}-${verse.chapter}-${verse.label}-${verse.version}-${format}.png`.replace(/[^a-z0-9._-]/gi, '-');
 
 let logoPromise;
+const backgroundImages = new Map();
+function loadBackground(src) {
+  if (backgroundImages.has(src)) return backgroundImages.get(src);
+  const promise = new Promise((resolve, reject) => {
+    const image = new Image();
+    const finish = error => {
+      clearTimeout(timer); image.onload = null; image.onerror = null;
+      if (error) { image.src = ''; reject(new Error('No pudimos cargar este fondo. Reintenta o elige un color.')); }
+      else resolve(image);
+    };
+    const timer = setTimeout(() => finish(true), 10000);
+    image.onload = () => finish(false);
+    image.onerror = () => finish(true);
+    image.src = src;
+  }).catch(error => { backgroundImages.delete(src); throw error; });
+  backgroundImages.set(src, promise);
+  return promise;
+}
+
+// Keep the scenery visible in square exports without stretching the photograph.
+export function coverSource(imageWidth, imageHeight, width, height) {
+  const scale = Math.max(width / imageWidth, height / imageHeight);
+  const cropWidth = width / scale, cropHeight = height / scale;
+  return [(imageWidth - cropWidth) / 2, (imageHeight - cropHeight) * .65, cropWidth, cropHeight];
+}
+
 function loadLogo() {
   return logoPromise ||= new Promise(resolve => {
     const logo = new Image();
@@ -50,43 +79,54 @@ function loadLogo() {
   });
 }
 
-export async function renderVerseImage(verse, { theme = 'wine', format = 'portrait', font = 'classic' } = {}) {
+export async function renderVerseImage(verse, { theme = 'mountains', format = 'story', font = 'classic' } = {}) {
   const colors = verseImageThemes.find(item => item.id === theme) || verseImageThemes[0];
   const dimensions = verseImageFormats.find(item => item.id === format) || verseImageFormats[0];
   const family = readingFont(font).family;
   await document.fonts.ready;
   await document.fonts.load(`500 64px ${family}`);
+  const background = colors.image ? await loadBackground(colors.image) : null;
   const logo = await loadLogo();
   const canvas = document.createElement('canvas');
   const { width, height } = dimensions;
   canvas.width = width; canvas.height = height;
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('No se pudo preparar la imagen en este navegador.');
-  ctx.fillStyle = colors.background; ctx.fillRect(0, 0, width, height);
-  ctx.strokeStyle = colors.line; ctx.lineWidth = 2; ctx.strokeRect(48, 48, width - 96, height - 96);
+  if (background) {
+    ctx.drawImage(background, ...coverSource(background.naturalWidth, background.naturalHeight, width, height), 0, 0, width, height);
+    // White lettering retains contrast even over bright sky; the photo remains full bleed.
+    ctx.fillStyle = '#0000008f'; ctx.fillRect(0, 0, width, height);
+  } else {
+    ctx.fillStyle = colors.background; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = colors.line; ctx.lineWidth = 2; ctx.strokeRect(48, 48, width - 96, height - 96);
+  }
+  const textX = background ? width / 2 : 104;
+  ctx.textAlign = background ? 'center' : 'left';
   ctx.textBaseline = 'top'; ctx.fillStyle = colors.accent;
   ctx.font = '500 23px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText('UNA PALABRA PARA HOY', 104, 106);
-  ctx.fillRect(104, 153, 92, 3);
-  ctx.font = '160px Georgia, serif'; ctx.fillText('\u201c', 93, 198);
-  const region = { width: width - 208, height: height - 565 };
+  ctx.fillText('UNA PALABRA PARA HOY', textX, 106);
+  ctx.fillRect(background ? width / 2 - 46 : 104, 153, 92, 3);
+  const region = { width: width - 208, height: height - 565, maxSize: background ? 78 : 64 };
   const layout = fitImageText(verse.text, (value, size) => {
     ctx.font = `500 ${size}px ${family}`;
     return ctx.measureText(value).width;
   }, region);
-  ctx.font = `500 ${layout.size}px ${family}`; ctx.fillStyle = colors.text;
   const top = 310 + (region.height - layout.lines.length * layout.lineHeight) / 2;
-  layout.lines.forEach((line, index) => ctx.fillText(line, 104, top + index * layout.lineHeight));
+  ctx.font = '120px Georgia, serif'; ctx.fillText('\u201c', background ? textX : 93, background ? top - 105 : 198);
+  ctx.font = `500 ${layout.size}px ${family}`; ctx.fillStyle = colors.text;
+  layout.lines.forEach((line, index) => ctx.fillText(line, textX, top + index * layout.lineHeight));
   const citation = `${verse.title} ${verse.chapter}:${verse.label}`;
   ctx.font = '600 30px "Plus Jakarta Sans", sans-serif';
   const reference = wrapImageText(citation, value => ctx.measureText(value).width, width - 208);
   if (reference.length > 2) throw new Error('La referencia es demasiado larga para esta imagen.');
-  reference.forEach((line, index) => ctx.fillText(line, 104, height - 226 + index * 37));
+  const citationTop = background ? Math.min(height - 226, top + layout.lines.length * layout.lineHeight + 56) : height - 226;
+  reference.forEach((line, index) => ctx.fillText(line, textX, citationTop + index * 37));
   ctx.font = '500 20px "Plus Jakarta Sans", sans-serif'; ctx.fillStyle = colors.accent;
-  ctx.fillText(verse.version, 104, height - 226 + reference.length * 37 + 10);
+  ctx.fillText(verse.version, textX, citationTop + reference.length * 37 + 10);
+  ctx.textAlign = 'left';
   ctx.fillStyle = colors.line; ctx.fillRect(104, height - 101, width - 208, 1);
   if (logo) {
-    ctx.fillStyle = '#17191e'; ctx.fillRect(width - 293, height - 81, 32, 32);
+    if (!background) { ctx.fillStyle = '#17191e'; ctx.fillRect(width - 293, height - 81, 32, 32); }
     const ratio = Math.min(28 / logo.naturalWidth, 28 / logo.naturalHeight);
     ctx.drawImage(logo, width - 277 - logo.naturalWidth * ratio / 2, height - 65 - logo.naturalHeight * ratio / 2, logo.naturalWidth * ratio, logo.naturalHeight * ratio);
   }

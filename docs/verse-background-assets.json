@@ -1,0 +1,22 @@
+{
+  "generator": "Built-in image_gen",
+  "created": "2026-10-10",
+  "processing": "WebP quality 84, preserving the generated 941x1672 image. Local thumbnails at 240px wide, quality 72. Originals preserved outside the repository.",
+  "assets": [
+    {
+      "file": "public/verse-backgrounds/mountains-v1.webp",
+      "thumbnail": "public/verse-backgrounds/mountains-v1-thumb.webp",
+      "prompt": "Use case: photorealistic-natural. Create a single vertical 9:16 high quality photographic background asset for a Spanish Bible verse story in a youth community app. Scene: majestic Andean mountain peaks at first light, a quiet turquoise alpine lake in the foreground, subtle rose light touching distant peaks, natural blue-green and soft pink palette. Authentic landscape photography, crisp detail, luminous yet peaceful, no people, no buildings, no symbols. Composition: landscape details concentrated in bottom third and near side edges, the central 55 percent of the frame has calm uncluttered sky and still-water surfaces suitable for overlaying readable verse text later. The scenery must remain attractive if cropped to a square centered vertically. Natural light, no fake bokeh, no orbs, no decorative graphic gradient. No text, no lettering, no logos, no borders, no watermark. Deliver one image, not a collage."
+    },
+    {
+      "file": "public/verse-backgrounds/forest-v1.webp",
+      "thumbnail": "public/verse-backgrounds/forest-v1-thumb.webp",
+      "prompt": "Use case: photorealistic-natural. Create one vertical 9:16 high-quality editorial landscape photograph, for a Bible verse story background in a youth app. A tranquil green woodland with a narrow sunlit path, tall leafy trees framing the extreme edges, deep emerald ferns and soft morning mist, natural silver-green daylight filtering through leaves. Calm, hopeful, authentic and crisp nature photography, not fantasy. Center of the composition is open and uncluttered with soft natural mist and a path receding into distance to allow verse text to be overlaid later. Preserve recognizable woodland when center-cropped square. No humans, animals, text, lettering, logo, borders or watermarks. No artificial bokeh circles, orbs, flares or illustrated elements. One photograph only."
+    },
+    {
+      "file": "public/verse-backgrounds/sea-v1.webp",
+      "thumbnail": "public/verse-backgrounds/sea-v1-thumb.webp",
+      "prompt": "Use case: photorealistic-natural. Generate one vertical 9:16 high-quality landscape photograph as a background for a Bible verse story in a youth community app. Peaceful ocean shoreline at dusk, delicate rose-pink clouds in a soft blue sky, gentle turquoise waves and white sea foam on a clean empty beach. Editorial natural travel photography, realistic, luminous, no heavy orange grading. Horizon in lower middle, uncluttered center with large soft sky suitable for later verse text, subtle wave detail in the bottom third, still recognizable when cropped square from center. No people, animals, objects, buildings, typography, logos, watermark, frame, lens flare, artificial bokeh circles or glowing orbs. Just the full-bleed photograph, not a collage."
+    }
+  ]
+}

@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react';
-import { Check, Download, LoaderCircle, Share2 } from 'lucide-react';
+import { Check, Download, LoaderCircle, RotateCw, Share2 } from 'lucide-react';
 import AppDialog from './AppDialog';
 import { bibleFonts, readingFont } from '../../lib/bibleTypography';
 import { renderVerseImage, verseImageFormats, verseImageName, verseImageThemes } from '../../lib/verseImage';
 import { verseCitation } from '../../lib/bibleVerses';
 
 export default function BibleVerseShare({ verse, initialFont, onClose }) {
-  const [theme, setTheme] = useState('wine');
-  const [format, setFormat] = useState('portrait');
+  const [theme, setTheme] = useState('mountains');
+  const [format, setFormat] = useState('story');
   const [font, setFont] = useState(readingFont(initialFont).id);
   const [result, setResult] = useState(null);
   const [failure, setFailure] = useState(null);
   const [notice, setNotice] = useState('');
   const [sharing, setSharing] = useState(false);
-  const key = `${theme}:${format}:${font}`;
+  const [attempt, setAttempt] = useState(0);
+  const key = `${theme}:${format}:${font}:${attempt}`;
   const ready = result?.key === key;
   const error = failure?.key === key ? failure.message : '';
   const changeOption = (setter, current, next) => {
@@ -54,12 +55,13 @@ export default function BibleVerseShare({ verse, initialFont, onClose }) {
     <div className="bible-share-body">
       <div className="bible-share-preview" aria-busy={!ready && !error}>
         {ready ? <img src={result.url} width={result.width} height={result.height} alt={`Imagen de ${verseCitation(verse)}: ${verse.text}`} />
-          : error ? <p role="alert">{error}</p> : <div role="status"><LoaderCircle size={25} className="bible-spin" /><span>Preparando imagen...</span></div>}
+          : error ? <div className="bible-share-error"><p role="alert">{error}</p><button type="button" className="bible-command" onClick={() => setAttempt(value => value + 1)}><RotateCw size={17} />Reintentar</button></div> : <div role="status"><LoaderCircle size={25} className="bible-spin" /><span>Preparando imagen...</span></div>}
       </div>
       <div className="bible-share-options">
         <p className="bible-share-reference">{verseCitation(verse)}</p>
         <fieldset><legend>Formato</legend><div className="bible-image-formats">{verseImageFormats.map(item => <button type="button" key={item.id} aria-pressed={format === item.id} disabled={sharing} onClick={() => changeOption(setFormat, format, item.id)}><span className={`bible-format-outline is-${item.id}`} aria-hidden="true" /><span>{item.label}</span></button>)}</div></fieldset>
-        <fieldset><legend>Diseño</legend><div className="bible-share-swatches">{verseImageThemes.map(item => <button type="button" key={item.id} className="bible-swatch" title={item.label} aria-label={`Diseño ${item.label}`} aria-pressed={theme === item.id} disabled={sharing} style={{ '--swatch-color': item.background, color: item.text }} onClick={() => changeOption(setTheme, theme, item.id)}>{theme === item.id && <Check size={18} />}</button>)}</div></fieldset>
+        <fieldset><legend>Paisajes</legend><div className="bible-photo-options">{verseImageThemes.filter(item => item.image).map(item => <button type="button" key={item.id} title={item.label} aria-label={`Fondo ${item.label}`} aria-pressed={theme === item.id} disabled={sharing} onClick={() => changeOption(setTheme, theme, item.id)}><img src={item.thumbnail} width="240" height="426" alt="" /><span>{item.label}</span>{theme === item.id && <Check size={17} aria-hidden="true" />}</button>)}</div></fieldset>
+        <fieldset><legend>Colores</legend><div className="bible-share-swatches">{verseImageThemes.filter(item => !item.image).map(item => <button type="button" key={item.id} className="bible-swatch" title={item.label} aria-label={`Diseño ${item.label}`} aria-pressed={theme === item.id} disabled={sharing} style={{ '--swatch-color': item.background, color: item.text }} onClick={() => changeOption(setTheme, theme, item.id)}>{theme === item.id && <Check size={18} />}</button>)}</div></fieldset>
         <label className="bible-share-font">Tipografía<select aria-label="Fuente de la imagen" value={font} disabled={sharing} onChange={event => changeOption(setFont, font, event.target.value)}>{bibleFonts.map(item => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
         {ready && <p className="bible-share-dimensions">PNG · {result.width} × {result.height}</p>}
         <p role="status" className="bible-share-notice">{notice}</p>
