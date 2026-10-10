@@ -28,5 +28,14 @@ export function chapterVerses(nodes) {
   return entries;
 }
 export const favoriteKey = entry => `${entry.version}:${entry.reference}`;
+export const referencesOverlap = (left, right) => Boolean(left && right && left.split('+').some(part => right.split('+').includes(part)));
+export function passageBetween(entries, from, to = from) {
+  const start = entries.findIndex(entry => entry.reference === from);
+  const end = entries.findIndex(entry => entry.reference === to);
+  if (start < 0 || end < 0) return null;
+  const selected = entries.slice(Math.min(start, end), Math.max(start, end) + 1);
+  const reference = [...new Set(selected.flatMap(entry => entry.reference.split('+')))].join('+');
+  return { reference, label: verseLabel(reference), text: selected.map(entry => entry.text).join(' ') };
+}
 export const verseCitation = entry => `${entry.title} ${entry.chapter}:${entry.label} (${entry.version})`;
 export const verseClipboard = entry => `${verseCitation(entry)}\n\n«${entry.text.trim()}»`;

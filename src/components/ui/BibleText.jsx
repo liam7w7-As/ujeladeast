@@ -6,6 +6,8 @@ import { nodeText } from '../../lib/bibleModel';
 const tags = new Set(['div', 'span', 'table', 'tbody', 'tr', 'th', 'td', 'br', 'i', 'b', 'sup', 'em', 'strong']);
 export default function BibleText({ nodes, onNote, onVerse, favorites = [], selectedReference = '' }) {
   const seen = new Set();
+  const selected = new Set(selectedReference.split('+'));
+  const saved = new Set(favorites.flatMap(reference => reference.split('+')));
   function render(node, key) {
     if (typeof node === 'string') return node;
     const [tag, style, reference, children, spans] = node;
@@ -18,6 +20,8 @@ export default function BibleText({ nodes, onNote, onVerse, favorites = [], sele
     const verse = classes.includes('verse') && Boolean(reference) && Boolean(onVerse);
     const meaningful = verse && verseText(node).trim();
     const first = meaningful && !seen.has(reference);
+    const isSelected = Boolean(reference && reference.split('+').some(part => selected.has(part)));
+    const isFavorite = Boolean(reference && reference.split('+').some(part => saved.has(part)));
     if (meaningful) seen.add(reference);
     if (verse && !meaningful && !nodeText(node).trim()) return null;
     if (classes.includes('note')) {
@@ -26,7 +30,7 @@ export default function BibleText({ nodes, onNote, onVerse, favorites = [], sele
     }
     if (tag === 'br') return <br key={key} />;
     const Tag = tag;
-    const content = <Tag key={key} className={`${classes.map(value => value === 'heading' ? 'bible-source-heading' : `bible-${value}`).join(' ')} ${verse ? 'bible-verse-row' : ''} ${first ? 'bible-verse-start' : ''} ${verse && reference === selectedReference ? 'bible-verse-selected' : ''}`} data-reference={reference || undefined}
+    const content = <Tag key={key} className={`${classes.map(value => value === 'heading' ? 'bible-source-heading' : `bible-${value}`).join(' ')} ${verse ? 'bible-verse-row' : ''} ${first ? 'bible-verse-start' : ''} ${verse && isSelected ? 'bible-verse-selected' : ''}`} data-reference={reference || undefined}
       onClick={meaningful ? event => {
         if (event.target.closest('button') || !window.getSelection()?.isCollapsed) return;
         event.stopPropagation();
@@ -34,7 +38,7 @@ export default function BibleText({ nodes, onNote, onVerse, favorites = [], sele
       } : undefined}
       colSpan={tag === 'td' || tag === 'th' ? spans?.[0] : undefined} rowSpan={tag === 'td' || tag === 'th' ? spans?.[1] : undefined}>
       {tag === 'br' ? undefined : children.map((child, index) => render(child, `${key}.${index}`))}
-      {first && <button type="button" className={`bible-verse-action ${favorites.includes(reference) ? 'is-favorite' : ''}`} title={`Seleccionar versículo ${verseLabel(reference)}`} aria-label={`Opciones del versículo ${reference}`} aria-pressed={reference === selectedReference} onClick={() => onVerse(reference)}>{favorites.includes(reference) ? <Heart size={16} fill="currentColor" /> : <MoreHorizontal size={19} />}</button>}
+      {first && <button type="button" className={`bible-verse-action ${isFavorite ? 'is-favorite' : ''}`} title={`Seleccionar versículo ${verseLabel(reference)}`} aria-label={`Opciones del versículo ${reference}`} aria-pressed={isSelected} onClick={() => onVerse(reference)}>{isFavorite ? <Heart size={16} fill="currentColor" /> : <MoreHorizontal size={19} />}</button>}
     </Tag>;
     return tag === 'table' ? <div key={key} className="bible-table-scroll" tabIndex={0} role="region" aria-label="Tabla bíblica">{content}</div> : content;
   }

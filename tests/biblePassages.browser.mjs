@@ -1,0 +1,97 @@
+import { createRequire } from 'node:module';
+import { mkdir } from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const { chromium } = createRequire(import.meta.url)('playwright');
+const base = process.env.BIBLE_TEST_URL || 'http://127.0.0.1:5177';
+const output = 'test-results/bible-passages';
+await mkdir(output, { recursive: true });
+const browser = await chromium.launch({ headless: true, channel: 'chrome' });
+try {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce', hasTouch: true });
+  await context.route('https://**/*', route => route.abort());
+  await context.addInitScript(() => {
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async text => { window.copiedPassage = text; } } });
+  });
+  const page = await context.newPage(), errors = [];
+  page.setDefaultTimeout(20000); page.on('pageerror', error => errors.push(error.message));
+  await page.goto(`${base}/biblia?version=RVR1960&book=PSA&chapter=23`);
+  await page.getByLabel('Opciones del versículo PSA.23.1', { exact: true }).click();
+  await page.getByLabel('Seleccionar varios versículos', { exact: true }).click();
+  await page.getByLabel('Hasta el versículo').selectOption('PSA.23.3');
+  assert.equal(await page.locator('.bible-verse-action[aria-pressed=true]').count(), 3);
+  await page.getByLabel('Copiar versículo', { exact: true }).click();
+  const text = await page.evaluate(() => window.copiedPassage);
+  assert.match(text, /23:1–3 \(RVR1960\)/); assert.match(text, /Confortará mi alma/);
+  await page.getByLabel('Guardar favorito', { exact: true }).click();
+  assert.equal(await page.locator('.bible-verse-action.is-favorite').count(), 3);
+  await page.screenshot({ path: `${output}/range-mobile.png` });
+  await page.getByLabel('Compartir imagen', { exact: true }).click();
+  const preview = page.locator('.bible-share-preview img');
+  await preview.waitFor();
+  const sample = await page.evaluate(() => {
+    const c = document.createElement('canvas'); c.width = 400; c.height = 600;
+    const ctx = c.getContext('2d'); ctx.fillStyle = '#1fab78'; ctx.fillRect(0, 0, 400, 600);
+    ctx.fillStyle = '#c54f8b'; ctx.fillRect(0, 0, 200, 600);
+    return c.toDataURL('image/png').split(',')[1];
+  });
+  await page.getByLabel('Foto para el versículo').setInputFiles({ name: 'foto.png', mimeType: 'image/png', buffer: Buffer.from(sample, 'base64') });
+  await page.getByRole('button', { name: 'Usar mi foto', exact: true }).waitFor();
+  await preview.waitFor();
+  await page.getByLabel('Alinear a la izquierda').click(); await preview.waitFor();
+  const left = await preview.getAttribute('src');
+  await page.getByLabel('Texto arriba').click(); await preview.waitFor();
+  assert.notEqual(await preview.getAttribute('src'), left);
+  const pixels = await preview.evaluate(img => {
+    const c = document.createElement('canvas'); c.width = img.naturalWidth; c.height = img.naturalHeight;
+    const ctx = c.getContext('2d'); ctx.drawImage(img, 0, 0);
+    return [Array.from(ctx.getImageData(5, 5, 1, 1).data), Array.from(ctx.getImageData(c.width - 5, 5, 1, 1).data)];
+  });
+  assert.ok(pixels[0][0] > pixels[0][1], 'custom photo left half is pink');
+  assert.ok(pixels[1][1] > pixels[1][0], 'custom photo right half is green');
+  for (const viewport of [{ width: 320, height: 568 }, { width: 390, height: 844 }, { width: 1440, height: 900 }]) {
+    await page.setViewportSize(viewport);
+    const check = async () => {
+      const bounds = await page.getByRole('button', { name: 'Descargar imagen', exact: true }).boundingBox();
+      const image = await preview.boundingBox();
+      assert.ok(bounds.y >= 0 && bounds.y + bounds.height <= viewport.height, 'download stays in view');
+      assert.ok(image.y >= 0 && image.height >= 130 && image.y + image.height <= bounds.y, 'preview remains visible above controls');
+      assert.ok(await page.getByRole('dialog').evaluate(el => el.scrollWidth <= el.clientWidth));
+    };
+    await check(); await page.locator('.bible-share-options').evaluate(el => { el.scrollTop = el.scrollHeight; }); await check();
+    await page.screenshot({ path: `${output}/editor-${viewport.width}.png` });
+  }
+  await page.getByLabel('Texto abajo').click(); await preview.waitFor();
+  await page.getByLabel('Alinear a la derecha').click(); await preview.waitFor();
+  await page.getByRole('button', { name: '1:1', exact: true }).click(); await preview.waitFor();
+  assert.equal(await preview.getAttribute('height'), '1080');
+  await page.getByLabel('Foto para el versículo').setInputFiles({ name: 'mal.txt', mimeType: 'text/plain', buffer: Buffer.from('not a photo') });
+  await page.getByRole('alert').filter({ hasText: 'JPG, PNG o WebP' }).waitFor();
+  assert.equal(await page.getByRole('button', { name: 'Usar mi foto', exact: true }).getAttribute('aria-pressed'), 'true', 'invalid upload preserves photo');
+  const download = page.waitForEvent('download'); await page.getByRole('button', { name: 'Descargar imagen', exact: true }).click();
+  assert.match((await download).suggestedFilename(), /PSA-23-1-3-RVR1960/);
+  await page.getByLabel('Quitar mi foto').click(); await preview.waitFor();
+  assert.equal(await page.getByRole('button', { name: 'Usar mi foto', exact: true }).count(), 0);
+  await page.getByLabel('Cerrar ventana').click(); await page.reload();
+  await page.getByLabel('Marcadores', { exact: true }).click();
+  await page.getByRole('button', { name: /Salmos 23:1–3.*Jehová/ }).click();
+  await page.locator('.bible-verse-selected').first().waitFor();
+  assert.equal(await page.locator('.bible-verse-action[aria-pressed=true]').count(), 3);
+  await page.getByLabel('Comparar versiones', { exact: true }).click();
+  await page.getByRole('button', { name: 'Comparar', exact: true }).click();
+  const nvi = page.getByRole('region', { name: 'Lectura NVI', exact: true });
+  await nvi.getByLabel('Opciones del versículo PSA.23.1', { exact: true }).click();
+  await page.getByLabel('Seleccionar varios versículos', { exact: true }).click();
+  await page.getByLabel('Hasta el versículo').selectOption('PSA.23.2');
+  assert.equal(await nvi.locator('.bible-verse-action[aria-pressed=true]').count(), 2);
+  assert.equal(await page.getByRole('region', { name: 'Lectura RVR1960', exact: true }).locator('.bible-verse-action[aria-pressed=true]').count(), 0);
+  await page.getByLabel('Cerrar comparación', { exact: true }).click();
+  await page.goto(`${base}/biblia?version=TLA&book=GEN&chapter=2`);
+  await page.getByLabel('Opciones del versículo GEN.2.1+GEN.2.2+GEN.2.3', { exact: true }).click();
+  await page.getByLabel('Seleccionar varios versículos', { exact: true }).click();
+  const options = await page.getByLabel('Hasta el versículo').locator('option').evaluateAll(els => els.map(el => el.value));
+  await page.getByLabel('Hasta el versículo').selectOption(options[1]);
+  await page.getByLabel('Copiar versículo', { exact: true }).click();
+  assert.ok((await page.evaluate(() => window.copiedPassage)).includes('(TLA)'));
+  assert.deepEqual(errors, []);
+  console.log('PASS: range copy/favorite/reload/jump, grouped TLA, comparison isolation, own photo pixels, alignment/position, PNG range filename, invalid upload, pinned preview/actions at 320/390/1440.');
+} finally { await browser.close(); }

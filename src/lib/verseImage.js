@@ -79,13 +79,33 @@ function loadLogo() {
   });
 }
 
-export async function renderVerseImage(verse, { theme = 'mountains', format = 'story', font = 'classic' } = {}) {
+export async function prepareVersePhoto(file) {
+  if (!file || !['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) throw new Error('Elige una foto JPG, PNG o WebP.');
+  if (file.size > 12 * 1024 * 1024) throw new Error('La foto debe pesar menos de 12 MB.');
+  let bitmap;
+  try {
+    bitmap = await createImageBitmap(file);
+    if (!bitmap.width || !bitmap.height || bitmap.width * bitmap.height > 25000000) throw new Error('La foto es demasiado grande. Elige una de hasta 25 megapíxeles.');
+    const scale = Math.min(1, 1920 / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale)); canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('No se pudo abrir la foto.');
+    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    return canvas;
+  } catch (error) {
+    throw new Error(error.message.includes('megapíxeles') ? error.message : 'No pudimos abrir la foto. Prueba con otra imagen.', { cause: error });
+  } finally { bitmap?.close(); }
+}
+
+export async function renderVerseImage(verse, { theme = 'mountains', format = 'story', font = 'classic', align = 'center', position = 'center', customBackground } = {}) {
   const colors = verseImageThemes.find(item => item.id === theme) || verseImageThemes[0];
   const dimensions = verseImageFormats.find(item => item.id === format) || verseImageFormats[0];
   const family = readingFont(font).family;
   await document.fonts.ready;
   await document.fonts.load(`500 64px ${family}`);
-  const background = colors.image ? await loadBackground(colors.image) : null;
+  const background = theme === 'custom' ? customBackground : colors.image ? await loadBackground(colors.image) : null;
+  if (theme === 'custom' && !background) throw new Error('Selecciona una foto para el fondo.');
   const logo = await loadLogo();
   const canvas = document.createElement('canvas');
   const { width, height } = dimensions;
@@ -93,33 +113,38 @@ export async function renderVerseImage(verse, { theme = 'mountains', format = 's
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('No se pudo preparar la imagen en este navegador.');
   if (background) {
-    ctx.drawImage(background, ...coverSource(background.naturalWidth, background.naturalHeight, width, height), 0, 0, width, height);
+    ctx.drawImage(background, ...coverSource(background.naturalWidth || background.width, background.naturalHeight || background.height, width, height), 0, 0, width, height);
     // White lettering retains contrast even over bright sky; the photo remains full bleed.
     ctx.fillStyle = '#0000008f'; ctx.fillRect(0, 0, width, height);
   } else {
     ctx.fillStyle = colors.background; ctx.fillRect(0, 0, width, height);
     ctx.strokeStyle = colors.line; ctx.lineWidth = 2; ctx.strokeRect(48, 48, width - 96, height - 96);
   }
-  const textX = background ? width / 2 : 104;
-  ctx.textAlign = background ? 'center' : 'left';
+  const alignment = ['left', 'center', 'right'].includes(align) ? align : 'center';
+  const textX = alignment === 'left' ? 104 : alignment === 'right' ? width - 104 : width / 2;
+  ctx.textAlign = alignment;
   ctx.textBaseline = 'top'; ctx.fillStyle = colors.accent;
   ctx.font = '500 23px "Plus Jakarta Sans", sans-serif';
   ctx.fillText('UNA PALABRA PARA HOY', textX, 106);
-  ctx.fillRect(background ? width / 2 - 46 : 104, 153, 92, 3);
-  const region = { width: width - 208, height: height - 565, maxSize: background ? 78 : 64 };
-  const layout = fitImageText(verse.text, (value, size) => {
-    ctx.font = `500 ${size}px ${family}`;
-    return ctx.measureText(value).width;
-  }, region);
-  const top = 310 + (region.height - layout.lines.length * layout.lineHeight) / 2;
-  ctx.font = '120px Georgia, serif'; ctx.fillText('\u201c', background ? textX : 93, background ? top - 105 : 198);
-  ctx.font = `500 ${layout.size}px ${family}`; ctx.fillStyle = colors.text;
-  layout.lines.forEach((line, index) => ctx.fillText(line, textX, top + index * layout.lineHeight));
+  ctx.fillRect(alignment === 'center' ? width / 2 - 46 : alignment === 'right' ? width - 196 : 104, 153, 92, 3);
   const citation = `${verse.title} ${verse.chapter}:${verse.label}`;
   ctx.font = '600 30px "Plus Jakarta Sans", sans-serif';
   const reference = wrapImageText(citation, value => ctx.measureText(value).width, width - 208);
   if (reference.length > 2) throw new Error('La referencia es demasiado larga para esta imagen.');
-  const citationTop = background ? Math.min(height - 226, top + layout.lines.length * layout.lineHeight + 56) : height - 226;
+  const referenceHeight = 56 + reference.length * 37 + 30;
+  const region = { width: width - 208, height: height - 450 - referenceHeight, maxSize: background ? 78 : 64 };
+  const layout = fitImageText(verse.text, (value, size) => {
+    ctx.font = `500 ${size}px ${family}`;
+    return ctx.measureText(value).width;
+  }, region);
+  const textHeight = layout.lines.length * layout.lineHeight;
+  const ratio = position === 'top' ? 0 : position === 'bottom' ? 1 : .5;
+  const top = 290 + (region.height - textHeight) * ratio;
+  ctx.font = '120px Georgia, serif'; ctx.fillText('\u201c', textX, top - 105);
+  ctx.font = `500 ${layout.size}px ${family}`; ctx.fillStyle = colors.text;
+  layout.lines.forEach((line, index) => ctx.fillText(line, textX, top + index * layout.lineHeight));
+  ctx.font = '600 30px "Plus Jakarta Sans", sans-serif';
+  const citationTop = top + textHeight + 56;
   reference.forEach((line, index) => ctx.fillText(line, textX, citationTop + index * 37));
   ctx.font = '500 20px "Plus Jakarta Sans", sans-serif'; ctx.fillStyle = colors.accent;
   ctx.fillText(verse.version, textX, citationTop + reference.length * 37 + 10);
@@ -133,5 +158,5 @@ export async function renderVerseImage(verse, { theme = 'mountains', format = 's
   ctx.font = '600 19px "Plus Jakarta Sans", sans-serif'; ctx.fillStyle = colors.text;
   ctx.fillText('UJELADEA', width - 248, height - 75);
   const blob = await new Promise((resolve, reject) => canvas.toBlob(value => value ? resolve(value) : reject(new Error('No se pudo exportar la imagen.')), 'image/png'));
-  return { blob, width, height, description: verseCitation(verse), layout };
+  return { blob, width, height, description: verseCitation(verse), layout: { ...layout, top, citationTop, alignment, bottom: citationTop + reference.length * 37 + 30 } };
 }

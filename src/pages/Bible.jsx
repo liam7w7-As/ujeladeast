@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { ArrowLeft, ArrowRight, BookOpen, BookMarked, Bookmark, Check, ChevronDown, Columns3, Copy, Download, HardDriveDownload, Heart, LoaderCircle, Minus, Moon, Palette, Plus, RotateCw, Search, Settings2, Share2, Sun, Trash2, WifiOff, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BookOpen, BookMarked, Bookmark, Check, ChevronDown, Columns3, Copy, Download, HardDriveDownload, Heart, ListChecks, LoaderCircle, Minus, Moon, Palette, Plus, RotateCw, Search, Settings2, Share2, Sun, Trash2, WifiOff, X } from 'lucide-react';
 import AppDialog from '../components/ui/AppDialog';
 import BibleText from '../components/ui/BibleText';
 import BibleVerseShare from '../components/ui/BibleVerseShare';
 import { bibleFonts, readingFont, readingSize } from '../lib/bibleTypography';
 import BibleComparison from '../components/ui/BibleComparison';
-import { chapterVerses, favoriteKey, verseCitation, verseClipboard } from '../lib/bibleVerses';
+import { chapterVerses, favoriteKey, passageBetween, referencesOverlap, verseCitation, verseClipboard } from '../lib/bibleVerses';
+import { useBibleFavorites } from '../hooks/useBibleFavorites';
 import { adjacentChapter, bibleBackgrounds, bookmarkKey, normalizeBook, readPreference, selection, versionBackgrounds, versions, writePreference } from '../lib/bibleModel';
 import { cancelBibleDownload, downloadBible, librarySnapshot, loadBibleBook, refreshLibrary, removeBible, subscribeLibrary } from '../lib/bibleLibrary';
 import './bible.css';
@@ -18,12 +19,6 @@ function IconButton({ label, children, ...props }) {
 const initialBookmarks = () => {
   const saved = readPreference('bookmarks', []);
   return Array.isArray(saved) ? saved.filter(value => value && versions.some(version => version.id === value.version && version.books.some(book => book.id === value.book && value.chapter >= 1 && value.chapter <= book.chapters))).slice(0, 200) : [];
-};
-const initialFavorites = () => {
-  const saved = readPreference('verseFavorites', []);
-  return Array.isArray(saved) ? saved.filter(entry => entry && typeof entry.text === 'string' && typeof entry.reference === 'string'
-    && typeof entry.title === 'string' && typeof entry.label === 'string' && entry.reference.startsWith(`${entry.book}.${entry.chapter}.`)
-    && versions.some(version => version.id === entry.version && version.books.some(book => book.id === entry.book && Number.isInteger(entry.chapter) && entry.chapter >= 1 && entry.chapter <= book.chapters))).slice(0, 500) : [];
 };
 
 export default function Bible() {
@@ -43,10 +38,13 @@ export default function Bible() {
   const [query, setQuery] = useState('');
   const [pickerBook, setPickerBook] = useState(bookId);
   const [bookmarks, setBookmarks] = useState(initialBookmarks);
-  const [favorites, setFavorites] = useState(initialFavorites);
-  const [savedError, setSavedError] = useState('');
+  const favoriteStore = useBibleFavorites();
+  const { favorites, error: savedError } = favoriteStore;
+  const [importNotice, setImportNotice] = useState('');
   const [savedTab, setSavedTab] = useState('verses');
   const [activeVerse, setActiveVerse] = useState(null);
+  const [rangeMode, setRangeMode] = useState(false);
+  const [verseRange, setVerseRange] = useState(null);
   const [verseNotice, setVerseNotice] = useState('');
   const [copyFallback, setCopyFallback] = useState(false);
   const [comparison, setComparison] = useState([]);
@@ -96,14 +94,14 @@ export default function Bible() {
   }, [chapter, versionId, bookId, chapterNumber]);
   useEffect(() => {
     if (!visibleVerse || dialog || note) return;
-    const dismiss = event => { if (event.key === 'Escape') { copyRequest.current++; setActiveVerse(null); } };
+    const dismiss = event => { if (event.key === 'Escape') { copyRequest.current++; setActiveVerse(null); setRangeMode(false); setVerseRange(null); } };
     window.addEventListener('keydown', dismiss);
     return () => window.removeEventListener('keydown', dismiss);
   }, [visibleVerse, dialog, note]);
   useEffect(() => {
     if (!chapter || !targetReference || comparison.length) return;
     const timer = setTimeout(() => {
-      const target = [...(articleRef.current?.querySelectorAll('[data-reference]') || [])].find(element => element.dataset.reference === targetReference);
+      const target = [...(articleRef.current?.querySelectorAll('[data-reference]') || [])].find(element => referencesOverlap(element.dataset.reference, targetReference));
       target?.scrollIntoView({ block: 'center', behavior: reduced ? 'instant' : 'smooth' });
       target?.querySelector('button')?.focus({ preventScroll: true });
     }, reduced ? 0 : 220);
@@ -115,6 +113,7 @@ export default function Bible() {
     const target = selection(value);
     copyRequest.current++;
     setError(''); setNote(null); setDialog(''); setNotice(''); setActiveVerse(null);
+    setRangeMode(false); setVerseRange(null);
     setParams({ version: target.version, book: target.book, chapter: String(target.chapter), ...(reference ? { verse: reference } : {}) });
     window.scrollTo({ top: 0, behavior: 'instant' });
     articleRef.current?.focus({ preventScroll: true });
@@ -130,27 +129,37 @@ export default function Bible() {
     if (!writePreference(name, value)) setNotice('El ajuste se mantendrá solo durante esta visita.');
   }
   function openVerse(reference, id = versionId, source = chapter) {
-    if (visibleVerse?.reference === reference && visibleVerse.version === id) { closeVerse(); return; }
-    const verse = chapterVerses(source.nodes).get(reference);
+    if (!rangeMode && visibleVerse?.reference === reference && visibleVerse.version === id) { closeVerse(); return; }
+    const entries = [...chapterVerses(source.nodes).values()];
+    const anchor = rangeMode && visibleVerse?.version === id && verseRange ? verseRange.anchor : reference;
+    const verse = passageBetween(entries, anchor, reference);
     if (!verse) return;
+    const start = entries.findIndex(entry => entry.reference === anchor), end = entries.findIndex(entry => entry.reference === reference);
     const title = versions.find(entry => entry.id === id).books.find(entry => entry.id === bookId).title;
     copyRequest.current++;
     setActiveVerse({ ...verse, version: id, book: bookId, chapter: chapterNumber, title });
+    setVerseRange({ entries, anchor, from: entries[Math.min(start, end)].reference, to: entries[Math.max(start, end)].reference });
+    setVerseNotice(''); setCopyFallback(false);
+  }
+  function changeRange(from, to) {
+    const verse = passageBetween(verseRange.entries, from, to);
+    if (!verse) return;
+    const a = verseRange.entries.findIndex(entry => entry.reference === from), b = verseRange.entries.findIndex(entry => entry.reference === to);
+    copyRequest.current++;
+    setActiveVerse({ ...activeVerse, ...verse });
+    setVerseRange({ ...verseRange, anchor: from, from: verseRange.entries[Math.min(a, b)].reference, to: verseRange.entries[Math.max(a, b)].reference });
     setVerseNotice(''); setCopyFallback(false);
   }
   function closeVerse() {
     document.querySelector('.bible-verse-selected .bible-verse-action')?.focus({ preventScroll: true });
     copyRequest.current++;
     setActiveVerse(null); setVerseNotice(''); setCopyFallback(false);
-  }
-  function storeFavorites(updated) {
-    if (!writePreference('verseFavorites', updated)) { setSavedError('No se pudo actualizar tus favoritos en este dispositivo.'); return false; }
-    setSavedError(''); setFavorites(updated); return true;
+    setRangeMode(false); setVerseRange(null);
   }
   function toggleFavorite() {
     if (!activeFavorite && favorites.length >= 500) { setVerseNotice('Ya tienes 500 favoritos. Elimina alguno para guardar otro.'); return; }
-    const updated = activeFavorite ? favorites.filter(entry => favoriteKey(entry) !== favoriteKey(activeVerse)) : [activeVerse, ...favorites];
-    setVerseNotice(storeFavorites(updated) ? activeFavorite ? 'Versículo eliminado de favoritos.' : 'Versículo guardado en favoritos.' : 'No se pudo guardar en este dispositivo.');
+    const stored = activeFavorite ? favoriteStore.remove(activeVerse) : favoriteStore.save(activeVerse);
+    setVerseNotice(stored ? activeFavorite ? 'Pasaje eliminado de favoritos.' : 'Pasaje guardado en favoritos.' : 'No se pudo guardar en este dispositivo.');
   }
   async function copyVerse() {
     const request = ++copyRequest.current;
@@ -220,9 +229,13 @@ export default function Bible() {
             <div className="bible-selection-bar" role="group" aria-label="Acciones del versículo">
               <strong>{verseCitation(visibleVerse)}</strong>
               <IconButton label="Copiar versículo" onClick={copyVerse}><Copy size={19} /></IconButton>
-              <IconButton label={activeFavorite ? 'Quitar de favoritos' : 'Guardar favorito'} aria-pressed={Boolean(activeFavorite)} onClick={toggleFavorite}><Heart size={19} fill={activeFavorite ? 'currentColor' : 'none'} /></IconButton>
+              <IconButton label={activeFavorite ? 'Quitar de favoritos' : 'Guardar favorito'} aria-pressed={Boolean(activeFavorite)} disabled={!favoriteStore.ready} onClick={toggleFavorite}><Heart size={19} fill={activeFavorite ? 'currentColor' : 'none'} /></IconButton>
               <IconButton label="Compartir imagen" onClick={() => openShare(visibleVerse)}><Share2 size={19} /></IconButton>
               <IconButton label="Cerrar selección" onClick={closeVerse}><X size={18} /></IconButton>
+            </div>
+            <div className="bible-range-controls">
+              <button type="button" className="bible-range-toggle" aria-label="Seleccionar varios versículos" aria-pressed={rangeMode} onClick={() => { if (rangeMode && verseRange) changeRange(verseRange.from, verseRange.from); setRangeMode(!rangeMode); }}><ListChecks size={18} /><span>Varios versículos</span></button>
+              {rangeMode && verseRange && <div className="bible-range-inputs">{[['from', 'Desde'], ['to', 'Hasta']].map(([field, label]) => <label key={field}>{label}<select aria-label={`${label} el versículo`} value={verseRange[field]} onChange={event => changeRange(field === 'from' ? event.target.value : verseRange.from, field === 'to' ? event.target.value : verseRange.to)}>{verseRange.entries.map(entry => <option key={entry.reference} value={entry.reference}>{entry.label}</option>)}</select></label>)}</div>}
             </div>
             {verseNotice && <p role="status">{verseNotice}</p>}
             {copyFallback && <textarea aria-label="Texto para copiar" readOnly value={verseClipboard(visibleVerse)} onFocus={event => event.target.select()} autoFocus />}
@@ -264,8 +277,9 @@ export default function Bible() {
     </AppDialog>
     <AppDialog open={dialog === 'bookmarks'} onClose={() => setDialog('')} title="Marcadores">
       {savedError && <p role="alert" className="bible-saved-error">{savedError}</p>}
+      {savedTab === 'verses' && <div className="bible-favorites-sync"><div><p role="status">{!favoriteStore.ready ? 'Abriendo tus favoritos...' : !favoriteStore.owner ? 'Guardados en este dispositivo' : favoriteStore.status === 'syncing' ? 'Sincronizando favoritos...' : favoriteStore.status === 'synced' ? 'Favoritos sincronizados con tu cuenta' : favoriteStore.status === 'offline' ? 'Sin conexión. Tus favoritos siguen disponibles.' : 'Guardados en este dispositivo; sincronización pendiente.'}{favoriteStore.pending > 0 && ` ${favoriteStore.pending} cambios pendientes.`}</p>{importNotice && <p role="status">{importNotice}</p>}</div>{favoriteStore.owner && <IconButton label="Sincronizar favoritos" disabled={favoriteStore.status === 'syncing'} onClick={favoriteStore.retry}><RotateCw size={18} className={favoriteStore.status === 'syncing' ? 'bible-spin' : ''} /></IconButton>}{favoriteStore.owner && favoriteStore.guestCount > 0 && <button type="button" className="bible-command" onClick={() => { const count = favoriteStore.importGuest(); setImportNotice(`${count} favoritos añadidos a tu cuenta en este dispositivo.`); }}><Download size={16} />Importar favoritos de este dispositivo</button>}</div>}
       <div className="bible-saved-tabs" role="tablist" aria-label="Contenido guardado" onKeyDown={savedTabKey}><button id="bible-verses-tab" role="tab" tabIndex={savedTab === 'verses' ? 0 : -1} aria-selected={savedTab === 'verses'} aria-controls="bible-saved-panel" onClick={() => setSavedTab('verses')}>Versículos <span>{favorites.length}</span></button><button id="bible-chapters-tab" role="tab" tabIndex={savedTab === 'chapters' ? 0 : -1} aria-selected={savedTab === 'chapters'} aria-controls="bible-saved-panel" onClick={() => setSavedTab('chapters')}>Capítulos <span>{bookmarks.length}</span></button></div>
-      <div id="bible-saved-panel" role="tabpanel" aria-labelledby={savedTab === 'verses' ? 'bible-verses-tab' : 'bible-chapters-tab'} className="bible-dialog-body">{savedTab === 'verses' ? favorites.length ? favorites.map(entry => <div key={favoriteKey(entry)} className="bible-favorite-row"><button type="button" onClick={() => { setComparison([]); go(entry, entry.reference); }}><strong><Heart size={15} fill="currentColor" />{verseCitation(entry)}</strong><span>{entry.text}</span></button><IconButton label={`Compartir imagen ${verseCitation(entry)}`} onClick={() => openShare(entry, 'bookmarks')}><Share2 size={17} /></IconButton><IconButton label={`Eliminar favorito ${verseCitation(entry)}`} onClick={() => { if (!storeFavorites(favorites.filter(item => favoriteKey(item) !== favoriteKey(entry)))) setNotice('No se pudo eliminar el favorito.'); }}><Trash2 size={17} /></IconButton></div>) : <div className="bible-state"><Heart size={30} /><p>Aún no hay versículos favoritos.</p></div> : bookmarks.length ? bookmarks.map(entry => <div key={bookmarkKey(entry)} className="bible-bookmark-row"><button type="button" onClick={() => { setComparison([]); go(entry); }}><Bookmark size={19} /><span>{versions.find(v => v.id === entry.version).books.find(b => b.id === entry.book).title} {entry.chapter}<small>{entry.version}</small></span></button><IconButton label="Eliminar marcador" onClick={() => { const updated = bookmarks.filter(mark => bookmarkKey(mark) !== bookmarkKey(entry)); if (writePreference('bookmarks', updated)) setBookmarks(updated); }}><Trash2 size={17} /></IconButton></div>) : <div className="bible-state"><Bookmark size={30} /><p>Aún no hay capítulos guardados.</p></div>}</div>
+      <div id="bible-saved-panel" role="tabpanel" aria-labelledby={savedTab === 'verses' ? 'bible-verses-tab' : 'bible-chapters-tab'} className="bible-dialog-body">{savedTab === 'verses' ? favorites.length ? favorites.map(entry => <div key={favoriteKey(entry)} className="bible-favorite-row"><button type="button" onClick={() => { setComparison([]); go(entry, entry.reference); }}><strong><Heart size={15} fill="currentColor" />{verseCitation(entry)}</strong><span>{entry.text}</span></button><IconButton label={`Compartir imagen ${verseCitation(entry)}`} onClick={() => openShare(entry, 'bookmarks')}><Share2 size={17} /></IconButton><IconButton label={`Eliminar favorito ${verseCitation(entry)}`} onClick={() => { if (!favoriteStore.remove(entry)) setNotice('No se pudo eliminar el favorito.'); }}><Trash2 size={17} /></IconButton></div>) : <div className="bible-state"><Heart size={30} /><p>Aún no hay versículos favoritos.</p></div> : bookmarks.length ? bookmarks.map(entry => <div key={bookmarkKey(entry)} className="bible-bookmark-row"><button type="button" onClick={() => { setComparison([]); go(entry); }}><Bookmark size={19} /><span>{versions.find(v => v.id === entry.version).books.find(b => b.id === entry.book).title} {entry.chapter}<small>{entry.version}</small></span></button><IconButton label="Eliminar marcador" onClick={() => { const updated = bookmarks.filter(mark => bookmarkKey(mark) !== bookmarkKey(entry)); if (writePreference('bookmarks', updated)) setBookmarks(updated); }}><Trash2 size={17} /></IconButton></div>) : <div className="bible-state"><Bookmark size={30} /><p>Aún no hay capítulos guardados.</p></div>}</div>
     </AppDialog>
     <AppDialog open={dialog === 'downloads'} onClose={() => { setDialog(''); setConfirmDelete(''); }} title="Biblias sin conexión">
       <div className="bible-dialog-body bible-downloads">{library.error && <p role="alert" className="bible-download-error">{library.error}</p>}{!online && <p className="bible-download-offline"><WifiOff size={16} />Sin conexión</p>}{versions.map(entry => {
