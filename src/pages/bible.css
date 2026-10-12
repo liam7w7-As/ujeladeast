@@ -38,6 +38,7 @@
 .bible-chapter-heading p { font-size: 12px; color: var(--reader-muted); line-height: 1.6; margin-bottom: 6px; }
 .bible-chapter-heading h2 { font-size: 30px; line-height: 1.3; font-weight: 650; }
 .bible-chapter > .bible-label { display: none; }
+.bible-text-content > .bible-label { display: none; }
 .bible-s, .bible-s1, .bible-s2, .bible-s3, .bible-ms, .bible-ms1 { font-weight: 650; font-size: .95em; line-height: 1.6; margin: 26px 0 14px; }
 .bible-source-heading { display: inline; }
 .bible-cross-references { font-size: .8em; color: var(--reader-muted, #a3b0a9); line-height: 1.5; margin: -6px 0 14px; overflow-wrap: anywhere; }
@@ -181,6 +182,42 @@
 }
 @media (prefers-reduced-motion: reduce) { .bible-spin { animation: none; } }
 
+.bible-search-tools { flex-shrink: 0; padding: 16px 22px 12px; border-bottom: 1px solid #ffffff15; }
+.bible-query-field { display: flex; align-items: center; gap: 10px; padding: 0 10px; border: 1px solid #ffffff30; border-radius: 6px; min-height: 48px; color: #e6b1c1; }
+.bible-query-field:focus-within { border-color: #e6b1c1; }
+.bible-query-field input { min-width: 0; width: 100%; min-height: 46px; outline: none; background: transparent; color: #f4f3f1; font-size: 16px; }
+.bible-query-field input::-webkit-search-cancel-button { display: none; }
+.bible-query-field > svg { flex-shrink: 0; }
+.bible-search-filters { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; margin-top: 14px; }
+.bible-search-filters > label { display: flex; flex-direction: column; gap: 5px; min-width: 0; flex: 1; font-size: 11px; color: #b8c3bd; }
+.bible-search-filters select { width: 100%; min-width: 0; min-height: 44px; padding: 7px; background: #22252a; color: #f4f3f1; border: 1px solid #ffffff26; border-radius: 4px; font-size: 14px; }
+.bible-search-filters .bible-phrase-option { flex-direction: row; flex: 0 0 auto; align-items: center; min-height: 44px; gap: 8px; }
+.bible-phrase-option input { width: 18px; height: 18px; accent-color: #b9476a; }
+.bible-search-availability { display: flex; align-items: center; gap: 6px; color: #afcaba; margin-top: 10px; font-size: 11px; }
+.bible-search-results { min-height: 0; height: min(58dvh, 560px); overflow-y: auto; overscroll-behavior: contain; padding: 0 22px 16px; }
+.bible-search-count { font-size: 12px; color: #a8b4ac; padding: 14px 0; }
+.bible-search-result { display: block; position: relative; width: 100%; padding: 16px 28px 16px 0; border-bottom: 1px solid #ffffff15; text-align: left; }
+.bible-search-result:hover, .bible-search-result:focus-visible { background: #ffffff06; }
+.bible-search-result > span { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; }
+.bible-search-result strong { font-size: 14px; color: #f3b4c7; }
+.bible-search-result small { font-size: 10px; color: #a8b4ac; }
+.bible-search-result p { font-size: 14px; line-height: 1.7; margin-top: 6px; overflow-wrap: anywhere; }
+.bible-search-result mark { color: #fff0cb; background: #75602780; border-radius: 2px; }
+.bible-search-result > svg { position: absolute; right: 0; top: 19px; color: #a8b4ac; }
+.bible-search-message { margin: 24px 0; font-size: 14px; line-height: 1.6; }
+.bible-search-download, .bible-search-loading { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 30px 0; text-align: center; font-size: 14px; }
+.bible-search-download h3 { font-weight: 650; font-size: 17px; }
+.bible-search-download p { max-width: 400px; line-height: 1.6; }
+.bible-search-download progress { width: min(100%, 280px); height: 6px; accent-color: #d9849f; }
+.bible-search-pagination { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-top: 18px; font-size: 11px; }
+@media (max-width: 639px) {
+  .bible-search-tools { padding: 12px; }
+  .bible-search-results { padding-left: 16px; padding-right: 16px; }
+  .bible-search-filters { gap: 8px; }
+  .bible-search-filters > label { flex-basis: calc(50% - 8px); }
+  .bible-search-filters .bible-phrase-option { min-height: 36px; }
+}
+
 .bible-verse-row { display: block; position: relative; padding-right: 36px; min-height: 36px; }
 .bible-verse-start { margin-top: 12px; }
 .bible-verse-selected { background: #b45d7b30; border-radius: 4px; box-shadow: -3px 0 #b44769; }
@@ -307,7 +344,7 @@ body:has(.bible-immersive) { overflow: hidden; }
 .bible-immersive .bible-controls { flex-shrink: 0; height: 54px; min-height: 54px; }
 .bible-immersive .bible-notice { flex-shrink: 0; min-height: 0; margin: 0; padding: 0; }
 .bible-immersive .bible-notice:not(:empty) { padding: 6px 0; }
-.bible-immersive .bible-reading-area > .bible-chapter { flex: 1; min-height: 0; overflow-y: auto; width: 100%; max-width: 880px; margin: 0 auto; padding: 24px 18px 40px; overscroll-behavior: contain; scrollbar-width: thin; }
+.bible-immersive .bible-reading-area > .bible-chapter { flex: 1; min-height: 0; overflow-y: auto; overflow-anchor: none; width: 100%; max-width: 880px; margin: 0 auto; padding: 24px 18px 40px; overscroll-behavior: contain; scrollbar-width: thin; }
 .bible-immersive.bible-comparing .bible-sidebar { display: none; }
 .bible-immersive .bible-comparison { flex: 1; min-height: 0; }
 .bible-immersive .bible-compare-track { display: grid; height: 100%; min-height: 0; grid-template-columns: repeat(var(--comparison-count), minmax(0, 1fr)); grid-template-rows: minmax(0, 1fr); overflow: hidden; scroll-snap-type: none; }
@@ -334,6 +371,8 @@ body:has(.bible-immersive) { overflow: hidden; }
   .bible-immersive .bible-heading { height: 52px; padding: 0 8px; gap: 0; }
   .bible-immersive .bible-reader-title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .bible-immersive .bible-header-actions { gap: 0; }
+  .bible-immersive .bible-heading .bible-icon { width: 40px; height: 44px; flex-basis: 40px; }
+  .bible-immersive .bible-heading .bible-toolbar-divider { display: none; }
   .bible-immersive .bible-toolbar-divider { margin: 0 2px; }
   .bible-immersive .bible-controls { padding: 0 12px; height: 52px; min-height: 52px; }
   .bible-immersive .bible-reading-area > .bible-chapter { padding: 20px 16px 36px; line-height: 1.7; }

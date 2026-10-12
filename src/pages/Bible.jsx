@@ -5,10 +5,12 @@ import { ArrowLeft, ArrowRight, BookOpen, BookMarked, Bookmark, Check, ChevronDo
 import AppDialog from '../components/ui/AppDialog';
 import BibleText from '../components/ui/BibleText';
 import BibleVerseShare from '../components/ui/BibleVerseShare';
+import BibleSearch from '../components/ui/BibleSearch';
 import { bibleFonts, readingFont, readingSize } from '../lib/bibleTypography';
 import BibleComparison from '../components/ui/BibleComparison';
-import { chapterVerses, favoriteKey, passageBetween, referencesOverlap, verseCitation, verseClipboard } from '../lib/bibleVerses';
+import { chapterVerses, favoriteKey, passageBetween, verseCitation, verseClipboard } from '../lib/bibleVerses';
 import { useBibleFavorites } from '../hooks/useBibleFavorites';
+import { useBibleReadingResume } from '../hooks/useBibleReadingResume';
 import { adjacentChapter, bibleBackgrounds, bookmarkKey, normalizeBook, readPreference, selection, versionBackgrounds, versions, writePreference } from '../lib/bibleModel';
 import { cancelBibleDownload, downloadBible, librarySnapshot, loadBibleBook, refreshLibrary, removeBible, subscribeLibrary } from '../lib/bibleLibrary';
 import './bible.css';
@@ -58,7 +60,7 @@ export default function Bible() {
   const [redLetters, setRedLetters] = useState(() => readPreference('redLetters', true) !== false);
   const [backgrounds, setBackgrounds] = useState(() => versionBackgrounds(readPreference('backgrounds', {})));
   const [confirmDelete, setConfirmDelete] = useState('');
-  const articleRef = useRef(null);
+  const [navigation, setNavigation] = useState(null);
   const copyRequest = useRef(0);
   const comparisonBase = useRef(versionId);
   const reduced = useReducedMotion();
@@ -68,6 +70,8 @@ export default function Bible() {
   const saved = bookmarks.some(entry => bookmarkKey(entry) === key);
   const previous = adjacentChapter(current, -1), next = adjacentChapter(current, 1);
   const targetReference = params.get('verse') || '';
+  const targetPoint = navigation?.key === key ? navigation.point : undefined;
+  const { attachArticle, getPosition, recordComparison, storageError: readingStorageError, flush: flushReading, focusArticle } = useBibleReadingResume({ location: current, chapter, comparing: comparison.length > 0, reference: targetReference, targetPoint, fontSize, fontFamily: readingFont(fontId).family });
   const activeFavorite = activeVerse && favorites.some(entry => favoriteKey(entry) === favoriteKey(activeVerse));
   const visibleVerse = activeVerse?.book === bookId && activeVerse?.chapter === chapterNumber
     && (comparison.length ? comparison.includes(activeVerse.version) : activeVerse.version === versionId) ? activeVerse : null;
@@ -90,33 +94,24 @@ export default function Bible() {
     return () => controller.abort();
   }, [versionId, bookId, retry, online, installed?.sha256]);
   useEffect(() => {
-    if (chapter) writePreference('position', { version: versionId, book: bookId, chapter: chapterNumber });
-  }, [chapter, versionId, bookId, chapterNumber]);
-  useEffect(() => {
     if (!visibleVerse || dialog || note) return;
     const dismiss = event => { if (event.key === 'Escape') { copyRequest.current++; setActiveVerse(null); setRangeMode(false); setVerseRange(null); } };
     window.addEventListener('keydown', dismiss);
     return () => window.removeEventListener('keydown', dismiss);
   }, [visibleVerse, dialog, note]);
-  useEffect(() => {
-    if (!chapter || !targetReference || comparison.length) return;
-    const timer = setTimeout(() => {
-      const target = [...(articleRef.current?.querySelectorAll('[data-reference]') || [])].find(element => referencesOverlap(element.dataset.reference, targetReference));
-      target?.scrollIntoView({ block: 'center', behavior: reduced ? 'instant' : 'smooth' });
-      target?.querySelector('button')?.focus({ preventScroll: true });
-    }, reduced ? 0 : 220);
-    return () => clearTimeout(timer);
-  }, [chapter, targetReference, comparison.length, reduced]);
 
   function go(value, reference = '') {
     if (!value) return;
     const target = selection(value);
+    flushReading();
+    const point = target.book === bookId && target.chapter === chapterNumber ? getPosition() : null;
+    setNavigation({ key: bookmarkKey(target), point: point || { verse: 1, fraction: 0, intro: 0 } });
     copyRequest.current++;
     setError(''); setNote(null); setDialog(''); setNotice(''); setActiveVerse(null);
     setRangeMode(false); setVerseRange(null);
     setParams({ version: target.version, book: target.book, chapter: String(target.chapter), ...(reference ? { verse: reference } : {}) });
     window.scrollTo({ top: 0, behavior: 'instant' });
-    articleRef.current?.focus({ preventScroll: true });
+    focusArticle();
   }
   function toggleBookmark() {
     if (!saved && bookmarks.length >= 200) { setNotice('Ya tienes 200 marcadores. Elimina alguno para guardar otro.'); return; }
@@ -208,7 +203,7 @@ export default function Bible() {
     <main className="bible-layout">
       <header className="bible-heading">
         <div className="bible-reader-brand"><Link to="/feed" className="bible-icon" title="Salir de la Biblia" aria-label="Salir de la Biblia"><ArrowLeft size={21} /></Link><div className="bible-reader-title"><h1><BookOpen size={20} />Biblia</h1><span className="bible-connection">{installed ? <><Check size={13} />{online ? 'Disponible sin conexión' : 'Leyendo sin conexión'}</> : online ? 'Lectura en línea' : <><WifiOff size={13} />Sin conexión</>}</span></div></div>
-        <div className="bible-header-actions"><IconButton label="Anterior" disabled={!previous} onClick={() => go(previous)}><ArrowLeft size={19} /></IconButton><IconButton label="Siguiente" disabled={!next} onClick={() => go(next)}><ArrowRight size={19} /></IconButton><span className="bible-toolbar-divider" /><IconButton label="Marcadores" onClick={() => setDialog('bookmarks')}><BookMarked size={21} /></IconButton><IconButton label="Descargas" onClick={() => setDialog('downloads')}><HardDriveDownload size={21} />{library.operation && <span className="bible-busy-dot" />}</IconButton><IconButton label="Ajustes de lectura" onClick={() => setDialog('settings')}><Settings2 size={21} /></IconButton></div>
+        <div className="bible-header-actions"><IconButton label="Anterior" disabled={!previous} onClick={() => go(previous)}><ArrowLeft size={19} /></IconButton><IconButton label="Siguiente" disabled={!next} onClick={() => go(next)}><ArrowRight size={19} /></IconButton><span className="bible-toolbar-divider" /><IconButton label="Buscar en la Biblia" onClick={() => setDialog('search')}><Search size={21} /></IconButton><IconButton label="Marcadores" onClick={() => setDialog('bookmarks')}><BookMarked size={21} /></IconButton><IconButton label="Descargas" onClick={() => setDialog('downloads')}><HardDriveDownload size={21} />{library.operation && <span className="bible-busy-dot" />}</IconButton><IconButton label="Ajustes de lectura" onClick={() => setDialog('settings')}><Settings2 size={21} /></IconButton></div>
       </header>
       <div className="bible-workspace">
         <aside className="bible-sidebar" aria-label="Libros de la Biblia">
@@ -224,7 +219,7 @@ export default function Bible() {
             {comparison.length > 0 && <IconButton label="Cerrar comparación" onClick={closeComparison}><X size={19} /></IconButton>}
             <IconButton label={saved ? 'Quitar marcador' : 'Guardar capítulo'} aria-pressed={saved} onClick={toggleBookmark}><Bookmark size={20} fill={saved ? 'currentColor' : 'none'} /></IconButton>
           </div>
-          <p role="status" className="bible-notice">{notice}</p>
+          <p role="status" className="bible-notice">{notice || (readingStorageError ? 'No se pudo guardar la posición de lectura en este dispositivo.' : '')}</p>
           {visibleVerse && <section className="bible-selection" aria-label="Versículo seleccionado">
             <div className="bible-selection-bar" role="group" aria-label="Acciones del versículo">
               <strong>{verseCitation(visibleVerse)}</strong>
@@ -240,16 +235,18 @@ export default function Bible() {
             {verseNotice && <p role="status">{verseNotice}</p>}
             {copyFallback && <textarea aria-label="Texto para copiar" readOnly value={verseClipboard(visibleVerse)} onFocus={event => event.target.select()} autoFocus />}
           </section>}
-          {comparison.length > 0 ? <BibleComparison key={`${bookId}:${chapterNumber}`} ids={comparison} current={current} primary={{ chapter, error, onRetry: () => { setError(''); setRetry(value => value + 1); } }} installed={library.installed} online={online} onNote={(nodes, id) => setNote({ nodes, version: id })} onVerse={openVerse} favorites={favorites} fontSize={fontSize} fontFamily={readingFont(fontId).family} redLetters={redLetters} selectedReference={visibleVerse?.reference || targetReference} selectedVersion={visibleVerse?.version || versionId} backgrounds={backgrounds} onCloseVersion={closeVersion} /> : <AnimatePresence mode="wait" initial={false}>
-            <motion.article key={key} ref={articleRef} tabIndex={-1} aria-label={`${bookInfo.title} ${chapterNumber}, ${versionId}`} className={`bible-chapter ${redLetters ? 'bible-red-letters' : ''}`} data-background={backgrounds[versionId]} style={{ '--bible-font-size': `${fontSize}px` }} initial={reduced ? false : { opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }}>
+          {comparison.length > 0 ? <BibleComparison key={`${bookId}:${chapterNumber}`} ids={comparison} current={current} initialPosition={targetPoint} onPositionChange={recordComparison} primary={{ chapter, error, onRetry: () => { setError(''); setRetry(value => value + 1); } }} installed={library.installed} online={online} onNote={(nodes, id) => setNote({ nodes, version: id })} onVerse={openVerse} favorites={favorites} fontSize={fontSize} fontFamily={readingFont(fontId).family} redLetters={redLetters} selectedReference={visibleVerse?.reference || targetReference} selectedVersion={visibleVerse?.version || versionId} backgrounds={backgrounds} onCloseVersion={closeVersion} /> : <AnimatePresence mode="wait" initial={false}>
+            <motion.article key={key} ref={attachArticle} data-reading-key={key} tabIndex={-1} aria-label={`${bookInfo.title} ${chapterNumber}, ${versionId}`} className={`bible-chapter ${redLetters ? 'bible-red-letters' : ''}`} data-background={backgrounds[versionId]} style={{ '--bible-font-size': `${fontSize}px` }} initial={reduced ? false : { opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }}>
               <header className="bible-chapter-heading"><p>{version.title}</p><h2>{bookInfo.title} {chapterNumber}</h2></header>
-              {chapter ? <BibleText nodes={chapter.nodes} onNote={nodes => setNote({ nodes, version: versionId })} onVerse={openVerse} favorites={favorites.filter(entry => entry.version === versionId).map(entry => entry.reference)} selectedReference={visibleVerse?.reference || targetReference} /> : error ? <div className="bible-state" role="alert"><WifiOff size={28} /><h3>No pudimos abrir este capítulo</h3><p>{online ? error : 'Esta versión no está descargada en este dispositivo.'}</p><div><button className="bible-command" type="button" onClick={() => { setError(''); setRetry(value => value + 1); }}><RotateCw size={17} />Reintentar</button><button className="bible-command" type="button" onClick={() => setDialog('downloads')}><Download size={17} />Descargas</button></div></div> : <div className="bible-state" role="status"><LoaderCircle className="bible-spin" size={26} /><p>Abriendo capítulo...</p></div>}
+              {chapter ? <div className="bible-text-content"><BibleText nodes={chapter.nodes} onNote={nodes => setNote({ nodes, version: versionId })} onVerse={openVerse} favorites={favorites.filter(entry => entry.version === versionId).map(entry => entry.reference)} selectedReference={visibleVerse?.reference || targetReference} /></div> : error ? <div className="bible-state" role="alert"><WifiOff size={28} /><h3>No pudimos abrir este capítulo</h3><p>{online ? error : 'Esta versión no está descargada en este dispositivo.'}</p><div><button className="bible-command" type="button" onClick={() => { setError(''); setRetry(value => value + 1); }}><RotateCw size={17} />Reintentar</button><button className="bible-command" type="button" onClick={() => setDialog('downloads')}><Download size={17} />Descargas</button></div></div> : <div className="bible-state" role="status"><LoaderCircle className="bible-spin" size={26} /><p>Abriendo capítulo...</p></div>}
               {chapter && <p className="bible-copyright">{version.copyright}</p>}
             </motion.article>
           </AnimatePresence>}
         </div>
       </div>
     </main>
+
+    {dialog === 'search' && <BibleSearch current={current} library={library} online={online} onClose={() => setDialog('')} onOpen={row => { setComparison([]); go(row, row.reference); }} />}
 
     <AppDialog open={dialog === 'books'} onClose={() => setDialog('')} title="Libros y capítulos" wide>
       <div className="bible-picker"><div className="bible-picker-books"><label className="bible-search"><Search size={17} /><input autoFocus aria-label="Filtrar libros" placeholder="Buscar libro" value={query} onChange={event => setQuery(event.target.value)} /></label><div className="bible-book-list">{matchingBooks.map(book => <button key={book.id} type="button" aria-pressed={pickerBook === book.id} onClick={() => setPickerBook(book.id)}><span>{book.title}</span><span>{book.chapters}</span></button>)}{!matchingBooks.length && <p>No se encontraron libros.</p>}</div></div><div className="bible-picker-chapters"><h3>{chosenBook.title}</h3><div className="bible-chapter-grid">{Array.from({ length: chosenBook.chapters }, (_, index) => <button type="button" key={index} aria-label={`${chosenBook.title} ${index + 1}`} aria-current={chosenBook.id === bookId && index + 1 === chapterNumber ? 'true' : undefined} onClick={() => go({ ...current, book: chosenBook.id, chapter: index + 1 })}>{index + 1}</button>)}</div></div></div>

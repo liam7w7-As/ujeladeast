@@ -29,9 +29,9 @@ function LoadedColumn(props) {
   }, [versionId, bookId, chapterNumber, online, installed?.sha256, retry]);
   return <Column {...props} {...result} onRetry={() => { setResult({ chapter: null, error: '' }); setRetry(value => value + 1); }} />;
 }
-export default function BibleComparison({ ids, current, primary, installed, ...props }) {
+export default function BibleComparison({ ids, current, primary, installed, initialPosition, onPositionChange, ...props }) {
   const track = useRef(null);
-  const position = useRef({ verse: 1, fraction: 0, intro: 0 });
+  const position = useRef(initialPosition || { verse: 1, fraction: 0, intro: 0 });
   const expectedScroll = useRef(new WeakMap());
   const frame = useRef(0);
   const applyPosition = useCallback((except = null) => {
@@ -51,6 +51,10 @@ export default function BibleComparison({ ids, current, primary, installed, ...p
     frame.current = requestAnimationFrame(() => applyPosition());
   }, [applyPosition]);
   useEffect(() => { contentChanged(); }, [ids.length, contentChanged]);
+  useEffect(() => {
+    position.current = initialPosition || { verse: 1, fraction: 0, intro: 0 };
+    contentChanged();
+  }, [initialPosition, contentChanged]);
   const handleScroll = useCallback(event => {
     if (event.target !== event.currentTarget) return;
     const element = event.currentTarget;
@@ -60,9 +64,10 @@ export default function BibleComparison({ ids, current, primary, installed, ...p
     const next = readingPosition(elementAnchors(element), element.scrollTop);
     if (!next) return;
     position.current = next;
+    onPositionChange?.(next);
     cancelAnimationFrame(frame.current);
     frame.current = requestAnimationFrame(() => applyPosition(element));
-  }, [applyPosition]);
+  }, [applyPosition, onPositionChange]);
   useEffect(() => {
     let active = true;
     const observer = new ResizeObserver(contentChanged);
