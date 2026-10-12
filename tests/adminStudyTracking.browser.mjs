@@ -41,7 +41,9 @@ try {
     const url = new URL(route.request().url());
     let body = [];
     let status = 200;
-    if (url.pathname.includes('/profiles')) body = { id, full_name: 'Administrador', role, church_name: 'Central' };
+    // This fixture exercises the pre-migration completion compatibility path.
+    if (['get_study_status', 'complete_study_lesson'].includes(url.pathname.split('/').at(-1))) { status = 404; body = { code: 'PGRST202', message: 'Migration not installed' }; }
+    else if (url.pathname.includes('/profiles')) body = { id, full_name: 'Administrador', role, church_name: 'Central' };
     else if (url.pathname.includes('/study_plans')) body = url.searchParams.get('offset') === '0' ? plans : [];
     else if (url.pathname.includes('/study_weeks')) body = url.searchParams.get('plan_id') === 'eq.plan-a' && url.searchParams.get('offset') === '0' ? weeks : [];
     else if (url.pathname.includes('/study_lessons')) {

@@ -207,6 +207,7 @@ function BibleStudyContent() {
         {lessonError && <p role="alert" className="study-notice">{lessonError}</p>}
 
         {activeView === 'dashboard' && <StudyDashboard
+          userId={user.id} onStreakStatus={acceptStatus}
           name={profile?.full_name?.split(' ')[0] || 'Estudiante'} plan={plan} journey={journey} weeks={unlockedWeeks}
           loading={journeyLoading} error={journeyError} planError={studyError} planLoading={studyLoading}
           retryPlan={getCurrentPlan} retryJourney={refreshJourney} openingLesson={openingLesson}

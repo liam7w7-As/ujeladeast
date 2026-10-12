@@ -2,8 +2,9 @@ import { ArrowRight, BookOpen, Check, CheckCircle2, ChevronRight, HeartHandshake
 import { motion } from 'motion/react';
 import StreakCard from './StreakCard';
 import DailyBibleFact from './DailyBibleFact';
+import StudyRecovery from './StudyRecovery';
 
-export default function StudyDashboard({ name, plan, journey, weeks, loading, error, planError, planLoading, retryPlan, retryJourney, openingLesson, openLesson, openWeek, openPlan, streak, streakLoading, streakError, retryStreak, entries, openJournal, openSOS }) {
+export default function StudyDashboard({ userId, onStreakStatus, name, plan, journey, weeks, loading, error, planError, planLoading, retryPlan, retryJourney, openingLesson, openLesson, openWeek, openPlan, streak, streakLoading, streakError, retryStreak, entries, openJournal, openSOS }) {
   const currentWeek = weeks.find(week => week.current) || weeks.findLast(week => week.finished);
   const next = journey?.nextLesson;
   return <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
@@ -31,6 +32,7 @@ export default function StudyDashboard({ name, plan, journey, weeks, loading, er
       </div>
       <aside className="study-home-aside" aria-label="Mi constancia y reflexiones">
         <StreakCard data={streak} loading={streakLoading} error={streakError} onRetry={retryStreak} />
+        {streak && <StudyRecovery userId={userId} recovery={streak.recovery} serverNow={streak.server_now} unconfirmed={Boolean(streakError)} onStatus={onStreakStatus} onRefresh={retryStreak} />}
         {streak && !streakError && <div className="study-xp"><span>Nivel {Math.floor(streak.total_xp / 100) + 1}</span><strong>{streak.total_xp} XP</strong><progress value={streak.total_xp % 100} max={100} aria-label="Experiencia del nivel" /></div>}
         <section className="study-diary-preview"><header><h2><NotebookPen size={18} />Mi diario</h2><button type="button" onClick={openJournal} aria-label="Abrir mi diario" title="Abrir mi diario"><ArrowRight size={18} /></button></header>
           {entries.length ? entries.slice(0, 2).map(entry => <button type="button" key={entry.id} onClick={openJournal}><time>{new Intl.DateTimeFormat('es-BO', { day: 'numeric', month: 'short' }).format(new Date(entry.created_at))}</time><p>{entry.content || entry.favorite_verses?.join(', ') || 'Versículos guardados'}</p><ChevronRight size={16} /></button>) : <p>Todavía no hay reflexiones guardadas.</p>}

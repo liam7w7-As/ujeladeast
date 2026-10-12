@@ -1,0 +1,41 @@
+.study-recovery { padding: 20px 0; border-bottom: 1px solid #ffffff20; font-size: 13px; line-height: 1.7; }
+.study-recovery h3 { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 650; margin-bottom: 8px; color: #b8decf; }
+.study-recovery > p { margin: 6px 0; }
+.recovery-session { overflow-y: auto; min-height: 0; padding: 20px 24px 28px; font-size: 14px; line-height: 1.7; }
+.recovery-session, .recovery-session * { letter-spacing: 0; }
+.recovery-session h3 { font-size: 20px; font-weight: 650; line-height: 1.4; margin: 8px 0; overflow-wrap: anywhere; }
+.recovery-session header > p, .recovery-deadline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: #bdc8d1; }
+.recovery-session svg, .study-recovery svg { flex-shrink: 0; }
+.recovery-policy { font-size: 12px; color: #adb9c3; margin: 12px 0; }
+.recovery-deadline { font-size: 12px; }
+.recovery-status { font-size: 11px; color: #c8cdd5; }
+.recovery-status.is-approved { color: #9edcc1; }
+.recovery-status.is-rejected { color: #f2b4c5; }
+.recovery-status.is-pending { color: #eed18e; }
+.recovery-modes { display: flex; gap: 0; border-bottom: 1px solid #ffffff26; margin: 20px 0; }
+.recovery-modes button { flex: 1; min-height: 44px; border-bottom: 2px solid transparent; color: #aab8c2; }
+.recovery-modes [aria-pressed=true] { color: #ffc7d7; border-color: #b44969; }
+.recovery-reading p, .recovery-feedback p { white-space: pre-wrap; overflow-wrap: anywhere; }
+.recovery-reading h4, .recovery-feedback h4 { font-weight: 650; margin: 20px 0 8px; }
+.recovery-answer { display: grid; gap: 8px; margin: 20px 0; }
+.recovery-answer > span { font-weight: 600; overflow-wrap: anywhere; }
+.recovery-answer textarea, .recovery-note { resize: vertical; width: 100%; min-height: 110px; padding: 12px; border: 1px solid #ffffff30; border-radius: 6px; background: #101214; color: #f4f3f1; font-size: 16px; line-height: 1.6; }
+.recovery-answer small { font-size: 11px; color: #aab7bf; }
+.recovery-check { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; margin: 18px 0; }
+.recovery-check input { flex-shrink: 0; width: 18px; height: 18px; margin-top: 3px; accent-color: #b44969; }
+.recovery-command { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 9px 14px; border-radius: 6px; border: 1px solid #ffffff26; font-size: 13px; margin: 8px 6px 0 0; }
+.recovery-command.is-primary { background: #8f1937; border-color: #b44969; color: white; }
+.recovery-command:disabled { opacity: .5; cursor: not-allowed; }
+.recovery-command:hover:not(:disabled) { filter: brightness(1.15); }
+.recovery-command:focus-visible, .recovery-session :is(input,textarea,button):focus-visible { outline: 2px solid #e4a7ba; outline-offset: 3px; }
+.recovery-error { color: #ffc0ce; border-left: 2px solid #be506e; padding: 10px 12px; margin: 12px 0; font-size: 13px; }
+.recovery-confirmation { display: flex; gap: 10px; align-items: flex-start; color: #b6dfcb; }
+.recovery-admin-list { border-top: 1px solid #ffffff20; }
+.recovery-admin-list > button { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; text-align: left; width: 100%; gap: 16px; padding: 18px 0; border-bottom: 1px solid #ffffff20; }
+.recovery-admin-list strong, .recovery-admin-list small { display: block; overflow-wrap: anywhere; }
+.recovery-admin-list small { color: #aebbc4; margin-top: 4px; font-size: 12px; }
+@media (max-width: 639px) {
+  .recovery-session { padding: 16px 16px 24px; }
+  .recovery-session h3 { font-size: 18px; }
+  .recovery-session form > .recovery-command { width: 100%; }
+}

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, ChevronLeft, ChevronRight, Check, Circle, RefreshCw, Search, Flame } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { collectPages, STUDY_TIME_ZONE, trackingRows } from '../../lib/studyTracking';
+import StudyRecoveriesAdmin from '../../components/admin/StudyRecoveriesAdmin';
 
 const STATUS = { 'not-started': 'Sin iniciar', active: 'Activo', inactive: 'Sin actividad reciente', completed: 'Completado' };
 const STATUS_STYLE = { 'not-started': 'text-on-surface-variant', active: 'text-emerald-400', inactive: 'text-amber-300', completed: 'text-sky-300' };
@@ -12,6 +13,7 @@ const formatDate = value => value ? dateFormatter.format(new Date(value)) : 'Sin
 const lessonLabel = lesson => lesson ? `S${lesson.week_number} · D${lesson.day_number}: ${lesson.title}` : null;
 
 export default function AdminStudyTracking() {
+  const [view, setView] = useState('tracking');
   const [plans, setPlans] = useState([]);
   const [planId, setPlanId] = useState('');
   const [data, setData] = useState({ profiles: [], lessons: [], weeks: [] });
@@ -92,12 +94,19 @@ export default function AdminStudyTracking() {
   const plan = plans.find(item => item.id === planId);
   const updateFilter = (setter, value) => { setter(value); setPage(0); };
   const refresh = () => { setLoading(true); setError(''); setReload(value => value + 1); };
+  const views = <nav className="flex flex-wrap gap-3 border-b border-surface-border pb-3" aria-label="Vistas de seguimiento">
+    <button type="button" className="recovery-command" aria-pressed={view === 'tracking'} onClick={() => setView('tracking')}>Seguimiento</button>
+    <button type="button" className="recovery-command" aria-pressed={view === 'recovery'} onClick={() => setView('recovery')}>Recuperaciones</button>
+  </nav>;
+  if (view === 'recovery') return <div className="min-w-0 space-y-6">{views}<StudyRecoveriesAdmin /></div>;
 
   return (
     <div className="min-w-0 space-y-6">
+      {views}
       <header className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h1 className="text-2xl font-bold text-white break-words">Seguimiento de estudios</h1>
+          <p className="mt-1 text-xs text-on-surface-variant">Rachas reales, sin días recuperados. Criterio del campamento.</p>
           {loadedAt && !error && <p className="mt-1 text-xs text-on-surface-variant">Actualizado: {loadedAt.toLocaleTimeString('es-BO', { hour: '2-digit', minute: '2-digit', timeZone: STUDY_TIME_ZONE })}</p>}
         </div>
         <button type="button" onClick={refresh} disabled={loading} className={buttonClass} title="Actualizar seguimiento" aria-label="Actualizar seguimiento"><RefreshCw size={18} className={loading ? 'animate-spin' : ''} /></button>

@@ -1,5 +1,15 @@
 # Seguimiento de estudios
 
+## Recuperacion de racha (12 de octubre)
+
+Con el guardado atomico ya instalado, ejecutar completo
+`migrations/202610120001_streak_recovery.sql`. No necesita nuevas variables ni
+IA. Los repasos requieren revision en Admin > Seguimiento > Recuperaciones;
+no modifican la racha real del campamento ni el XP. No volver a ejecutar el
+SQL antiguo de rachas despues de esta migracion.
+
+Reglas, activacion y comprobaciones: [guia de recuperacion](../docs/streak-recovery-activation.md).
+
 ## Activar semanas y dato diario (rediseño del 5 de octubre)
 
 El guardado atomico anterior ya debe estar instalado. Para este rediseño:
