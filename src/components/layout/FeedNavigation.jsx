@@ -6,6 +6,7 @@ import { useAuth } from '../../hooks/useAuth';
 import NotificationBell from '../ui/NotificationBell';
 import ProfileAvatar from '../ui/ProfileAvatar';
 import AppDialog from '../ui/AppDialog';
+import InstallButton from '../ui/InstallButton';
 import MobileNavigation from './MobileNavigation';
 
 const links = [
@@ -39,6 +40,7 @@ export default function FeedNavigation({ onCreate }) {
         {createButton('feed-nav-link feed-nav-create')}
       </div>
       <div className="feed-rail-account">
+        <InstallButton className="feed-nav-link" />
         {user ? <>
           <div className="feed-nav-notifications"><NotificationBell /><span>Notificaciones</span></div>
           <button className="feed-nav-link" type="button" title="Tu cuenta" aria-label="Tu cuenta" onClick={() => setMenuOpen(true)}><ProfileAvatar profile={profile} metadata={user.user_metadata} className="h-8 w-8" /><span className="truncate">{profile?.full_name || 'Tu cuenta'}</span></button>

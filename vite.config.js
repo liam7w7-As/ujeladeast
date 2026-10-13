@@ -26,6 +26,8 @@ export default defineConfig({
         orientation: 'portrait',
         start_url: '/',
         scope: '/',
+        // Relative URL checks this origin without changing either installed app's identity.
+        related_applications: [{ platform: 'webapp', url: '/manifest.webmanifest' }],
         icons: [
           {
             src: 'pwa-192x192-v2.png',

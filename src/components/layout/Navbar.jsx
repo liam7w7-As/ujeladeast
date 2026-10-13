@@ -6,6 +6,7 @@ import { useAuth } from '../../hooks/useAuth'
 import NotificationBell from '../ui/NotificationBell'
 import { HeartHandshake, LogOut, Menu, X } from 'lucide-react'
 import ProfileAvatar from '../ui/ProfileAvatar'
+import InstallButton from '../ui/InstallButton'
 
 const navItems = [
   { label: 'Inicio', href: '/', id: 'home' },
@@ -119,6 +120,7 @@ function Navbar({ activeItem = 'home' }) {
         </div>
 
         {/* Mobile Toggle Button */}
+        <InstallButton iconOnly />
         {user && <NotificationBell />}
         <motion.button 
           whileTap={{ scale: 0.9 }}

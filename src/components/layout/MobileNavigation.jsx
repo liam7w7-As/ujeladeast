@@ -6,6 +6,7 @@ import { useAuth } from '../../hooks/useAuth';
 import ProfileAvatar from '../ui/ProfileAvatar';
 import NotificationBell from '../ui/NotificationBell';
 import AppDialog from '../ui/AppDialog';
+import InstallButton from '../ui/InstallButton';
 import { migrationPilotAllowed } from '../../lib/domainMigration';
 import './mobile-navigation.css';
 
@@ -43,6 +44,7 @@ export default function MobileNavigation({ onCreate }) {
     <header className="mobile-app-header">
       <Link to="/" aria-label="UJELADEA inicio" className="mobile-app-brand"><img src="/logo-ujeladea.png" alt="" /><span>UJELADEA<span>.</span></span></Link>
       <div className="mobile-app-actions">
+        <InstallButton iconOnly />
         {onCreate && <motion.button type="button" className="mobile-icon" title="Crear publicación" aria-label="Crear publicación" onClick={onCreate} whileTap={reduced ? undefined : { scale: 0.9 }}><PlusSquare size={23} /></motion.button>}
         {user ? <NotificationBell /> : <Link to="/login" className="mobile-signin" aria-current={pathname === '/login' ? 'page' : undefined}>Entrar<LogIn size={17} /></Link>}
       </div>
@@ -60,6 +62,7 @@ export default function MobileNavigation({ onCreate }) {
         <div className="mobile-more-links">{extraLinks.map(({ to, label, Icon, state }) => <Link key={label} to={to} state={state} onClick={() => setOpen(false)}><Icon size={23} /><span>{label}</span></Link>)}</div>
         {profile?.role === 'admin' && <Link className="mobile-account-action" to="/admin" onClick={() => setOpen(false)}><Shield size={19} />Administración</Link>}
         {canTestDomain && <Link className="mobile-account-action" to="/?traslado=piloto" onClick={() => setOpen(false)}><Globe size={19} />Probar cambio de dominio</Link>}
+        <InstallButton className="mobile-account-action" onSelect={() => setOpen(false)} />
         {user && <button type="button" className="mobile-account-action" disabled={busy} onClick={signOut}><LogOut size={19} />{busy ? 'Cerrando sesión...' : 'Cerrar sesión'}</button>}
         {error && <p role="alert" className="text-sm text-red-300 mt-3">{error}</p>}
       </div>

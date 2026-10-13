@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { ArrowLeft, ArrowRight, BookOpen, BookMarked, Bookmark, Check, ChevronDown, Columns3, Copy, Download, HardDriveDownload, Heart, ListChecks, LoaderCircle, Minus, Moon, Palette, Plus, RotateCw, Search, Settings2, Share2, Sun, Trash2, WifiOff, X } from 'lucide-react';
 import AppDialog from '../components/ui/AppDialog';
+import InstallButton from '../components/ui/InstallButton';
 import BibleText from '../components/ui/BibleText';
 import BibleVerseShare from '../components/ui/BibleVerseShare';
 import BibleSearch from '../components/ui/BibleSearch';
@@ -259,6 +260,7 @@ export default function Bible() {
         <button type="button" className="bible-command" onClick={() => { changeSetting('fontSize', 19, setFontSize); changeSetting('fontFamily', 'jakarta', setFontId); }}><RotateCw size={16} />Restablecer tipografía</button>
         <div className="bible-setting"><span>Apariencia</span><div className="bible-segment" role="group" aria-label="Apariencia"><IconButton label="Tema claro" aria-pressed={theme === 'light'} onClick={() => changeSetting('theme', 'light', setTheme)}><Sun size={20} /></IconButton><IconButton label="Tema oscuro" aria-pressed={theme === 'dark'} onClick={() => changeSetting('theme', 'dark', setTheme)}><Moon size={20} /></IconButton></div></div><label className="bible-setting"><span>Palabras de Jesús en rojo</span><input type="checkbox" checked={redLetters} onChange={event => changeSetting('redLetters', event.target.checked, setRedLetters)} /></label>
         <button type="button" className="bible-command bible-background-link" onClick={() => setDialog('backgrounds')}><Palette size={18} />Fondos por versión</button>
+        <InstallButton className="bible-command" onSelect={() => setDialog('')} />
       </div>
     </AppDialog>
     {dialog === 'share' && shareTarget && <BibleVerseShare verse={shareTarget.verse} initialFont={fontId} onClose={() => setDialog(shareTarget.back)} />}

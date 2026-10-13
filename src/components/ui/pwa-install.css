@@ -1,0 +1,25 @@
+.pwa-install-entry { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; color: #efb4c4; font-size: 13px; font-weight: 600; letter-spacing: 0; }
+.pwa-install-entry svg { flex-shrink: 0; }
+.pwa-install-entry:focus-visible { outline: 2px solid #efb4c4; outline-offset: 2px; border-radius: 6px; }
+.pwa-install-entry:disabled { opacity: .6; }
+.pwa-install-icon { width: 44px; height: 44px; flex-shrink: 0; border-radius: 8px; }
+.pwa-install-icon:hover { background: #ffffff0a; }
+.pwa-install-prompt { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; padding: 16px; display: flex; justify-content: center; pointer-events: none; }
+.pwa-install-banner { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; width: 100%; max-width: 520px; border: 1px solid #ffffff26; border-radius: 8px; background: #17191c; box-shadow: 0 8px 32px #0006; padding: 16px; pointer-events: auto; }
+.pwa-install-banner > img { width: 36px; height: 44px; object-fit: contain; }
+.pwa-install-copy { flex: 1; min-width: 160px; }
+.pwa-install-copy strong { color: #f4f3f1; font-size: 14px; }
+.pwa-install-copy p { color: #b7bcc3; font-size: 12px; line-height: 1.5; margin-top: 4px; }
+.pwa-install-banner-actions { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 12px; }
+.pwa-install-banner-actions > .pwa-install-entry { padding: 0 12px; border-radius: 6px; background: #8f1937; color: white; }
+.pwa-install-banner-actions > button:last-child { padding: 8px; min-height: 44px; color: #c3c7cd; font-size: 12px; }
+.pwa-install-help { padding: 20px; overflow-y: auto; font-size: 14px; line-height: 1.65; }
+.pwa-install-help > * + * { margin-top: 16px; }
+.pwa-install-help ol { list-style: decimal; padding-left: 24px; }
+.pwa-install-help li + li { margin-top: 12px; }
+.pwa-install-help li svg { display: inline; margin-right: 6px; vertical-align: middle; }
+.pwa-install-help [role=alert] { color: #ffb4b4; }
+.pwa-install-note { color: #acb2ba; font-size: 12px; border-top: 1px solid #ffffff15; padding-top: 16px; }
+.pwa-install-spin { animation: pwa-install-spin 1.2s linear infinite; }
+@keyframes pwa-install-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .pwa-install-spin { animation: none; } }
