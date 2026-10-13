@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpenText, HouseHeart, MessagesSquare, Music4, NotebookPen, PanelsTopLeft, Library, Users, MessageCircle, LogIn, LogOut, PlusSquare, HeartHandshake, Shield } from 'lucide-react';
+import { BookOpenText, HouseHeart, MessagesSquare, Music4, NotebookPen, PanelsTopLeft, Library, Users, MessageCircle, LogIn, LogOut, PlusSquare, HeartHandshake, Shield, Globe } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { useAuth } from '../../hooks/useAuth';
 import ProfileAvatar from '../ui/ProfileAvatar';
 import NotificationBell from '../ui/NotificationBell';
 import AppDialog from '../ui/AppDialog';
+import { migrationPilotAllowed } from '../../lib/domainMigration';
 import './mobile-navigation.css';
 
 const tabs = [
@@ -31,6 +32,7 @@ export default function MobileNavigation({ onCreate }) {
   const reduced = useReducedMotion();
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, [pathname]);
   const moreActive = !tabs.some(tab => tab.to === pathname);
+  const canTestDomain = migrationPilotAllowed({ origin: window.location.origin, search: '?traslado=piloto', userId: user?.id, profile, development: import.meta.env.DEV });
   const signOut = async () => {
     setBusy(true); setError('');
     try { await logout(); setOpen(false); }
@@ -57,6 +59,7 @@ export default function MobileNavigation({ onCreate }) {
         {user ? <div className="mobile-more-profile"><ProfileAvatar profile={profile} metadata={user.user_metadata} /><div><strong>{profile?.full_name || 'Tu cuenta'}</strong><p>{profile?.church_name || user.email}</p></div></div> : <div className="mobile-guest-actions"><Link to="/login" onClick={() => setOpen(false)}>Iniciar sesión<LogIn size={18} /></Link><Link to="/register" onClick={() => setOpen(false)}>Crear cuenta<PlusSquare size={18} /></Link></div>}
         <div className="mobile-more-links">{extraLinks.map(({ to, label, Icon, state }) => <Link key={label} to={to} state={state} onClick={() => setOpen(false)}><Icon size={23} /><span>{label}</span></Link>)}</div>
         {profile?.role === 'admin' && <Link className="mobile-account-action" to="/admin" onClick={() => setOpen(false)}><Shield size={19} />Administración</Link>}
+        {canTestDomain && <Link className="mobile-account-action" to="/?traslado=piloto" onClick={() => setOpen(false)}><Globe size={19} />Probar cambio de dominio</Link>}
         {user && <button type="button" className="mobile-account-action" disabled={busy} onClick={signOut}><LogOut size={19} />{busy ? 'Cerrando sesión...' : 'Cerrar sesión'}</button>}
         {error && <p role="alert" className="text-sm text-red-300 mt-3">{error}</p>}
       </div>

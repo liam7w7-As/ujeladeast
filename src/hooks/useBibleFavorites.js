@@ -3,10 +3,10 @@ import { useAuth } from './useAuth';
 import { supabase } from '../lib/supabase';
 import { createFavoriteStore } from '../lib/bibleFavorites';
 
-export function useBibleFavorites() {
+export function useBibleFavorites({ timeoutMs = 0, enabled = true, validateLocalData = null } = {}) {
   const { user, loading } = useAuth();
   const owner = user?.id || null;
-  const ready = Boolean(owner) || !loading;
+  const ready = enabled && (Boolean(owner) || !loading);
   const store = useMemo(() => createFavoriteStore({
     owner,
     // Defer localStorage access so blocked storage becomes an actionable UI error.
@@ -14,15 +14,25 @@ export function useBibleFavorites() {
     online: () => navigator.onLine,
     lock: run => navigator.locks ? navigator.locks.request(`bible-favorites:${owner}`, run) : run(),
     remote: async (operations, signal) => {
+      if (validateLocalData && !validateLocalData()) throw new Error('Local data cannot be verified');
       const { data, error } = await supabase.auth.getSession();
       if (error || signal.aborted || data.session?.user.id !== owner) throw new Error('Session changed');
       // Capture the JWT; an account switch must not send the old queue as the new user.
-      const response = await supabase.rpc('sync_bible_favorites', { p_operations: operations })
-        .setHeader('Authorization', `Bearer ${data.session.access_token}`).abortSignal(signal);
-      if (response.error) throw response.error;
-      return response.data;
+      const timed = timeoutMs ? new AbortController() : null;
+      const abort = () => timed?.abort();
+      signal.addEventListener('abort', abort, { once: true });
+      const timer = timed ? setTimeout(abort, timeoutMs) : null;
+      try {
+        if (signal.aborted) throw new Error('Session changed');
+        const response = await supabase.rpc('sync_bible_favorites', { p_operations: operations })
+          .setHeader('Authorization', `Bearer ${data.session.access_token}`).abortSignal(timed?.signal || signal);
+        if (response.error) throw response.error;
+        // A pilot audit must also protect data changed while the request was in flight.
+        if (validateLocalData && !validateLocalData()) throw new Error('Local data changed');
+        return response.data;
+      } finally { clearTimeout(timer); signal.removeEventListener('abort', abort); }
     },
-  }), [owner]);
+  }), [owner, timeoutMs, validateLocalData]);
   const state = useSyncExternalStore(store.subscribe, store.getSnapshot);
   useEffect(() => {
     if (!ready) return;
