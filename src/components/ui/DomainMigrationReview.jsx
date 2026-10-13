@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Bookmark, CheckCircle2, CircleAlert, CloudCheck, Download, ExternalLink, FilePenLine, Heart, LoaderCircle, RefreshCw, ShieldCheck } from 'lucide-react';
 import { useBibleFavorites } from '../../hooks/useBibleFavorites';
+import { useMigrationStudyReview } from '../../hooks/useMigrationStudyReview';
 import { inspectMigrationData, MIGRATION_DESTINATION, migrationReadiness } from '../../lib/domainMigration';
 import { listDownloads } from '../../lib/bibleStorage';
 import { appUpdateBlocker } from '../../lib/appUpdate';
@@ -26,24 +27,33 @@ export default function DomainMigrationReview({ owner, onClose }) {
   const [acknowledged, setAcknowledged] = useState('');
   const [guestConsent, setGuestConsent] = useState(false);
   const [message, setMessage] = useState('');
-  const { ready, guestMissing } = migrationReadiness(inventory, favorites, online, downloads);
+  const studies = useMigrationStudyReview(owner, inventory, online, scan);
+  const localCurrent = inventory.signature === inspect(owner).signature;
+  const { ready, guestMissing, pending, consentKey } = migrationReadiness(inventory, favorites, online && localCurrent, downloads, studies);
   const synced = !inventory.error && favorites.status === 'synced' && favorites.pending === 0 && inventory.pendingFavorites === 0 && !favorites.error;
-  const consent = Boolean(acknowledged && acknowledged === inventory.signature);
+  const consent = Boolean(acknowledged && acknowledged === consentKey);
 
-  useEffect(() => {
-    const refresh = () => {
+  const refresh = useCallback(() => {
       const next = inspect(owner);
       setInventory(previous => previous.signature === next.signature && previous.error === next.error ? previous : next);
       setOnline(navigator.onLine);
-    };
+  }, [owner]);
+  useEffect(() => {
+    const focus = () => { refresh(); setAcknowledged(''); setScan(value => value + 1); };
     const timer = window.setInterval(refresh, 2000);
-    window.addEventListener('storage', refresh); window.addEventListener('focus', refresh);
+    window.addEventListener('storage', refresh); window.addEventListener('focus', focus);
     window.addEventListener('online', refresh); window.addEventListener('offline', refresh);
     return () => {
-      clearInterval(timer); window.removeEventListener('storage', refresh); window.removeEventListener('focus', refresh);
+      clearInterval(timer); window.removeEventListener('storage', refresh); window.removeEventListener('focus', focus);
       window.removeEventListener('online', refresh); window.removeEventListener('offline', refresh);
     };
-  }, [owner]);
+  }, [refresh]);
+
+  useEffect(() => {
+    // Same-tab favorite writes do not fire a storage event.
+    const timer = window.setTimeout(refresh, 0);
+    return () => clearTimeout(timer);
+  }, [refresh, favorites.status, favorites.pending, favorites.favorites]);
 
   useEffect(() => {
     let active = true;
@@ -63,9 +73,9 @@ export default function DomainMigrationReview({ owner, onClose }) {
   };
   const depart = event => {
     const latest = inspect(owner);
-    const state = migrationReadiness(latest, favorites, navigator.onLine, downloads);
+    const state = migrationReadiness(latest, favorites, navigator.onLine, downloads, studies);
     const blocker = appUpdateBlocker();
-    if (favorites.owner !== owner || !state.ready || acknowledged !== latest.signature || blocker) {
+    if (favorites.owner !== owner || !state.ready || acknowledged !== state.consentKey || blocker) {
       event.preventDefault(); setInventory(latest); setAcknowledged('');
       setMessage(blocker || 'Hay cambios pendientes o cambió la conexión. Revisa los datos nuevamente antes de continuar.');
       return;
@@ -77,10 +87,15 @@ export default function DomainMigrationReview({ owner, onClose }) {
   return <AppDialog open onClose={onClose} title="Antes de cambiar de dirección">
     <div className="domain-migration-review">
       <p className="domain-migration-intro">Revisión de esta cuenta y este navegador. No borra datos ni cambia tu racha.</p>
-      <p className="domain-migration-status" role="status" data-ready={ready}>{ready ? <ShieldCheck size={22} /> : <CircleAlert size={22} />}{ready ? 'Sin pendientes en esta revisión' : 'Revisemos antes de continuar'}</p>
+      <p className="domain-migration-status" role="status" data-ready={ready && !pending}>{ready && !pending ? <ShieldCheck size={22} /> : <CircleAlert size={22} />}{ready ? pending ? 'Hay borradores que seguirán en esta app' : 'Sin pendientes en esta revisión' : 'Revisemos antes de continuar'}</p>
       {!online && <p role="alert" className="domain-migration-warning">Sin conexión. Conéctate para confirmar la sincronización.</p>}
       {inventory.error && <p role="alert" className="domain-migration-warning">{inventory.error}</p>}
       <ul className="domain-migration-list">
+        <ReviewRow Icon={CloudCheck} title="Estudios guardados en tu cuenta" tone={studies.status === 'ready' ? 'good' : 'warning'}>
+          {studies.status === 'ready' ? <><p>{studies.completedCount} {studies.completedCount === 1 ? 'estudio completado confirmado' : 'estudios completados confirmados'} en Supabase.</p><p>Ya están en tu cuenta. No necesitas repetirlos ni trasladarlos al nuevo dominio.</p></>
+            : <p>{studies.status === 'loading' ? 'Comprobando tus estudios en Supabase…' : 'Aún no se ha podido confirmar el estado de tus estudios.'}</p>}
+          {studies.error && <p role="alert">{studies.error}</p>}
+        </ReviewRow>
         <ReviewRow Icon={synced ? CloudCheck : Heart} title="Versículos favoritos de tu cuenta" tone={synced ? 'good' : 'warning'}>
           <p>{inventory.error ? 'La sincronización está detenida hasta poder revisar los datos locales.' : synced ? `${favorites.favorites.length} ${favorites.favorites.length === 1 ? 'favorito confirmado' : 'favoritos confirmados'} en tu cuenta.` : favorites.status === 'syncing' ? 'Confirmando con el servidor…' : `${Math.max(favorites.pending, inventory.pendingFavorites)} cambios locales pendientes de confirmar.`}</p>
           {favorites.error && <p role="alert">{favorites.error}</p>}
@@ -90,9 +105,15 @@ export default function DomainMigrationReview({ owner, onClose }) {
           <p>{guestMissing ? `${guestMissing} favoritos de este dispositivo aún no están en tu cuenta. Añádelos solo si son tuyos.` : 'Estos favoritos también están en la lista de tu cuenta. Su confirmación depende de la sincronización anterior.'}</p>
           {guestMissing > 0 && <><label className="domain-migration-checkbox"><input type="checkbox" checked={guestConsent} onChange={event => setGuestConsent(event.target.checked)} />Estos favoritos locales son míos.</label><button type="button" className="domain-migration-text-action" disabled={!guestConsent || !online || Boolean(inventory.error) || favorites.status === 'syncing'} onClick={() => { setAcknowledged(''); favorites.importGuest(); setInventory(inspect(owner)); }}><CloudCheck size={16} />Añadir a mi cuenta</button></>}
         </ReviewRow>}
-        <ReviewRow Icon={FilePenLine} title="Borradores de estudio y recuperación" tone={inventory.error || inventory.studyDrafts || inventory.recoveryDrafts ? 'warning' : 'good'}>
-          <p>{inventory.error ? 'No pudimos completar la revisión de borradores.' : inventory.studyDrafts || inventory.recoveryDrafts ? `${inventory.studyDrafts} de estudio y ${inventory.recoveryDrafts} de recuperación guardados solo aquí. Termínalos y confirma su envío en esta app antes de cambiar.` : 'No encontramos borradores locales de esta cuenta.'}</p>
-          {(inventory.studyDrafts > 0 || inventory.recoveryDrafts > 0) && <Link to="/estudios" onClick={onClose} className="domain-migration-text-action"><BookOpen size={16} />Volver a mis estudios</Link>}
+        <ReviewRow Icon={FilePenLine} title="Borradores de estudio y recuperación" tone={studies.status !== 'ready' || studies.pending.length ? 'warning' : 'good'}>
+          {studies.status !== 'ready' ? <p>Los borradores se conservan mientras comprobamos qué respuestas ya están guardadas.</p> : <>
+            {studies.empty > 0 && <p>{studies.empty} {studies.empty === 1 ? 'borrador sin respuestas ni notas' : 'borradores sin respuestas ni notas'}. No impiden continuar y no se eliminan.</p>}
+            {studies.confirmed > 0 && <p>{studies.confirmed} {studies.confirmed === 1 ? 'copia local ya confirmada' : 'copias locales ya confirmadas'} en tu cuenta. Se conservan sin bloquear el cambio.</p>}
+            {studies.pending.length ? <><p>Estas respuestas seguirán en la app anterior. Puedes retomarlas aquí o abrir el nuevo sitio conservando esta instalación.</p>
+              <ul className="domain-migration-pending">{studies.pending.map(item => <li key={`${item.kind}:${item.id}`}><strong>{item.title}</strong><p>{item.reason}</p></li>)}</ul>
+              <Link to="/estudios" onClick={onClose} className="domain-migration-text-action"><BookOpen size={16} />Ver mis estudios</Link></>
+              : <p>No hay respuestas locales pendientes de confirmar.</p>}
+          </>}
         </ReviewRow>
         <ReviewRow Icon={Download} title="Contenido sin conexión">
           <p>{downloads.status === 'loading' ? 'Revisando descargas…' : downloads.status === 'error' ? 'No pudimos revisar las descargas. Vuelve a comprobar.' : downloads.versions.length ? `Versiones guardadas aquí: ${downloads.versions.map(version => version.id).join(', ')}.` : 'No encontramos versiones completas descargadas aquí.'}</p>
@@ -104,7 +125,9 @@ export default function DomainMigrationReview({ owner, onClose }) {
         <ReviewRow Icon={CheckCircle2} title="Tu cuenta sigue siendo la misma" tone="good"><p>Los estudios completados, rachas y XP ya guardados en tu cuenta no cambian por el dominio. Inicia sesión con la misma cuenta.</p></ReviewRow>
       </ul>
       <button type="button" className="domain-migration-text-action" onClick={recheck}><RefreshCw size={17} />Volver a comprobar</button>
-      <label className="domain-migration-checkbox domain-migration-consent"><input type="checkbox" checked={consent} disabled={!ready} onChange={event => setAcknowledged(event.target.checked ? inventory.signature : '')} />Entiendo qué datos no se trasladan y conservaré la app anterior hasta comprobar el nuevo sitio.</label>
+      <label className="domain-migration-checkbox domain-migration-consent"><input type="checkbox" checked={consent} disabled={!ready} onChange={event => { setAcknowledged(event.target.checked ? consentKey : ''); setMessage(''); }} />{pending
+        ? `Entiendo que ${pending === 1 ? 'queda 1 borrador con respuestas sin confirmar' : `quedan ${pending} borradores con respuestas sin confirmar`} en esta app. No se trasladan automáticamente. Conservaré la app anterior para retomarlos, junto con mis descargas y ajustes.`
+        : 'Entiendo qué datos no se trasladan y conservaré la app anterior hasta comprobar el nuevo sitio.'}</label>
       {message && <p role="status" className="domain-migration-warning">{message}</p>}
       <div className="domain-migration-actions">
         {ready && consent ? <a className="domain-migration-primary" href={MIGRATION_DESTINATION} target="_blank" rel="noopener noreferrer" onClick={depart} onAuxClick={depart}>Ir al nuevo sitio<ExternalLink size={18} /></a> : <button type="button" disabled className="domain-migration-primary">Ir al nuevo sitio<ExternalLink size={18} /></button>}

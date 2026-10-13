@@ -30,6 +30,9 @@
 .domain-migration-row > div { min-width: 0; }
 .domain-migration-row h3 { color: #f2f3f4; font-size: 14px; font-weight: 600; line-height: 1.5; margin-bottom: 4px; }
 .domain-migration-row p + p { margin-top: 6px; }
+.domain-migration-pending { list-style: none; padding: 0; margin-top: 12px; }
+.domain-migration-pending li + li { margin-top: 12px; }
+.domain-migration-pending strong { color: #e3d4b8; font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
 .domain-migration-text-action { color: #eeb5c4; padding: 8px 0; text-align: left; }
 .domain-migration-text-action:hover { text-decoration: underline; }
 .domain-migration-checkbox { display: flex; align-items: flex-start; gap: 10px; color: #d6d9de; font-size: 13px; line-height: 1.6; margin-top: 10px; padding-block: 6px; cursor: pointer; }

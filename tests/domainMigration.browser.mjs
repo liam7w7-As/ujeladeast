@@ -9,6 +9,8 @@ await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ headless: true, channel: 'chrome' });
 const alice = '10000000-0000-0000-0000-000000000001';
 const bob = '10000000-0000-0000-0000-000000000002';
+const lessonId = '20000000-0000-0000-0000-000000000001';
+const recoveryId = '30000000-0000-0000-0000-000000000001';
 const session = id => ({ access_token: `test-${id}`, refresh_token: 'test-refresh', token_type: 'bearer', expires_in: 3600, expires_at: Math.floor(Date.now() / 1000) + 3600, user: { id, aud: 'authenticated', role: 'authenticated', email: 'pilot@example.invalid', user_metadata: {} } });
 const entry = n => ({ version: 'RVR1960', book: 'PSA', chapter: 23, reference: `PSA.23.${n}`, title: 'Salmos', text: `Texto de prueba ${n}` });
 const key = n => `RVR1960:PSA.23.${n}`;
@@ -16,7 +18,8 @@ const errors = [], forbidden = [];
 async function setup({ role = 'admin', loggedIn = true, seeds = {}, brokenDownloads = false } = {}) {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce', serviceWorkers: 'block' });
   await context.routeWebSocket('**', socket => socket.close());
-  const state = { calls: 0, missing: false, hung: false, entries: new Map(), revision: 0, receipts: new Set() };
+  const state = { calls: 0, missing: false, hung: false, entries: new Map(), revision: 0, receipts: new Set(),
+    studyCalls: [], completedCount: 12, progress: [], journals: [], recoveries: [], lessons: [{ id: lessonId, title: 'Aprender a escuchar' }] };
   await context.addInitScript(({ token, old, seeds, brokenDownloads }) => {
     if (location.origin === old && !sessionStorage.getItem('seeded')) {
       sessionStorage.setItem('seeded', 'true');
@@ -43,6 +46,30 @@ async function setup({ role = 'admin', loggedIn = true, seeds = {}, brokenDownlo
     if (name === 'profiles') body = { id: alice, full_name: 'Cuenta piloto', role, avatar_url: '/avatars/hombre.webp' };
     else if (name === 'user') body = session(alice).user;
     else if (name === 'token') body = session(alice);
+    else if (['user_progress', 'journal_entries', 'study_streak_recoveries', 'study_lessons'].includes(name)) {
+      assert.ok(['GET', 'HEAD'].includes(request.method()), 'migration never writes studies or recoveries');
+      assert.equal(request.headers().authorization, `Bearer test-${alice}`);
+      if (name !== 'study_lessons') assert.equal(url.searchParams.get('user_id'), `eq.${alice}`);
+      state.studyCalls.push({ name, method: request.method(), url: request.url() });
+      if (state.holdStudy) {
+        state.holdStudy = false;
+        await new Promise(resolve => { state.releaseStudy = resolve; });
+      }
+      if (state.studyHung) { await new Promise(resolve => setTimeout(resolve, 16000)); return route.abort().catch(() => {}); }
+      if (state.studyError) { status = 503; body = { message: 'Unavailable' }; }
+      else if (request.method() === 'HEAD') {
+        assert.equal(url.searchParams.get('completed'), 'eq.true');
+        return route.fulfill({ status: 200, headers: { 'content-range': `*/${state.completedCount}`, 'access-control-expose-headers': 'content-range' }, body: '' });
+      } else {
+        const table = { user_progress: 'progress', journal_entries: 'journals', study_streak_recoveries: 'recoveries', study_lessons: 'lessons' }[name];
+        const field = ['study_lessons', 'study_streak_recoveries'].includes(name) ? 'id' : 'lesson_id';
+        const filter = url.searchParams.get(field);
+        assert.ok(filter?.startsWith('in.('));
+        const ids = filter.slice(4, -1).split(',');
+        const start = Number(url.searchParams.get('offset') || 0), limit = Number(url.searchParams.get('limit') || 50);
+        body = state[table].filter(row => ids.includes(row[field])).slice(start, start + limit);
+      }
+    }
     else if (name === 'sync_bible_favorites') {
       state.calls++;
       assert.equal(request.headers().authorization, `Bearer test-${alice}`);
@@ -70,7 +97,7 @@ const openReview = async page => {
   await page.getByRole('button', { name: 'Revisar mis datos', exact: true }).click();
   await page.getByRole('dialog', { name: 'Antes de cambiar de dirección' }).waitFor();
 };
-const agree = page => page.getByLabel('Entiendo qué datos no se trasladan y conservaré la app anterior hasta comprobar el nuevo sitio.');
+const agree = page => page.locator('.domain-migration-consent input');
 const recheck = page => page.getByRole('button', { name: 'Volver a comprobar', exact: true });
 try {
   for (const options of [{}, { role: 'user' }, { loggedIn: false }]) {
@@ -80,14 +107,17 @@ try {
     await page.waitForFunction(() => !document.querySelector('.auth-loading'));
     assert.equal(await page.getByRole('region', { name: 'Prueba de cambio de dominio' }).count(), 0);
     assert.equal(state.calls, 0, 'ordinary visits do not sync or audit');
+    assert.equal(state.studyCalls.length, 0);
     await context.close();
   }
 
-  const studyKey = `ujeladea:study-draft:v1:${alice}:lesson-test`, recoveryKey = `ujeladea:recovery:v1:${alice}:request-test`;
+  const studyKey = `ujeladea:study-draft:v1:${alice}:${lessonId}`, recoveryKey = `ujeladea:recovery:v1:${alice}:${recoveryId}`;
+  const originalStudy = JSON.stringify({ version: 1, answers: { 0: 'Borrador privado de prueba' } });
+  const originalRecovery = JSON.stringify({ answers: ['Repaso de prueba', '', ''], read: true });
   const queueKey = `bible:favorites:${alice}:op:test-op`;
   const { context, page, state } = await setup({ seeds: {
-    [studyKey]: JSON.stringify({ version: 1, answers: { 0: 'Borrador privado de prueba' } }),
-    [recoveryKey]: JSON.stringify({ answers: ['Repaso de prueba', '', ''], read: true }),
+    [studyKey]: originalStudy,
+    [recoveryKey]: originalRecovery,
     [`ujeladea:study-draft:v1:${bob}:other`]: 'another-account-private-draft',
     [queueKey]: JSON.stringify({ id: 'test-op', key: key(2), entry: entry(2), queuedAt: 1 }),
     'bible:verseFavorites': JSON.stringify([entry(1)]),
@@ -119,7 +149,8 @@ try {
   await page.setViewportSize({ width: 390, height: 844 });
   await openReview(page);
   await page.getByText('1 favorito confirmado en tu cuenta.', { exact: true }).waitFor();
-  await page.getByText(/1 de estudio y 1 de recuperación/).waitFor();
+  await page.getByText('12 estudios completados confirmados en Supabase.', { exact: true }).waitFor();
+  await page.getByText('Aprender a escuchar', { exact: true }).waitFor();
   await page.getByText('Versiones guardadas aquí: RVR1960.', { exact: true }).waitFor();
   assert.equal(state.entries.size, 1, 'guest favorite not imported without permission');
   assert.equal(await page.getByRole('button', { name: 'Ir al nuevo sitio', exact: true }).isDisabled(), true);
@@ -127,22 +158,32 @@ try {
   await page.getByLabel('Estos favoritos locales son míos.').check();
   await page.getByRole('button', { name: 'Añadir a mi cuenta', exact: true }).click();
   await page.getByText('2 favoritos confirmados en tu cuenta.', { exact: true }).waitFor();
+  await page.getByText('Hay borradores que seguirán en esta app', { exact: true }).waitFor();
+  await agree(page).check();
+  await page.getByRole('link', { name: 'Ir al nuevo sitio', exact: true }).waitFor();
+  assert.ok((await page.locator('.domain-migration-consent').textContent()).includes('2 borradores con respuestas sin confirmar'));
+  await agree(page).uncheck();
   assert.equal(state.entries.size, 2);
   assert.ok(await page.evaluate(() => localStorage.getItem('bible:verseFavorites')), 'guest originals retained');
   assert.equal(await page.evaluate(key => localStorage.getItem(key), queueKey), null, 'only acknowledged queue operation removed');
   for (const width of [320, 390, 1440]) {
     await page.setViewportSize({ width, height: 844 });
     assert.ok(await page.getByRole('dialog').evaluate(el => el.scrollWidth <= el.clientWidth));
+    await page.locator('.domain-migration-review').evaluate(el => { el.scrollTop = 0; });
     await page.screenshot({ path: `${output}/review-pending-${width}.png` });
   }
   await page.getByRole('button', { name: 'Seguir aquí', exact: true }).click();
   assert.ok(await page.evaluate(key => localStorage.getItem(key), studyKey));
   await page.reload(); await openReview(page);
-  await page.getByText(/1 de estudio y 1 de recuperación/).waitFor();
-  // Simulate the existing study/recovery flows clearing their own saved drafts in this mocked account.
-  await page.evaluate(keys => keys.forEach(key => localStorage.removeItem(key)), [studyKey, recoveryKey]);
+  await page.getByText('Hay borradores que seguirán en esta app', { exact: true }).waitFor();
+  // Server confirmation reconciles stale copies without deleting a single local draft.
+  state.progress = [{ user_id: alice, lesson_id: lessonId, completed: true, answers: { 0: 'Borrador privado de prueba' } }];
+  state.recoveries = [{ user_id: alice, id: recoveryId, status: 'pending', answers: ['Repaso de prueba', '', ''] }];
   await recheck(page).click();
   await page.getByText('Sin pendientes en esta revisión', { exact: true }).waitFor();
+  await page.getByText('2 copias locales ya confirmadas en tu cuenta. Se conservan sin bloquear el cambio.', { exact: true }).waitFor();
+  assert.equal(await page.evaluate(key => localStorage.getItem(key), studyKey), originalStudy);
+  assert.equal(await page.evaluate(key => localStorage.getItem(key), recoveryKey), originalRecovery);
   await context.setOffline(true);
   await page.getByRole('alert').filter({ hasText: 'Sin conexión. Conéctate' }).waitFor();
   assert.equal(await agree(page).isDisabled(), true);
@@ -158,9 +199,10 @@ try {
   await page.evaluate(key => localStorage.setItem(key, '{"version":1,"answers":{"0":"New draft"}}'), studyKey);
   const departure = page.getByRole('link', { name: 'Ir al nuevo sitio', exact: true });
   if (await departure.count()) await departure.click();
-  await page.waitForFunction(() => document.querySelector('.domain-migration-consent input')?.disabled);
+  await page.waitForFunction(() => !document.querySelector('.domain-migration-consent input')?.checked);
+  await page.getByText('Hay borradores que seguirán en esta app', { exact: true }).waitFor();
   assert.equal(context.pages().length, 1, 'a fresh draft blocks even a previously enabled departure');
-  await page.evaluate(key => localStorage.removeItem(key), studyKey);
+  await page.evaluate(({ key, value }) => localStorage.setItem(key, value), { key: studyKey, value: originalStudy });
   await recheck(page).click(); await page.getByText('Sin pendientes en esta revisión', { exact: true }).waitFor();
   await agree(page).check();
   await page.evaluate(() => {
@@ -192,6 +234,8 @@ try {
   await arrival.screenshot({ path: `${output}/arrival-mobile.png` });
   assert.ok(await page.evaluate(() => localStorage.getItem('bible:bookmarks')));
   assert.ok(await page.evaluate(() => localStorage.getItem('bible:position')));
+  assert.equal(await page.evaluate(key => localStorage.getItem(key), studyKey), originalStudy);
+  assert.equal(await page.evaluate(key => localStorage.getItem(key), recoveryKey), originalRecovery);
   assert.ok(await page.evaluate(async () => (await caches.match('/data/test-hymn.json')).json()));
   assert.equal(await page.evaluate(id => localStorage.getItem(`ujeladea:study-draft:v1:${id}:other`), bob), 'another-account-private-draft');
   await page.getByRole('button', { name: 'Seguir aquí', exact: true }).click();
@@ -201,6 +245,60 @@ try {
   await page.getByRole('link', { name: 'Probar cambio de dominio', exact: true }).click();
   await page.getByRole('region', { name: 'Prueba de cambio de dominio' }).waitFor();
   await context.close();
+
+  const empty = await setup({ seeds: { [studyKey]: JSON.stringify({ version: 1, step: 3, answers: { 0: '  ' }, journalContent: '' }), [recoveryKey]: JSON.stringify({ answers: ['', '', ''], read: true }) } });
+  await empty.page.goto(`${old}/?traslado=piloto`); await openReview(empty.page);
+  await empty.page.getByText('Sin pendientes en esta revisión', { exact: true }).waitFor();
+  await empty.page.getByText('2 borradores sin respuestas ni notas. No impiden continuar y no se eliminan.', { exact: true }).waitFor();
+  assert.ok(empty.state.studyCalls.every(call => call.method === 'HEAD'), 'empty drafts need no private answer queries');
+  await agree(empty.page).check();
+  assert.ok(await empty.page.evaluate(key => localStorage.getItem(key), studyKey));
+  await empty.context.close();
+
+  const journalDraft = JSON.stringify({ version: 1, answers: { 0: 'Guardada' }, journalContent: 'Nota privada pendiente', verseInput: 'Jn 1:1' });
+  const journal = await setup({ seeds: { [studyKey]: journalDraft } });
+  journal.state.progress = [{ user_id: alice, lesson_id: lessonId, completed: true, answers: { 0: 'Guardada' } }];
+  await journal.page.goto(`${old}/?traslado=piloto`); await openReview(journal.page);
+  await journal.page.getByText('La lección está completada, pero hay respuestas o notas locales diferentes.', { exact: true }).waitFor();
+  assert.equal(await journal.page.getByText('Nota privada pendiente', { exact: true }).count(), 0);
+  await agree(journal.page).check();
+  const retainedPopup = journal.context.waitForEvent('page');
+  await journal.page.getByRole('link', { name: 'Ir al nuevo sitio', exact: true }).click();
+  const retainedArrival = await retainedPopup; await retainedArrival.waitForURL(`${destination}/?traslado=llegada`);
+  assert.equal(await journal.page.evaluate(key => localStorage.getItem(key), studyKey), journalDraft);
+  assert.equal(journal.page.url(), `${old}/?traslado=piloto`);
+  await retainedArrival.close();
+  journal.state.journals = [{ user_id: alice, lesson_id: lessonId, content: 'Nota privada pendiente', favorite_verses: ['Jn 1:1'] }];
+  await recheck(journal.page).click();
+  await journal.page.getByText('Sin pendientes en esta revisión', { exact: true }).waitFor();
+  assert.equal(await journal.page.evaluate(key => localStorage.getItem(key), studyKey), journalDraft);
+  journal.state.studyError = true; await recheck(journal.page).click();
+  await journal.page.getByRole('alert').filter({ hasText: 'No pudimos comprobar tus estudios en Supabase' }).waitFor();
+  assert.equal(await agree(journal.page).isDisabled(), true);
+  journal.state.studyError = false; await recheck(journal.page).click();
+  await journal.page.getByText('Sin pendientes en esta revisión', { exact: true }).waitFor();
+  await journal.context.close();
+
+  const studyTimeout = await setup(); studyTimeout.state.studyHung = true;
+  await studyTimeout.page.goto(`${old}/?traslado=piloto`); await openReview(studyTimeout.page);
+  await studyTimeout.page.getByRole('alert').filter({ hasText: 'No pudimos comprobar tus estudios en Supabase' }).waitFor({ timeout: 22000 });
+  assert.equal(await agree(studyTimeout.page).isDisabled(), true);
+  studyTimeout.state.studyHung = false; await recheck(studyTimeout.page).click();
+  await studyTimeout.page.getByText('Sin pendientes en esta revisión', { exact: true }).waitFor();
+  await studyTimeout.context.close();
+
+  const stale = await setup({ seeds: { [studyKey]: originalStudy } }); stale.state.holdStudy = true;
+  stale.state.progress = [{ user_id: alice, lesson_id: lessonId, completed: true, answers: { 0: 'Borrador privado de prueba' } }];
+  await stale.page.goto(`${old}/?traslado=piloto`); await openReview(stale.page);
+  for (let attempt = 0; attempt < 100 && !stale.state.releaseStudy; attempt++) await new Promise(resolve => setTimeout(resolve, 20));
+  assert.ok(stale.state.releaseStudy);
+  await stale.page.evaluate(key => { localStorage.setItem(key, '{"version":1,"answers":{"0":"Cambió durante la consulta"}}'); window.dispatchEvent(new StorageEvent('storage', { key })); }, studyKey);
+  stale.state.releaseStudy();
+  await stale.page.getByText('Hay borradores que seguirán en esta app', { exact: true }).waitFor();
+  assert.equal(await agree(stale.page).isChecked(), false);
+  assert.equal(await stale.page.getByText('Sin pendientes en esta revisión', { exact: true }).count(), 0);
+  assert.ok((await stale.page.evaluate(key => localStorage.getItem(key), studyKey)).includes('Cambió durante la consulta'));
+  await stale.context.close();
 
   for (const options of [{ seeds: { 'bible:bookmarks': '{corrupt' } }, { seeds: { [`bible:favorites:${alice}`]: '{"favorites":[{}]}' } }, { brokenDownloads: true }]) {
     const { context, page, state } = await setup(options);
@@ -232,5 +330,11 @@ try {
   assert.equal(await changedDuringSync.page.evaluate(id => localStorage.getItem(`bible:favorites:${id}`), alice), '{"favorites":[{}]}', 'late response never overwrites data that became unreadable');
   await changedDuringSync.context.close();
   assert.deepEqual(errors, []); assert.deepEqual(forbidden, []);
-  console.log('PASS: opt-in admin pilot, no regular-user banner or requests, scoped inventory, explicit guest import, offline/errors/timeouts, fresh-departure and save guards, preserved old app/storage, separate-origin login/arrival, responsive 320/390/1440 layouts. Mock accounts only.');
+  console.log('PASS: opt-in pilot, scoped read-only Supabase comparison, empty/confirmed drafts retained, journal and recovery checks, explicit pending-draft departure, offline/errors/timeouts, stale-response and save guards, preserved old app/storage, separate-origin login/arrival, responsive 320/390/1440 layouts. Mock accounts only.');
+} catch (error) {
+  for (const context of browser.contexts()) for (const page of context.pages()) {
+    console.error((await page.locator('body').innerText().catch(() => '')).slice(-7000));
+    await page.screenshot({ path: `${output}/failure.png` }).catch(() => {});
+  }
+  throw error;
 } finally { await browser.close(); }

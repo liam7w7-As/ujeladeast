@@ -185,19 +185,28 @@ try {
   const actionBounds = await page.locator('.study-session-actions-mobile').boundingBox();
   assert.ok(verseBounds.y >= 60 && verseBounds.y + verseBounds.height <= actionBounds.y, 'last input remains reachable above fixed actions');
   await page.screenshot({ path: `${output}/close-scrolled-mobile.png` });
+  for (const width of [320, 390, 1440]) {
+    await page.setViewportSize({ width, height: 844 });
+    const finish = page.getByRole('button', { name: 'Finalizar y guardar en mi cuenta', exact: true });
+    await finish.scrollIntoViewIfNeeded();
+    assert.ok(await finish.evaluate(el => el.scrollWidth <= el.clientWidth), 'save label fits the button');
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+    await page.screenshot({ path: `${output}/save-action-${width}.png` });
+  }
+  await page.setViewportSize({ width: 390, height: 844 });
   lessons[1].teaching += '<p>Actualización de prueba.</p>';
-  await page.getByRole('button', { name: 'Guardar estudio', exact: true }).click();
+  await page.getByRole('button', { name: 'Finalizar y guardar en mi cuenta', exact: true }).click();
   await page.getByRole('alert').filter({ hasText: 'La lección cambió' }).waitFor();
   assert.equal(writes.length, 0);
   lessons[1].teaching = lessons[1].teaching.replace('<p>Actualización de prueba.</p>', '');
   failJournal = true;
-  await page.getByRole('button', { name: 'Guardar estudio', exact: true }).click();
+  await page.getByRole('button', { name: 'Finalizar y guardar en mi cuenta', exact: true }).click();
   await page.getByRole('alert').filter({ hasText: 'No pudimos guardar' }).waitFor();
   assert.equal(writes.length, 0);
   failJournal = false; failProgress = true;
   holdSave = true;
-  await page.getByRole('button', { name: 'Guardar estudio', exact: true }).click();
-  await page.getByRole('button', { name: 'Guardando...', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Finalizar y guardar en mi cuenta', exact: true }).click();
+  await page.getByRole('button', { name: 'Guardando en tu cuenta...', exact: true }).waitFor();
   const savingGuard = await page.evaluate(() => {
     const event = new CustomEvent('ujeladea:before-update', { cancelable: true, detail: { reason: '' } });
     window.dispatchEvent(event);
@@ -208,10 +217,10 @@ try {
   while (!releaseSave) await new Promise(resolve => setTimeout(resolve, 20));
   holdSave = false;
   releaseSave();
-  await page.getByRole('button', { name: 'Guardar estudio', exact: true }).waitFor();
+  await page.getByRole('button', { name: 'Finalizar y guardar en mi cuenta', exact: true }).waitFor();
   assert.equal(writes.length, 0);
   failProgress = false;
-  await page.getByRole('button', { name: 'Guardar estudio', exact: true }).click();
+  await page.getByRole('button', { name: 'Finalizar y guardar en mi cuenta', exact: true }).click();
   await page.getByRole('heading', { name: 'Estudio guardado', exact: true }).waitFor();
   assert.deepEqual(writes[0].answers, { 0: 'Escuchar con atención antes de reaccionar.', 2: 'Dejaría terminar a la otra persona.' });
   assert.equal(streakWrites.at(-1).total_xp, 30, 'journal does not award XP');
@@ -234,16 +243,16 @@ try {
   await page.getByText('Lee Santiago 1:19-20 en tu Biblia.', { exact: true }).waitFor();
   await page.getByRole('button', { name: 'Continuar', exact: true }).click();
   failStreak = true;
-  await page.getByRole('button', { name: 'Guardar estudio', exact: true }).click();
+  await page.getByRole('button', { name: 'Finalizar y guardar en mi cuenta', exact: true }).click();
   if (atomic) {
     await page.getByRole('alert').filter({ hasText: 'No pudimos guardar' }).waitFor();
     assert.equal(progress.has('lesson-4'), false, 'A failed atomic call cannot confirm a lesson');
     failStreak = false; loseResponse = true;
-    await page.getByRole('button', { name: 'Guardar estudio', exact: true }).click();
+    await page.getByRole('button', { name: 'Finalizar y guardar en mi cuenta', exact: true }).click();
     await page.getByRole('alert').filter({ hasText: 'No pudimos guardar' }).waitFor();
     assert.equal(progress.has('lesson-4'), true, 'Simulated committed save with lost response');
     const xp = streak.total_xp;
-    await page.getByRole('button', { name: 'Guardar estudio', exact: true }).click();
+    await page.getByRole('button', { name: 'Finalizar y guardar en mi cuenta', exact: true }).click();
     await page.getByRole('heading', { name: 'Estudio guardado', exact: true }).waitFor();
     assert.equal(streak.total_xp, xp, 'Recovering the response must not award XP again');
   } else {
@@ -268,7 +277,7 @@ try {
   await page.getByRole('button', { name: 'Continuar', exact: true }).click();
   await page.getByLabel('¿Cómo la aplicarías en una conversación?', { exact: true }).fill('Escuchando con paciencia.');
   await page.getByRole('button', { name: 'Continuar', exact: true }).click();
-  await page.getByRole('button', { name: 'Guardar estudio', exact: true }).click();
+  await page.getByRole('button', { name: 'Finalizar y guardar en mi cuenta', exact: true }).click();
   await page.getByText('¡Semana 2 desbloqueada! Completaste la semana 1.', { exact: true }).waitFor();
   await page.getByRole('button', { name: 'Volver a mi estudio', exact: true }).click();
   await page.getByRole('button', { name: 'Continuar: día 8 de 365', exact: true }).waitFor();

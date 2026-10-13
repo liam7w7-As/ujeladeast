@@ -41,6 +41,9 @@
 .study-session-actions button:focus-visible { outline: 2px solid #e6aabc; outline-offset: 3px; }
 .study-primary { display: inline-flex; justify-content: center; align-items: center; gap: 10px; min-height: 48px; padding: 12px 20px; border-radius: 8px; background: #a93353; color: white; font-size: 13px; font-weight: 650; }
 .study-primary:hover { background: #ba4163; }
+.study-session-actions .study-primary { min-width: 0; max-width: 100%; }
+.study-session-actions .study-primary svg, .study-save-status svg { flex-shrink: 0; }
+.study-session-actions .study-primary span { min-width: 0; overflow-wrap: anywhere; }
 .study-back { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; font-size: 13px; color: #b9c7bf; }
 .study-session button:disabled { opacity: .45; cursor: not-allowed; }
 .study-session button:focus-visible, .study-session summary:focus-visible { outline: 2px solid #e6aabc; outline-offset: 3px; }

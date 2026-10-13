@@ -86,13 +86,13 @@ export default function StudySession({ userId, lesson, ordinal, total, onExit, o
   const exit = () => storageError && !readOnly && !result ? setConfirmExit(true) : onExit();
   const actions = mobile => <div className={`study-session-actions${mobile ? ' study-session-actions-mobile' : ''}`}>
     <button type="button" onClick={() => go(stepIndex - 1)} disabled={busy || transitioning || stepIndex === 0} className="study-back"><ArrowLeft size={18} />Anterior</button>
-    <motion.button type="submit" form="study-session-form" className="study-primary" disabled={busy || transitioning} whileTap={reduced ? undefined : { scale: 0.98 }}>{busy ? <><LoaderCircle size={18} className="animate-spin" />Guardando...</> : <>{step.id === 'close' ? readOnly ? 'Volver al estudio' : 'Guardar estudio' : 'Continuar'}<ArrowRight size={18} /></>}</motion.button>
+    <motion.button type="submit" form="study-session-form" className="study-primary" disabled={busy || transitioning} whileTap={reduced ? undefined : { scale: 0.98 }}>{busy ? <><LoaderCircle size={18} className="animate-spin" />Guardando en tu cuenta...</> : <><span>{step.id === 'close' ? readOnly ? 'Volver al estudio' : 'Finalizar y guardar en mi cuenta' : 'Continuar'}</span><ArrowRight size={18} /></>}</motion.button>
   </div>;
 
   return <section className="study-session" aria-label="Estudio por pasos">
     <div className="study-session-toolbar">
       <button type="button" onClick={exit} disabled={busy}><ArrowLeft size={18} />Mi estudio</button>
-      <span className="study-save-status" role="status">{readOnly ? <><CheckCircle2 size={15} />Completado</> : result ? <><CloudCheck size={15} />Guardado</> : storageError ? <><CircleAlert size={15} />Sin guardar</> : <><Check size={15} />Borrador en este navegador</>}</span>
+      <span className="study-save-status" role="status">{busy ? <><LoaderCircle size={15} className="animate-spin" />Guardando en tu cuenta</> : readOnly || result ? <><CloudCheck size={15} />Confirmado en tu cuenta</> : storageError ? <><CircleAlert size={15} />Sin guardar</> : <><Check size={15} />Borrador en este dispositivo</>}</span>
     </div>
     {result ? <motion.div className="study-finished" initial={reduced ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
       <CheckCircle2 size={44} /><h1 ref={heading} tabIndex={-1}>Estudio guardado</h1>
