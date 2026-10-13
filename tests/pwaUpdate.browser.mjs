@@ -20,6 +20,7 @@ const types = { '.js': 'application/javascript', '.css': 'text/css', '.html': 't
 const server = createServer(async (request, response) => {
   try {
     const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
+    if (pathname === '/sitemap-publicaciones.xml') { response.writeHead(503, { 'Content-Type': 'text/plain' }).end('Sitemap temporarily unavailable'); return; }
     const root = resolve(output, active);
     let file = resolve(root, `.${pathname}`);
     if (file !== root && !file.startsWith(root + sep)) { response.writeHead(403).end(); return; }
@@ -46,14 +47,17 @@ try {
   assert.equal(await page.getByRole('dialog', { name: 'Nueva versión disponible' }).count(), 0, 'No update popup on first installation');
   assert.equal(await page.evaluate(() => document.documentElement.dataset.appBuild), 'pwa-test-A');
   const files = await context.newPage();
-  for (const path of ['/sitemap.xml', '/robots.txt', '/sitemap.xml?check=1', '/robots.txt?check=1']) {
+  for (const path of ['/sitemap.xml', '/sitemap-paginas.xml', '/robots.txt', '/sitemap.xml?check=1', '/sitemap-paginas.xml?check=1', '/robots.txt?check=1']) {
     const response = await files.goto(base + path);
     const pathname = new URL(path, base).pathname;
     assert.equal(response.status(), 200);
     assert.equal(response.fromServiceWorker(), false, `${path} must not receive the offline app shell`);
     assert.match(response.headers()['content-type'], pathname.endsWith('.xml') ? /application\/xml/ : /text\/plain/);
-    assert.equal(await response.text(), await readFile(resolve('public', pathname.slice(1)), 'utf8'));
+    assert.equal(await response.text(), await readFile(resolve(pathname === '/sitemap-paginas.xml' ? `${output}/A` : 'public', pathname.slice(1)), 'utf8'));
   }
+  const unavailableSitemap = await files.goto(base + '/sitemap-publicaciones.xml');
+  assert.equal(unavailableSitemap.status(), 503, 'An unavailable dynamic sitemap must not receive the app shell');
+  assert.equal(unavailableSitemap.fromServiceWorker(), false);
   await files.goto(base + '/biblia?version=RVR1960&book=PSA&chapter=23');
   await files.waitForFunction(() => document.documentElement.dataset.appBuild === 'pwa-test-A');
   assert.equal(new URL(files.url()).searchParams.get('chapter'), '23', 'Bible deep links still use the app shell');

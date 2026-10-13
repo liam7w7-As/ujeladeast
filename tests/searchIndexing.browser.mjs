@@ -1,11 +1,12 @@
 import { createRequire } from 'node:module';
 import { readFile } from 'node:fs/promises';
 import assert from 'node:assert/strict';
+import { publicPages } from '../src/lib/siteContent.js';
 
 const { chromium } = createRequire(import.meta.url)('playwright');
 const base = process.env.SEARCH_TEST_URL || 'http://127.0.0.1:5177';
 const deployed = process.env.SEARCH_TEST_DEPLOYED === '1';
-const expectedPaths = ['/', '/feed', '/himnario', '/biblia', '/sociedades', '/recursos'];
+const expectedPaths = Object.keys(publicPages);
 const source = await readFile(new URL('../public/sitemap.xml', import.meta.url), 'utf8');
 const robots = await readFile(new URL('../public/robots.txt', import.meta.url), 'utf8');
 for (const name of ['sitemap.xml', 'robots.txt']) {
@@ -22,17 +23,16 @@ try {
       invalid: doc.querySelector('parsererror') !== null,
       name: doc.documentElement.localName,
       namespace: doc.documentElement.namespaceURI,
-      urls: [...doc.getElementsByTagNameNS(ns, 'url')].map(node => ({
-        locs: [...node.getElementsByTagNameNS(ns, 'loc')].map(loc => loc.textContent),
-        fields: [...node.children].map(child => child.localName),
-      })),
+      locs: [...doc.getElementsByTagNameNS(ns, 'loc')].map(loc => loc.textContent),
     };
   }, source);
   assert.equal(parsed.invalid, false);
-  assert.equal(parsed.name, 'urlset');
+  assert.equal(parsed.name, 'sitemapindex');
   assert.equal(parsed.namespace, 'http://www.sitemaps.org/schemas/sitemap/0.9');
-  assert.deepEqual(parsed.urls.map(url => url.locs), expectedPaths.map(path => [`https://www.ujeladea.org${path}`]));
-  assert.ok(parsed.urls.every(url => url.fields.length === 1 && url.fields[0] === 'loc'), 'no invented modification dates or extra URLs');
+  assert.deepEqual(parsed.locs, ['https://www.ujeladea.org/sitemap-paginas.xml', 'https://www.ujeladea.org/sitemap-publicaciones.xml']);
+  const pagesXml = await readFile(new URL('../dist/sitemap-paginas.xml', import.meta.url), 'utf8');
+  const pageUrls = await page.evaluate(xml => [...new DOMParser().parseFromString(xml, 'application/xml').querySelectorAll('loc')].map(node => node.textContent), pagesXml);
+  assert.deepEqual(pageUrls, expectedPaths.map(path => `https://www.ujeladea.org${path}`));
 
   const origins = deployed ? ['https://www.ujeladea.org', 'https://ujeladeast.vercel.app'] : [base];
   for (const origin of origins) {
@@ -47,9 +47,37 @@ try {
       assert.equal(response.status, 200, `${origin}${path} is a real direct entry point`);
       assert.match(response.headers.get('content-type') || '', /text\/html/);
       assert.ok(!/noindex/i.test(response.headers.get('x-robots-tag') || ''));
-      assert.match(await response.text(), /<div id="root"><\/div>/);
+      const html = await response.text();
+      assert.match(html, /<main/);
+      const metadata = await page.evaluate(html => {
+        const document = new DOMParser().parseFromString(html, 'text/html');
+        return { title: document.title, canonical: document.querySelector('link[rel="canonical"]')?.href, description: document.querySelector('meta[name="description"]')?.content, schema: JSON.parse(document.querySelector('script[type="application/ld+json"]')?.textContent || '{}') };
+      }, html);
+      assert.equal(metadata.canonical, `https://www.ujeladea.org${path}`);
+      assert.equal(metadata.title, publicPages[path].title);
+      assert.ok(metadata.description && metadata.schema['@graph']);
     }
     if (!deployed) continue;
+    const postsXml = await fetch(origin + '/sitemap-publicaciones.xml', { signal: AbortSignal.timeout(30000) });
+    assert.equal(postsXml.status, 200, 'live publication sitemap');
+    assert.match(postsXml.headers.get('content-type'), /application\/xml/);
+    const postUrls = await page.evaluate(xml => {
+      const doc = new DOMParser().parseFromString(xml, 'application/xml');
+      if (doc.querySelector('parsererror')) throw new Error('Invalid post XML');
+      return [...doc.querySelectorAll('loc')].map(node => node.textContent);
+    }, await postsXml.text());
+    if (postUrls.length) {
+      const path = new URL(postUrls[0]).pathname;
+      const postResponse = await fetch(origin + path, { signal: AbortSignal.timeout(30000) });
+      assert.equal(postResponse.status, 200);
+      const html = await postResponse.text();
+      assert.match(html, /SocialMediaPosting/);
+      assert.match(html, /publication-text/);
+      assert.ok(html.includes(postUrls[0]));
+    }
+    const missingPost = await fetch(origin + '/publicaciones/00000000-0000-0000-0000-000000000000', { signal: AbortSignal.timeout(30000) });
+    assert.equal(missingPost.status, 404);
+    assert.match(missingPost.headers.get('x-robots-tag') || '', /noindex/);
     for (const path of ['/login', '/register', '/recuperar', '/chat', '/estudios', '/admin', '/admin/seguimiento']) {
       const response = await fetch(origin + path, { redirect: 'manual', signal: AbortSignal.timeout(20000) });
       assert.equal(response.status, 200, `${path} remains accessible`);
@@ -69,5 +97,5 @@ try {
     const manifest = await (await fetch(origin + '/manifest.webmanifest', { signal: AbortSignal.timeout(20000) })).json();
     for (const key of ['id', 'start_url', 'scope']) assert.equal(manifest[key], '/', `PWA ${key} is preserved`);
   }
-  console.log(`PASS: valid six-page XML sitemap, public robots.txt, unchanged build assets, direct public routes${deployed ? ', deployed noindex headers, real 404s, both origins and PWA identity preserved' : ' (Vercel headers/404s require deployed mode)'}.`);
+  console.log(`PASS: sitemap index, eight public pages, canonical metadata, structured data${deployed ? ', live public posts, real 404s, noindex, both origins and PWA identity preserved' : ' (dynamic sitemap and Vercel responses require deployed mode)'}.`);
 } finally { await browser.close(); }

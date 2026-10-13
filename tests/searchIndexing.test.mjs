@@ -1,15 +1,19 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import { publicPages } from '../src/lib/siteContent.js';
 
 const config = JSON.parse(await readFile(new URL('../vercel.json', import.meta.url), 'utf8'));
 
 test('known SPA routes open directly without rewriting assets, APIs or unknown public paths', () => {
-  const paths = ['/feed', '/himnario', '/biblia', '/sociedades', '/recursos', '/estudios', '/login', '/register', '/recuperar', '/chat', '/admin/:path*'];
-  assert.deepEqual(config.rewrites.map(rule => rule.source), paths);
-  assert.ok(config.rewrites.every(rule => rule.destination === '/index.html'));
+  for (const path of Object.keys(publicPages).filter(path => path !== '/')) assert.ok(config.rewrites.some(rule => rule.source === path && rule.destination === `/seo-pages${path}.html`));
+  for (const path of ['/estudios', '/login', '/register', '/recuperar', '/chat', '/admin/:path*']) assert.ok(config.rewrites.some(rule => rule.source === path && rule.destination === '/app.html'));
+  assert.ok(config.rewrites.some(rule => rule.source === '/publicaciones/:id' && rule.destination === '/api/public-seo?kind=post&id=:id'));
+  assert.ok(config.rewrites.some(rule => rule.source === '/sitemap-publicaciones.xml' && rule.destination === '/api/public-seo?kind=sitemap'));
+  assert.ok(!config.rewrites.some(rule => rule.source === '/:path*'));
   assert.equal(config.redirects, undefined, 'no forced migration of the old PWA');
-  assert.deepEqual(config.functions, { 'api/daily-bible-fact.js': { maxDuration: 30 } });
+  assert.deepEqual(config.functions['api/daily-bible-fact.js'], { maxDuration: 30 });
+  assert.equal(config.functions['api/public-seo.js'].includeFiles, 'dist/seo-template.html');
 });
 
 test('private and account pages use noindex without suppressing public content or SW updates', async () => {

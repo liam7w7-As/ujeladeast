@@ -18,6 +18,7 @@ const tabs = [
   { to: '/estudios', label: 'Estudios', kind: 'study', Icon: NotebookPen },
 ];
 const extraLinks = [
+  { to: '/nosotros', label: 'Quiénes somos', Icon: Users },
   { to: '/sociedades', label: 'Sociedades', Icon: Users },
   { to: '/recursos', label: 'Recursos', Icon: Library },
   { to: '/chat', label: 'UJELADITO', Icon: MessageCircle },

@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom'
 const footerGroups = [
   {
     title: 'Plataforma',
-    links: [['Inicio', '/'], ['Comunidad', '/feed'], ['Recursos', '/recursos']],
+    links: [['Inicio', '/'], ['Quiénes somos', '/nosotros'], ['Comunidad', '/feed'], ['Recursos', '/recursos']],
   },
   {
     title: 'Crecer juntos',
-    links: [['Estudios', '/estudios'], ['Biblia', '/biblia'], ['Himnario', '/himnario'], ['Sociedades', '/sociedades']],
+    links: [['Estudio bíblico', '/estudio-biblico'], ['Biblia', '/biblia'], ['Himnario', '/himnario'], ['Sociedades', '/sociedades']],
   },
 ]
 
@@ -23,8 +23,8 @@ function Footer() {
             </span>
           </Link>
           <p className="max-w-xs font-inter text-sm font-light leading-relaxed text-white/50">
-            Unidos en Cristo, creciendo juntos. Parte de UJELAB y la Iglesia
-            Nacional INELA Bolivia.
+            Juventud Los Amigos del Distrito El Alto. Dependiente de UJELAB,
+            la rama juvenil nacional de INELA en Bolivia.
           </p>
         </div>
 

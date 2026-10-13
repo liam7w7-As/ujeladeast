@@ -1,17 +1,24 @@
 {
-  "functions": { "api/daily-bible-fact.js": { "maxDuration": 30 } },
+  "functions": {
+    "api/daily-bible-fact.js": { "maxDuration": 30 },
+    "api/public-seo.js": { "maxDuration": 30, "includeFiles": "dist/seo-template.html" }
+  },
   "rewrites": [
-    { "source": "/feed", "destination": "/index.html" },
-    { "source": "/himnario", "destination": "/index.html" },
-    { "source": "/biblia", "destination": "/index.html" },
-    { "source": "/sociedades", "destination": "/index.html" },
-    { "source": "/recursos", "destination": "/index.html" },
-    { "source": "/estudios", "destination": "/index.html" },
-    { "source": "/login", "destination": "/index.html" },
-    { "source": "/register", "destination": "/index.html" },
-    { "source": "/recuperar", "destination": "/index.html" },
-    { "source": "/chat", "destination": "/index.html" },
-    { "source": "/admin/:path*", "destination": "/index.html" }
+    { "source": "/nosotros", "destination": "/seo-pages/nosotros.html" },
+    { "source": "/estudio-biblico", "destination": "/seo-pages/estudio-biblico.html" },
+    { "source": "/feed", "destination": "/seo-pages/feed.html" },
+    { "source": "/himnario", "destination": "/seo-pages/himnario.html" },
+    { "source": "/biblia", "destination": "/seo-pages/biblia.html" },
+    { "source": "/sociedades", "destination": "/seo-pages/sociedades.html" },
+    { "source": "/recursos", "destination": "/seo-pages/recursos.html" },
+    { "source": "/publicaciones/:id", "destination": "/api/public-seo?kind=post&id=:id" },
+    { "source": "/sitemap-publicaciones.xml", "destination": "/api/public-seo?kind=sitemap" },
+    { "source": "/estudios", "destination": "/app.html" },
+    { "source": "/login", "destination": "/app.html" },
+    { "source": "/register", "destination": "/app.html" },
+    { "source": "/recuperar", "destination": "/app.html" },
+    { "source": "/chat", "destination": "/app.html" },
+    { "source": "/admin/:path*", "destination": "/app.html" }
   ],
   "headers": [
     {

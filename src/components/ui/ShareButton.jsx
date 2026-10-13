@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Check, Copy, MessageCircle, Send, Share2, ThumbsUp } from 'lucide-react';
+import { SITE_URL } from '../../lib/siteContent';
+import { postPath } from '../../lib/seo';
 
 export default function ShareButton({ post, className = 'flex items-center gap-2 text-white/60 hover:text-white', iconOnly = false }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -7,7 +9,7 @@ export default function ShareButton({ post, className = 'flex items-center gap-2
   const [error, setError] = useState('');
   const menuRef = useRef(null);
 
-  const postUrl = `${window.location.origin}/feed?post=${post.id}`;
+  const postUrl = `${SITE_URL}${postPath(post.id)}`;
   const shareText = `Mira esta publicación en UJELADEA: "${(post.content || '').substring(0, 80)}"`;
 
   useEffect(() => {

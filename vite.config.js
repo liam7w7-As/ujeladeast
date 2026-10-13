@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import { env } from 'node:process'
+import seoBuildPlugin from './scripts/build-seo.mjs'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -12,6 +13,7 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    seoBuildPlugin(),
     VitePWA({
       registerType: 'prompt',
       includeAssets: ['favicon.ico', 'favicon-v2.png', 'apple-touch-icon-v2.png', 'masked-icon.svg'],
@@ -19,7 +21,7 @@ export default defineConfig({
         id: '/',
         name: 'UJELADEA',
         short_name: 'UJELADEA',
-        description: 'Plataforma digital de la juventud INELA - Distrito El Alto',
+        description: 'UJELADEA, juventud Los Amigos del Distrito El Alto, dependiente de UJELAB',
         theme_color: '#09090b',
         background_color: '#09090b',
         display: 'standalone',
@@ -58,7 +60,9 @@ export default defineConfig({
       workbox: {
         skipWaiting: false,
         clientsClaim: true,
-        navigateFallbackDenylist: [/^\/(?:sitemap\.xml|robots\.txt)(?:\?|$)/],
+        navigateFallback: '/app.html',
+        navigateFallbackDenylist: [/^\/(?:sitemap(?:-paginas|-publicaciones)?\.xml|robots\.txt)(?:\?|$)/],
+        globIgnores: ['**/seo-template.html', '**/seo-pages/**'],
         globPatterns: ['**/*.{js,css,html,ico,png,webp,svg,woff2}'],
         runtimeCaching: [
           {

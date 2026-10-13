@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Heart, Maximize2, MessageCircle } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { postPath } from '../../lib/seo';
 import { useAuth } from '../../hooks/useAuth';
 import { postCategory, postTime } from '../../lib/feed';
 import CommentsSection from './CommentsSection';
@@ -72,7 +73,7 @@ export default function PostCard({ id, profiles, created_at, content, image_url,
     <header className="feed-post-header">
       <ProfileAvatar profile={profiles} className="h-9 w-9" />
       <div className="feed-post-author"><h2>{author}</h2><p>{profiles?.church_name || 'Comunidad UJELADEA'}</p></div>
-      <time dateTime={created_at} title={created_at}>{postTime(created_at)}</time>
+      <Link to={postPath(id)} title="Abrir publicación" aria-label={`Abrir publicación de ${author}`}><time dateTime={created_at} title={created_at}>{postTime(created_at)}</time></Link>
     </header>
     {image_url ? (imageFailed ? <p className="feed-image-error">No se pudo cargar la imagen.</p> : <div className="feed-post-media" onDoubleClick={doubleLike}>
       <img src={image_url} alt={`Imagen de la publicación de ${author}`} loading={entranceIndex === 0 ? 'eager' : 'lazy'} decoding="async" onError={() => setImageFailed(true)} />
