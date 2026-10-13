@@ -1,9 +1,30 @@
 {
   "functions": { "api/daily-bible-fact.js": { "maxDuration": 30 } },
+  "rewrites": [
+    { "source": "/feed", "destination": "/index.html" },
+    { "source": "/himnario", "destination": "/index.html" },
+    { "source": "/biblia", "destination": "/index.html" },
+    { "source": "/sociedades", "destination": "/index.html" },
+    { "source": "/recursos", "destination": "/index.html" },
+    { "source": "/estudios", "destination": "/index.html" },
+    { "source": "/login", "destination": "/index.html" },
+    { "source": "/register", "destination": "/index.html" },
+    { "source": "/recuperar", "destination": "/index.html" },
+    { "source": "/chat", "destination": "/index.html" },
+    { "source": "/admin/:path*", "destination": "/index.html" }
+  ],
   "headers": [
     {
       "source": "/sw.js",
       "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }]
+    },
+    {
+      "source": "/:page(login|register|recuperar|estudios|chat)",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }]
+    },
+    {
+      "source": "/admin/:path*",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }]
     }
   ]
 }

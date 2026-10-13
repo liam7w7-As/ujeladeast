@@ -16,7 +16,7 @@ for (const version of ['A', 'B']) {
   console.log(`Built ${version}`);
 }
 let active = 'A';
-const types = { '.js': 'application/javascript', '.css': 'text/css', '.html': 'text/html', '.json': 'application/json', '.webmanifest': 'application/manifest+json', '.png': 'image/png', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.woff2': 'font/woff2' };
+const types = { '.js': 'application/javascript', '.css': 'text/css', '.html': 'text/html', '.xml': 'application/xml', '.txt': 'text/plain', '.json': 'application/json', '.webmanifest': 'application/manifest+json', '.png': 'image/png', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.woff2': 'font/woff2' };
 const server = createServer(async (request, response) => {
   try {
     const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
@@ -45,6 +45,19 @@ try {
   await page.waitForFunction(() => navigator.serviceWorker.controller);
   assert.equal(await page.getByRole('dialog', { name: 'Nueva versión disponible' }).count(), 0, 'No update popup on first installation');
   assert.equal(await page.evaluate(() => document.documentElement.dataset.appBuild), 'pwa-test-A');
+  const files = await context.newPage();
+  for (const path of ['/sitemap.xml', '/robots.txt', '/sitemap.xml?check=1', '/robots.txt?check=1']) {
+    const response = await files.goto(base + path);
+    const pathname = new URL(path, base).pathname;
+    assert.equal(response.status(), 200);
+    assert.equal(response.fromServiceWorker(), false, `${path} must not receive the offline app shell`);
+    assert.match(response.headers()['content-type'], pathname.endsWith('.xml') ? /application\/xml/ : /text\/plain/);
+    assert.equal(await response.text(), await readFile(resolve('public', pathname.slice(1)), 'utf8'));
+  }
+  await files.goto(base + '/biblia?version=RVR1960&book=PSA&chapter=23');
+  await files.waitForFunction(() => document.documentElement.dataset.appBuild === 'pwa-test-A');
+  assert.equal(new URL(files.url()).searchParams.get('chapter'), '23', 'Bible deep links still use the app shell');
+  await files.close();
   await page.evaluate(async () => {
     localStorage.setItem('ujeladea:study-draft:v1:test:lesson', 'draft stays');
     localStorage.setItem('pwa-test-favorite', 'Juan 3:16');
@@ -118,7 +131,7 @@ try {
   assert.equal(await popup.count(), 0, 'No false update prompt offline');
   await context.close();
   assert.deepEqual(errors, []);
-  console.log('PASS: real A -> B worker update, responsive popup above Bible, later, save guard, multi-tab consent, localStorage/IndexedDB/hymn cache preserved, offline activation and reload.');
+  console.log('PASS: real XML/text navigation under an installed worker, Bible deep links, real A -> B worker update, responsive popup above Bible, later, save guard, multi-tab consent, localStorage/IndexedDB/hymn cache preserved, offline activation and reload.');
 } finally {
   await browser.close();
   await new Promise(resolve => server.close(resolve));

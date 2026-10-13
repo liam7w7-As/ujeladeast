@@ -58,6 +58,7 @@ export default defineConfig({
       workbox: {
         skipWaiting: false,
         clientsClaim: true,
+        navigateFallbackDenylist: [/^\/(?:sitemap\.xml|robots\.txt)(?:\?|$)/],
         globPatterns: ['**/*.{js,css,html,ico,png,webp,svg,woff2}'],
         runtimeCaching: [
           {
