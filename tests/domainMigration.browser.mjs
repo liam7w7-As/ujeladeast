@@ -15,7 +15,7 @@ const session = id => ({ access_token: `test-${id}`, refresh_token: 'test-refres
 const entry = n => ({ version: 'RVR1960', book: 'PSA', chapter: 23, reference: `PSA.23.${n}`, title: 'Salmos', text: `Texto de prueba ${n}` });
 const key = n => `RVR1960:PSA.23.${n}`;
 const errors = [], forbidden = [];
-async function setup({ role = 'admin', loggedIn = true, seeds = {}, brokenDownloads = false } = {}) {
+async function setup({ role = 'user', loggedIn = true, seeds = {}, brokenDownloads = false } = {}) {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce', serviceWorkers: 'block' });
   await context.routeWebSocket('**', socket => socket.close());
   const state = { calls: 0, missing: false, hung: false, entries: new Map(), revision: 0, receipts: new Set(),
@@ -100,16 +100,41 @@ const openReview = async page => {
 const agree = page => page.locator('.domain-migration-consent input');
 const recheck = page => page.getByRole('button', { name: 'Volver a comprobar', exact: true });
 try {
-  for (const options of [{}, { role: 'user' }, { loggedIn: false }]) {
+  for (const options of [{}, { role: 'admin' }, { loggedIn: false }]) {
     const { context, page, state } = await setup(options);
-    await page.goto(`${old}/${Object.keys(options).length ? '?traslado=piloto' : ''}`);
+    await page.goto(`${old}/`);
     await page.getByRole('link', { name: 'UJELADEA inicio', exact: true }).last().waitFor();
     await page.waitForFunction(() => !document.querySelector('.auth-loading'));
-    assert.equal(await page.getByRole('region', { name: 'Prueba de cambio de dominio' }).count(), 0);
-    assert.equal(state.calls, 0, 'ordinary visits do not sync or audit');
+    await page.getByRole('region', { name: 'Cambio de dominio', exact: true }).waitFor();
+    assert.equal(state.calls, 0, 'public notice does not automatically sync or audit');
     assert.equal(state.studyCalls.length, 0);
+    assert.equal(page.url(), `${old}/`, 'ordinary visits never redirect');
+    await page.getByRole('button', { name: 'Más tarde', exact: true }).click();
+    await page.reload();
+    await page.getByRole('link', { name: 'Ver aviso de ujeladea.org', exact: true }).waitFor();
+    assert.equal(await page.getByRole('region', { name: 'Cambio de dominio', exact: true }).count(), 0, 'dismissal survives reload for this session');
+    await page.getByRole('link', { name: 'Ver aviso de ujeladea.org', exact: true }).click();
+    await page.getByRole('region', { name: 'Cambio de dominio', exact: true }).waitFor();
+    if (options.loggedIn === false) {
+      assert.equal(await page.getByRole('button', { name: 'Revisar mis datos', exact: true }).count(), 0);
+      await page.getByRole('link', { name: 'Entrar y revisar mis datos', exact: true }).click();
+      await page.getByLabel('Correo electrónico').fill('pilot@example.invalid');
+      await page.getByLabel('Contraseña', { exact: true }).fill('test-password-only');
+      await page.getByRole('button', { name: 'Iniciar sesión', exact: true }).click();
+      await page.waitForURL(`${old}/?traslado=revisar`);
+      await page.getByRole('button', { name: 'Revisar mis datos', exact: true }).waitFor();
+      assert.equal(state.calls, 0, 'sign-in alone does not start the review');
+    }
     await context.close();
   }
+
+  const alreadyThere = await setup();
+  await alreadyThere.page.goto(`${destination}/`);
+  await alreadyThere.page.getByRole('link', { name: 'UJELADEA inicio', exact: true }).last().waitFor();
+  assert.equal(await alreadyThere.page.locator('.domain-migration-notice').count(), 0, 'no move-away notice on the new domain');
+  await alreadyThere.page.getByRole('button', { name: 'Más opciones', exact: true }).click();
+  assert.equal(await alreadyThere.page.getByRole('link', { name: 'Nuevo dominio: ujeladea.org', exact: true }).count(), 0);
+  await alreadyThere.context.close();
 
   const studyKey = `ujeladea:study-draft:v1:${alice}:${lessonId}`, recoveryKey = `ujeladea:recovery:v1:${alice}:${recoveryId}`;
   const originalStudy = JSON.stringify({ version: 1, answers: { 0: 'Borrador privado de prueba' } });
@@ -126,10 +151,10 @@ try {
   } });
   await page.goto(`${old}/`);
   await page.getByLabel('Más opciones', { exact: true }).click();
-  await page.getByRole('link', { name: 'Probar cambio de dominio', exact: true }).click();
-  await page.waitForURL(`${old}/?traslado=piloto`);
-  await page.getByRole('region', { name: 'Prueba de cambio de dominio' }).waitFor();
-  assert.equal(state.calls, 0, 'opening the pilot banner alone does not modify favorites');
+  await page.getByRole('link', { name: 'Nuevo dominio: ujeladea.org', exact: true }).click();
+  await page.waitForURL(`${old}/?traslado=revisar`);
+  await page.getByRole('region', { name: 'Cambio de dominio', exact: true }).waitFor();
+  assert.equal(state.calls, 0, 'opening the public banner alone does not modify favorites');
   await page.evaluate(async () => {
     const db = await new Promise((resolve, reject) => {
       const request = indexedDB.open('ujeladea-bible', 1);
@@ -222,7 +247,7 @@ try {
   const arrival = await popupEvent; arrival.on('pageerror', error => errors.push(error.message));
   await arrival.waitForURL(`${destination}/?traslado=llegada`);
   await arrival.getByRole('region', { name: 'Bienvenida al nuevo dominio' }).waitFor();
-  assert.equal(page.url(), `${old}/?traslado=piloto`, 'old app remains on its original origin');
+  assert.equal(page.url(), `${old}/?traslado=revisar`, 'old app remains on its original origin');
   assert.equal(await arrival.evaluate(() => window.opener), null);
   assert.equal(await arrival.evaluate(() => localStorage.getItem('sb-placeholder-auth-token')), null, 'credentials not copied');
   await arrival.getByRole('region', { name: 'Bienvenida al nuevo dominio' }).getByRole('link', { name: 'Iniciar sesión' }).click();
@@ -240,10 +265,10 @@ try {
   assert.equal(await page.evaluate(id => localStorage.getItem(`ujeladea:study-draft:v1:${id}:other`), bob), 'another-account-private-draft');
   await page.getByRole('button', { name: 'Seguir aquí', exact: true }).click();
   await page.getByRole('button', { name: 'Más tarde', exact: true }).click();
-  assert.equal(await page.getByRole('region', { name: 'Prueba de cambio de dominio' }).count(), 0);
+  assert.equal(await page.getByRole('region', { name: 'Cambio de dominio', exact: true }).count(), 0);
   await page.getByLabel('Más opciones', { exact: true }).click();
-  await page.getByRole('link', { name: 'Probar cambio de dominio', exact: true }).click();
-  await page.getByRole('region', { name: 'Prueba de cambio de dominio' }).waitFor();
+  await page.getByRole('link', { name: 'Nuevo dominio: ujeladea.org', exact: true }).click();
+  await page.getByRole('region', { name: 'Cambio de dominio', exact: true }).waitFor();
   await context.close();
 
   const empty = await setup({ seeds: { [studyKey]: JSON.stringify({ version: 1, step: 3, answers: { 0: '  ' }, journalContent: '' }), [recoveryKey]: JSON.stringify({ answers: ['', '', ''], read: true }) } });
@@ -330,7 +355,7 @@ try {
   assert.equal(await changedDuringSync.page.evaluate(id => localStorage.getItem(`bible:favorites:${id}`), alice), '{"favorites":[{}]}', 'late response never overwrites data that became unreadable');
   await changedDuringSync.context.close();
   assert.deepEqual(errors, []); assert.deepEqual(forbidden, []);
-  console.log('PASS: opt-in pilot, scoped read-only Supabase comparison, empty/confirmed drafts retained, journal and recovery checks, explicit pending-draft departure, offline/errors/timeouts, stale-response and save guards, preserved old app/storage, separate-origin login/arrival, responsive 320/390/1440 layouts. Mock accounts only.');
+  console.log('PASS: public notice for members/admins/guests, session dismissal and reopening, guest login before review, no notice on new domain, scoped read-only Supabase comparison for ordinary members, empty/confirmed drafts retained, journal and recovery checks, explicit pending-draft departure, offline/errors/timeouts, stale-response and save guards, preserved old app/storage, separate-origin login/arrival, responsive 320/390/1440 layouts. Mock accounts only.');
 } catch (error) {
   for (const context of browser.contexts()) for (const page of context.pages()) {
     console.error((await page.locator('body').innerText().catch(() => '')).slice(-7000));

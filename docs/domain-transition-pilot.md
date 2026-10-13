@@ -1,4 +1,4 @@
-# Domain transition pilot
+# Optional domain transition
 
 Production origins remain independent:
 
@@ -6,11 +6,15 @@ Production origins remain independent:
 - New canonical domain: https://www.ujeladea.org
 - The apex ujeladea.org redirects to www in Vercel. Do not redirect the old vercel.app origin.
 
-## Opt-in test
+## Public notice
 
-In the old installed PWA, accept the normal update, sign in as an administrator and select More > Probar cambio de dominio. This manual menu entry navigates within the same app and does not leave its storage container. Alternatively open https://ujeladeast.vercel.app/?traslado=piloto. The notice appears on Home only. It requires both the query parameter and a loaded admin profile matching the authenticated user. It is not automatically announced to admins or students. Any administrator can deliberately activate this pilot via that menu entry or link; this is not an allowlist for one particular account.
+After the old installed PWA accepts the normal update, Home automatically shows the notice to members, administrators and guests on https://ujeladeast.vercel.app. No special role, environment variable or query parameter is needed. The notice is inline, not a blocking dialog. Staying on the old origin and keeping its installation are fully supported; moving and installing the new origin are optional.
 
-Development-only preview also accepts localhost or 127.0.0.1 on port 5177. Production builds do not enable this exception. No new environment variables, SQL, API keys or DNS changes are required.
+"Mas tarde" remembers dismissal in sessionStorage for the current account (or guest), including reloads and returning to Home. Only a small "Ver aviso de ujeladea.org" link remains. It and More > Nuevo dominio: ujeladea.org reopen the notice at /?traslado=revisar inside the same app. Old /?traslado=piloto links still work. If sessionStorage is blocked, the current visit can still dismiss the notice. No study/favorite data is changed by dismissing it.
+
+Guests sign in on the old origin before reviewing their data. Login returns to /?traslado=revisar; the review only opens after an explicit click on "Revisar mis datos". Reviews are tied to the current authenticated account, not an admin role. The public notice does not appear on the new origin; the separate arrival guide remains available through /?traslado=llegada.
+
+Development-only preview accepts localhost or 127.0.0.1 on port 5177 with ?traslado=revisar or the legacy ?traslado=piloto. Production builds do not enable this exception. No new environment variables, SQL, API keys or DNS changes are required.
 
 Test in the actual old installed app when possible. If opening the link launches another browser, its audit only covers that browser's storage, not the installed app. Keep the old installation and repeat the check there before removing it. iOS/browser containers may have separate storage.
 
@@ -30,7 +34,7 @@ Chapter bookmarks, reading position/preferences, offline Bible versions and hymn
 
 The destination is fixed at https://www.ujeladea.org/?traslado=llegada and opens in a separate tab with noopener/noreferrer. There is no dynamic return URL, auth token, account identifier, draft or answer in the link. No forced navigation, service-worker removal, cache clearing or uninstall occurs.
 
-The arrival notice offers the existing login flow with a return to the guide. The user signs in with the same account, checks studies/streak/favorites, installs from that origin, and downloads offline content again. A normal PWA update does not migrate its installed origin. Dismissing the pilot or simply continuing on the old origin keeps the old app usable. Only consider a broader rollout after the owner has checked Android/iOS and confirmed their account data.
+The arrival notice offers the existing login flow with a return to the guide. The user signs in with the same account, checks studies/streak/favorites, optionally installs from that origin, and downloads offline content again if needed. A normal PWA update does not migrate its installed origin. Dismissing the notice or simply continuing on the old origin keeps the old app usable. Do not add an automatic redirect, an expiry for the old app, or automatic cache cleanup as part of this rollout.
 
 ## Verification
 
@@ -39,4 +43,4 @@ The arrival notice offers the existing login flow with a return to the guide. Th
 - `node tests/domainMigration.browser.mjs` (Playwright available via the bundled runtime; dev server on port 5177)
 - Existing study completion, favorites, mobile and PWA update regression tests. Study button/status copy clarifies local drafts versus final account saves, without changing completion behavior.
 
-Browser tests use mocked Supabase accounts only. Do not test with or mutate the owner's live answers/favorites automatically, and do not claim the real account has passed until the owner performs the pilot.
+Browser tests use mocked Supabase accounts only, including an ordinary member for the full data-review flow. Do not test with or mutate live answers/favorites automatically, and do not claim a real account has passed until its owner performs the review.

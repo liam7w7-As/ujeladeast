@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { inspectMigrationData, migrationPilotAllowed, migrationReadiness as readiness, MIGRATION_DESTINATION, OLD_APP_ORIGIN } from '../src/lib/domainMigration.js';
+import { inspectMigrationData, migrationNoticeAvailable, migrationReadiness as readiness, MIGRATION_DESTINATION, MIGRATION_REVIEW_PATH, OLD_APP_ORIGIN } from '../src/lib/domainMigration.js';
 import { compareStudyDrafts } from '../src/lib/domainStudyReview.js';
 
 const owner = 'alice';
@@ -15,12 +15,15 @@ const downloads = { status: 'ready' };
 const reviewed = state => ({ ...compareStudyDrafts(state, { completedCount: 0 }), status: 'ready' });
 const migrationReadiness = (state, favorites, online, downloads) => readiness(state, favorites, online, downloads, reviewed(state));
 
-test('pilot requires explicit opt-in, old origin and the current admin profile', () => {
-  const base = { origin: OLD_APP_ORIGIN, search: '?traslado=piloto', userId: owner, profile: { id: owner, role: 'admin' } };
-  assert.equal(migrationPilotAllowed(base), true);
-  for (const change of [{ search: '' }, { userId: null }, { profile: { id: owner, role: 'user' } }, { profile: { id: 'bob', role: 'admin' } }, { origin: 'https://www.ujeladea.org' }, { origin: 'https://ujeladeast.vercel.app.evil.test' }]) assert.equal(migrationPilotAllowed({ ...base, ...change }), false);
-  assert.equal(migrationPilotAllowed({ ...base, origin: 'http://127.0.0.1:5177' }), false);
-  assert.equal(migrationPilotAllowed({ ...base, origin: 'http://127.0.0.1:5177', development: true }), true);
+test('notice is public on the exact old origin; local previews remain explicit and development-only', () => {
+  for (const search of ['', '?traslado=revisar', '?traslado=piloto']) {
+    assert.equal(migrationNoticeAvailable({ origin: OLD_APP_ORIGIN, search }), true);
+    for (const origin of ['https://www.ujeladea.org', 'https://ujeladea.org', 'https://ujeladeast.vercel.app.evil.test', 'http://127.0.0.1:5177']) assert.equal(migrationNoticeAvailable({ origin, search }), false);
+  }
+  assert.equal(migrationNoticeAvailable({ origin: 'http://127.0.0.1:5177', development: true }), false);
+  assert.equal(migrationNoticeAvailable({ origin: 'http://127.0.0.1:5177', search: '?traslado=revisar', development: true }), true);
+  assert.equal(migrationNoticeAvailable({ origin: 'http://localhost:5177', search: '?traslado=piloto', development: true }), true);
+  assert.equal(MIGRATION_REVIEW_PATH, '/?traslado=revisar');
   assert.equal(MIGRATION_DESTINATION, 'https://www.ujeladea.org/?traslado=llegada');
 });
 

@@ -1,4 +1,5 @@
 .domain-migration-notice { position: relative; margin: 0 0 32px; padding: 20px 0 24px; border-block: 1px solid #ffffff22; text-align: left; }
+.domain-migration-reopen { margin-bottom: 24px; }
 .domain-migration-brand { display: flex; align-items: center; gap: 12px; }
 .domain-migration-brand img { width: 34px; height: 40px; object-fit: contain; flex-shrink: 0; }
 .domain-migration-brand > div { min-width: 0; }

@@ -5,13 +5,13 @@ import { inspectStudyDraft } from './domainStudyReview.js';
 export const OLD_APP_ORIGIN = 'https://ujeladeast.vercel.app';
 export const NEW_APP_ORIGIN = 'https://www.ujeladea.org';
 export const MIGRATION_ARRIVAL_PATH = '/?traslado=llegada';
+export const MIGRATION_REVIEW_PATH = '/?traslado=revisar';
 export const MIGRATION_DESTINATION = `${NEW_APP_ORIGIN}${MIGRATION_ARRIVAL_PATH}`;
 
-export function migrationPilotAllowed({ origin, search, userId, profile, development = false }) {
-  const local = development && ['http://localhost:5177', 'http://127.0.0.1:5177'].includes(origin);
-  return Boolean(userId && profile?.id === userId && profile.role === 'admin'
-    && (origin === OLD_APP_ORIGIN || local)
-    && new URLSearchParams(search).get('traslado') === 'piloto');
+export function migrationNoticeAvailable({ origin, search = '', development = false }) {
+  const preview = ['revisar', 'piloto'].includes(new URLSearchParams(search).get('traslado'));
+  const local = development && preview && ['http://localhost:5177', 'http://127.0.0.1:5177'].includes(origin);
+  return origin === OLD_APP_ORIGIN || local;
 }
 
 const readingKeys = ['position', 'readingPositions', 'fontFamily', 'fontSize', 'theme', 'backgrounds', 'redLetters'].map(key => `bible:${key}`);
