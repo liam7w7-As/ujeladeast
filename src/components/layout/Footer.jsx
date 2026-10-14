@@ -1,4 +1,7 @@
 import { Link } from 'react-router-dom'
+import { organization } from '../../lib/siteContent'
+import SocialLinks from '../ui/SocialLinks'
+import '../ui/social-links.css'
 
 const footerGroups = [
   {
@@ -23,9 +26,9 @@ function Footer() {
             </span>
           </Link>
           <p className="max-w-xs font-inter text-sm font-light leading-relaxed text-white/50">
-            Juventud Los Amigos del Distrito El Alto. Dependiente de UJELAB,
-            la rama juvenil nacional de INELA en Bolivia.
+            {organization.fullName}
           </p>
+          <SocialLinks />
         </div>
 
         <div className="grid grid-cols-2 gap-20">
@@ -50,9 +53,9 @@ function Footer() {
 
       <div className="mt-10 flex w-full items-center justify-between gap-4 border-t border-surface-border pt-6">
         <p className="font-inter text-xs font-light text-white/40">
-          (c) {new Date().getFullYear()} UJELADEA. Caminando en la luz.
+          © {new Date().getFullYear()} UJELADEA
         </p>
-        <span className="text-xs text-white/40">Juventud INELA · Distrito El Alto</span>
+        <span className="text-sm text-white/70">Somos uno en Cristo</span>
       </div>
     </footer>
   )

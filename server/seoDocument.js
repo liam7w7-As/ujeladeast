@@ -4,6 +4,7 @@ import { InstitutionContent, StudyIntroduction, PublicLinks } from '../src/compo
 import PublicationContent from '../src/components/seo/PublicationContent.js';
 import { serializedSchema } from '../src/lib/seo.js';
 import { publicPages } from '../src/lib/siteContent.js';
+import { HomeHero, HomeIntro, HomeResources, HomeGalleryPreview, HomeConnect } from '../src/components/seo/HomeContent.js';
 
 export const safeJson = value => JSON.stringify(value).replaceAll('<', '\\u003c');
 function head(page) {
@@ -21,9 +22,8 @@ function head(page) {
 }
 export function staticContent(path) {
   const brand = h('a', { href: '/', 'aria-label': 'UJELADEA inicio' }, h('img', { src: '/logo-ujeladea.png', width: 96, height: 96, alt: 'UJELADEA', className: 'institution-logo' }));
-  if (path === '/nosotros' || path === '/') return h('main', { className: 'institution-main' }, brand,
-    path === '/' && h('h1', { className: 'text-4xl font-bold mb-8' }, 'UJELADEA'),
-    h(InstitutionContent, { heading: path === '/' ? 'h2' : 'h1', compact: path === '/' }), path === '/' && h(PublicLinks));
+  if (path === '/') return h('main', { className: 'landing-main' }, h(HomeHero), h('section', { className: 'landing-story' }, h(HomeIntro)), h(HomeResources), h(HomeGalleryPreview), h(HomeConnect));
+  if (path === '/nosotros') return h('main', { className: 'institution-main' }, brand, h(InstitutionContent));
   if (path === '/estudio-biblico') return h('main', { className: 'institution-main' }, brand, h(StudyIntroduction));
   const page = publicPages[path];
   return page ? h('main', { className: 'institution-main institution-content' }, brand, h('h1', null, page.heading), h('p', null, page.description), h(PublicLinks)) : null;

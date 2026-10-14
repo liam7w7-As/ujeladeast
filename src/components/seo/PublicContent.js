@@ -1,5 +1,6 @@
 import { createElement as h } from 'react';
 import { organization, publicPages, publicNavigation } from '../../lib/siteContent.js';
+import SocialLinks from '../ui/SocialLinks.js';
 
 export function PublicLinks() {
   return h('nav', { className: 'institution-links', 'aria-label': 'Explorar UJELADEA' }, publicNavigation.map(([label, path]) => h('a', { key: path, href: path }, label)));
@@ -19,7 +20,7 @@ export function InstitutionContent({ heading = 'h1', compact = false }) {
       h('h2', null, 'Forma parte de la comunidad'),
       h('p', null, 'Conoce nuestras sociedades y las actividades que se anuncian en la comunidad. Tambi\u00e9n puedes leer la Biblia, consultar el himnario y explorar nuestros recursos desde donde est\u00e9s.'),
       h(PublicLinks), h('h2', null, 'Nuestras redes'),
-      h('div', { className: 'institution-links' }, organization.socials.map(social => h('a', { key: social.name, href: social.url, target: '_blank', rel: 'noopener noreferrer' }, social.name))),
+      h(SocialLinks),
     ),
   );
 }

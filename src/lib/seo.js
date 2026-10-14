@@ -22,7 +22,8 @@ export function organizationSchema() {
     '@type': 'Organization', '@id': `${SITE_URL}/#organization`, name: organization.name,
     alternateName: organization.fullName, url: SITE_URL,
     description: organization.introduction, logo: `${SITE_URL}/pwa-512x512-v2.png`,
-    sameAs: organization.socials.map(social => social.url),
+    // Share URLs work for visitors, but are not stable profile identifiers.
+    sameAs: organization.socials.filter(social => social.identityLink !== false).map(social => social.url),
     location: { '@type': 'Place', name: 'El Alto, La Paz, Bolivia' },
     parentOrganization: {
       '@type': 'Organization', name: 'UJELAB',

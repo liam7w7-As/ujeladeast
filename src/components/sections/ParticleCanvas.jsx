@@ -4,11 +4,9 @@ function ParticleCanvas() {
   const canvasRef = useRef(null)
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia(
+    const motionPreference = window.matchMedia(
       '(prefers-reduced-motion: reduce)',
-    ).matches
-
-    if (prefersReducedMotion) return undefined
+    )
 
     const canvas = canvasRef.current
     const parent = canvas?.parentElement
@@ -20,21 +18,23 @@ function ParticleCanvas() {
     let height = 0
     let animationFrame = 0
     let particles = []
+    let visible = false
+    let previousTime = 0
     const mouse = { x: null, y: null, radius: 120 }
 
     class Particle {
       constructor() {
         this.x = Math.random() * width
         this.y = Math.random() * height
-        this.size = Math.random() * 2 + 0.5
-        this.density = Math.random() * 20 + 1
-        this.opacity = Math.random() * 0.4 + 0.1
+        this.size = Math.random() * 1.4 + 1
+        this.density = Math.random() * 3 + 1
+        this.opacity = Math.random() * 0.3 + 0.3
         this.vx = (Math.random() - 0.5) * 0.3
         this.vy = (Math.random() - 0.5) * 0.3
       }
 
       draw() {
-        ctx.fillStyle = `rgba(143, 25, 55, ${this.opacity})`
+        ctx.fillStyle = `rgba(218, 176, 193, ${this.opacity})`
         ctx.beginPath()
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
         ctx.closePath()
@@ -65,24 +65,54 @@ function ParticleCanvas() {
     }
 
     const resize = () => {
-      width = canvas.width = parent.offsetWidth
-      height = canvas.height = parent.offsetHeight
+      width = parent.offsetWidth
+      height = parent.offsetHeight
+      const ratio = Math.min(window.devicePixelRatio || 1, 2)
+      canvas.width = Math.round(width * ratio)
+      canvas.height = Math.round(height * ratio)
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0)
       particles = Array.from(
-        { length: Math.min((width * height) / 10000, 150) },
+        { length: Math.min(Math.floor((width * height) / 9000), 70) },
         () => new Particle(),
       )
+      draw()
     }
 
-    const animate = () => {
+    const draw = () => {
       ctx.clearRect(0, 0, width, height)
-      particles.forEach((particle) => {
-        particle.update()
+      particles.forEach((particle, index) => {
         particle.draw()
+        for (let other = index + 1; other < particles.length; other++) {
+          const next = particles[other]
+          const distance = Math.hypot(particle.x - next.x, particle.y - next.y)
+          if (distance < 110) {
+            ctx.strokeStyle = `rgba(154, 210, 191, ${(1 - distance / 110) * 0.22})`
+            ctx.lineWidth = 0.7
+            ctx.beginPath()
+            ctx.moveTo(particle.x, particle.y)
+            ctx.lineTo(next.x, next.y)
+            ctx.stroke()
+          }
+        }
       })
+    }
+
+    const animate = time => {
+      if (time - previousTime >= 32) {
+        particles.forEach(particle => particle.update())
+        draw()
+        previousTime = time
+      }
       animationFrame = requestAnimationFrame(animate)
     }
 
+    const updateAnimation = () => {
+      cancelAnimationFrame(animationFrame)
+      if (visible && !document.hidden && !motionPreference.matches) animationFrame = requestAnimationFrame(animate)
+    }
+
     const handleMouseMove = (event) => {
+      if (event.pointerType === 'touch') return
       const rect = canvas.getBoundingClientRect()
       mouse.x = event.clientX - rect.left
       mouse.y = event.clientY - rect.top
@@ -94,24 +124,33 @@ function ParticleCanvas() {
     }
 
     resize()
-    animate()
-
-    window.addEventListener('resize', resize)
-    parent.addEventListener('mousemove', handleMouseMove)
-    parent.addEventListener('mouseleave', handleMouseLeave)
+    const resizeObserver = new ResizeObserver(resize)
+    resizeObserver.observe(parent)
+    const intersection = new IntersectionObserver(entries => {
+      visible = entries[0].isIntersecting
+      updateAnimation()
+    })
+    intersection.observe(parent)
+    document.addEventListener('visibilitychange', updateAnimation)
+    motionPreference.addEventListener('change', updateAnimation)
+    parent.addEventListener('pointermove', handleMouseMove)
+    parent.addEventListener('pointerleave', handleMouseLeave)
 
     return () => {
       cancelAnimationFrame(animationFrame)
-      window.removeEventListener('resize', resize)
-      parent.removeEventListener('mousemove', handleMouseMove)
-      parent.removeEventListener('mouseleave', handleMouseLeave)
+      resizeObserver.disconnect()
+      intersection.disconnect()
+      document.removeEventListener('visibilitychange', updateAnimation)
+      motionPreference.removeEventListener('change', updateAnimation)
+      parent.removeEventListener('pointermove', handleMouseMove)
+      parent.removeEventListener('pointerleave', handleMouseLeave)
     }
   }, [])
 
   return (
     <canvas
       aria-hidden="true"
-      className="pointer-events-auto absolute inset-0 z-[-1] h-full w-full"
+      className="landing-particles"
       ref={canvasRef}
     />
   )

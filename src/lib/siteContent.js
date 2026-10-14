@@ -8,6 +8,7 @@ export const organization = {
   motto: 'Somos uno en Cristo, unidos permaneceremos',
   mottoYear: 2026,
   socials: [
+    { name: 'Facebook', url: 'https://www.facebook.com/share/1CTBBLE9pD/', identityLink: false },
     { name: 'Instagram', url: 'https://www.instagram.com/notinotas_ujeladea/' },
     { name: 'YouTube', url: 'https://www.youtube.com/@notinotas' },
     { name: 'TikTok', url: 'https://www.tiktok.com/@ujeladea.somos.to' },

@@ -1,0 +1,11 @@
+.social-links { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.social-links a { position: relative; display: grid; place-items: center; width: 46px; height: 46px; flex-shrink: 0; color: #fff; background: #ffffff08; border: 1px solid #ffffff24; border-radius: 8px; transition: background .2s, border-color .2s, transform .2s; }
+.social-links img { width: 21px; height: 21px; filter: invert(1); }
+.social-links a:hover { transform: translateY(-3px); background: #ffffff18; border-color: #ffffff60; }
+.social-links a[data-network=instagram]:hover { background: #76213f; }
+.social-links a[data-network=facebook]:hover { background: #1459ad; }
+.social-links a[data-network=youtube]:hover { background: #96202c; }
+.social-links a:focus-visible { outline: 2px solid #ebadbe; outline-offset: 4px; }
+.social-tooltip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); padding: 4px 8px; border-radius: 4px; background: #f6f6f6; color: #17191c; font-size: 12px; line-height: 1.5; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .15s; }
+.social-links a:hover .social-tooltip, .social-links a:focus-visible .social-tooltip { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .social-links a, .social-tooltip { transition: none; } .social-links a:hover { transform: none; } }

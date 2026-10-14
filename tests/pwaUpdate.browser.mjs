@@ -82,6 +82,18 @@ try {
   const other = await context.newPage();
   await other.goto(base + '/');
   await other.waitForFunction(() => document.documentElement.dataset.appBuild === 'pwa-test-A');
+  await other.locator('.landing-cover').evaluate(img => img.decode());
+  await other.waitForFunction(async () => {
+    const cache = await caches.open('community-photos-v1');
+    return Boolean(await cache.match(document.querySelector('.landing-cover').currentSrc));
+  });
+  assert.equal(await other.evaluate(async () => {
+    const names = (await caches.keys()).filter(name => name.includes('precache'));
+    for (const name of names) {
+      if ((await (await caches.open(name)).keys()).some(request => new URL(request.url).pathname.startsWith('/images/community/'))) return false;
+    }
+    return true;
+  }), true, 'Installing the app does not download every photo variant');
   active = 'B';
   await page.bringToFront();
   await page.evaluate(async () => (await navigator.serviceWorker.getRegistration()).update());
@@ -117,6 +129,8 @@ try {
   await otherPopup.waitFor();
   await otherPopup.getByRole('button', { name: 'Actualizar', exact: true }).click();
   await other.waitForFunction(() => document.documentElement.dataset.appBuild === 'pwa-test-B');
+  await other.locator('.landing-cover').evaluate(img => img.decode());
+  assert.ok(await other.locator('.landing-cover').evaluate(img => img.naturalWidth > 0), 'Visited cover remains available offline after update');
   const stored = await page.evaluate(async () => {
     const book = await new Promise(resolve => {
       const request = indexedDB.open('pwa-test-downloads', 1);

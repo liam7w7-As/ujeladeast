@@ -62,9 +62,18 @@ export default defineConfig({
         clientsClaim: true,
         navigateFallback: '/app.html',
         navigateFallbackDenylist: [/^\/(?:sitemap(?:-paginas|-publicaciones)?\.xml|robots\.txt)(?:\?|$)/],
-        globIgnores: ['**/seo-template.html', '**/seo-pages/**'],
+        globIgnores: ['**/seo-template.html', '**/seo-pages/**', '**/images/community/**'],
         globPatterns: ['**/*.{js,css,html,ico,png,webp,svg,woff2}'],
         runtimeCaching: [
+          {
+            urlPattern: ({ url, sameOrigin }) => sameOrigin && url.pathname.startsWith('/images/community/') && url.pathname.endsWith('.webp'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'community-photos-v1',
+              expiration: { maxEntries: 24, maxAgeSeconds: 60 * 60 * 24 * 30 },
+              cacheableResponse: { statuses: [200] },
+            },
+          },
           {
             urlPattern: /^https:\/\/.*\.supabase\.co\/storage\/.*/i,
             handler: 'CacheFirst',
