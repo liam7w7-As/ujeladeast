@@ -42,11 +42,11 @@ Somos uno en Cristo, unidos permaneceremos.
 
 FACEBOOK | AFICHE 1: PRESENTACIÓN
 
-Tu comunidad, también en tu celular.
+📱 Tu comunidad, también en tu celular.
 
 En UJELADEA seguimos compartiendo la fe y creciendo juntos. Ahora tienes a mano nuestra plataforma digital con Biblia, estudio bíblico, himnario y comunidad.
 
-Conócela y comparte el enlace con tu sociedad:
+🔗 Conócela y comparte el enlace con tu sociedad:
 https://www.ujeladea.org/
 
 Somos uno en Cristo, unidos permaneceremos.
@@ -56,18 +56,58 @@ Somos uno en Cristo, unidos permaneceremos.
 
 FACEBOOK | AFICHE 2: HERRAMIENTAS
 
-Un momento con la Palabra puede acompañarte a donde vayas.
+📖 Un momento con la Palabra puede acompañarte a donde vayas.
 
 Lee la Biblia en diferentes versiones, compara pasajes, guarda tus versículos favoritos y compártelos en una imagen. También encontrarás nuestro plan de estudio bíblico de 365 días y el himnario INELA, CALA y coros.
 
 Para leer sin conexión, descarga primero la versión de la Biblia que prefieras y abre el himnario mientras tengas internet.
 
-Descubre la plataforma, sin costo:
+🔗 Descubre la plataforma, sin costo:
 https://www.ujeladea.org/
 
 Desde El Alto, Bolivia, para toda nuestra juventud.
 
 #UJELADEA #Biblia #EstudioBíblico #Himnario #UJELAB
+
+
+FACEBOOK | AFICHE 3: HIMNARIO
+
+🎶 Tu himnario, siempre contigo.
+
+Encuentra alabanzas para tus reuniones, encuentros y momentos de adoración en el himnario digital de UJELADEA: INELA, CALA y coros en un mismo lugar.
+
+Busca por número o título y ajusta el tamaño de la letra para leer con comodidad desde tu celular.
+
+Para consultar sin conexión, abre previamente con internet el himnario o los coros que quieras utilizar. Después podrás consultar ese contenido sin conexión.
+
+🔗 Conoce el himnario gratuito:
+https://www.ujeladea.org/himnario
+
+Comparte este recurso con tu sociedad y sigamos alabando a Dios juntos.
+
+Somos uno en Cristo.
+
+#UJELADEA #Himnario #INELA #UJELAB
+
+
+FACEBOOK | AFICHE 4: ESTUDIO BÍBLICO
+
+📝 Crece en la Palabra, un día a la vez.
+
+Dedica un momento de tu día a leer la Biblia, comprender su enseñanza y reflexionar sobre cómo ponerla en práctica.
+
+En UJELADEA encontrarás un recorrido de estudio bíblico de 365 días, con lecturas y preguntas para acompañar tu aprendizaje. Con tu cuenta puedes guardar tus respuestas, continuar tu recorrido y llevar un diario personal.
+
+Crea tu cuenta gratuita o inicia sesión y comienza tu estudio. Para guardar tu avance necesitas conexión a internet.
+
+🔗 Conoce el plan de estudio:
+https://www.ujeladea.org/estudio-biblico
+
+Comparte la invitación con tu sociedad. Que cada lectura nos anime a vivir nuestra fe y servir a los demás.
+
+Somos uno en Cristo, unidos permaneceremos.
+
+#UJELADEA #EstudioBíblico #CrecerEnLaFe #UJELAB
 
 
 WHATSAPP | RECORDATORIO BREVE
@@ -89,3 +129,4 @@ NOTAS DE PUBLICACIÓN
 - El estudio y la comunidad requieren conexión para guardar o consultar datos en Supabase. La función sin conexión promocionada se refiere a las Biblias descargadas y al himnario previamente abierto.
 - No se incluyen descuentos del campamento: esa dinámica es distrital y sus criterios se están definiendo por separado.
 - El enlace corto ujeladea.org de los afiches lleva a https://www.ujeladea.org/.
+- Los emojis se utilizan únicamente en los textos de Facebook: uno en la apertura y otro para identificar el enlace. Los afiches conservan la composición de marca sin emojis añadidos.

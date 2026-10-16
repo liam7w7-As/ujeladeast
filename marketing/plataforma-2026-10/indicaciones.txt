@@ -10,12 +10,35 @@ afiche-02-herramientas.png
 afiche-02-herramientas-facebook.jpg
 Presentación de las herramientas con una captura pública real de la Biblia.
 
+afiche-03-himnario.png
+afiche-03-himnario-facebook.jpg
+Pieza del módulo Himnario, con la pantalla pública real de sus libros y buscador.
+
+afiche-04-estudio-biblico.png
+afiche-04-estudio-biblico-facebook.jpg
+Pieza del módulo Estudio bíblico. Su pantalla es la interfaz real de la aplicación
+renderizada localmente con una lección ficticia de demostración; no contiene
+cuentas, respuestas ni avances de jóvenes reales.
+
 textos-listos.txt
-Mensajes para WhatsApp distrital y nacional; recordatorio breve y dos textos de Facebook.
+Mensajes para WhatsApp distrital y nacional; recordatorio breve y cuatro textos de Facebook.
+Los textos de Facebook usan dos emojis por publicación, con un tono sobrio.
 
 fuentes/biblia-movil-real.png
 Captura de https://www.ujeladea.org/biblia?version=RVR1960&book=PSA&chapter=23,
 tomada sin iniciar sesión y sin datos personales, el 16 de octubre de 2026.
+
+fuentes/himnario-movil-real.png
+Captura de la página pública https://www.ujeladea.org/himnario sin iniciar sesión.
+
+fuentes/estudio-movil-demostracion.png
+Captura de la aplicación local: vista de lectura de una lección ficticia en Génesis 1.
+Datos de demostración aislados. No se leyó ni escribió en Supabase de producción.
+El texto de la lección ilustrativa no se presenta como contenido del plan publicado.
+
+capturar-modulos.mjs
+Script para reproducir esas dos capturas con Playwright y la compilación local dist/.
+Para ejecutarlo, Playwright debe estar disponible en la resolución de módulos de Node.
 
 COMO PUBLICAR
 
@@ -24,6 +47,7 @@ el PNG conserva la imagen sin la compresión adicional del JPG.
 
 Primero publicar el afiche de presentación con su texto y el enlace clicable.
 Después publicar el afiche de herramientas como segunda pieza de la serie.
+Continuar con Himnario y luego Estudio bíblico, cada uno con su texto específico.
 El enlace dentro de una imagen no es clicable: incluir siempre
 https://www.ujeladea.org/ en el texto que acompaña la publicación.
 
@@ -42,6 +66,7 @@ CREACION
 
 Afiches creados con la herramienta integrada imagegen, con el logo existente,
 la fotografía de grupo autorizada y la captura pública de la plataforma como referencias.
+Las piezas 3 y 4 toman el afiche 2 como referencia visual para mantener la misma serie.
 Exportaciones PNG/JPG adaptadas con Sharp, sin cambiar el contenido del afiche.
 Los prompts completos se conservan en prompts-imagegen.txt.
 
