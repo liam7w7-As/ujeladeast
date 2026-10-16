@@ -1,0 +1,49 @@
+UJELADEA | Serie de promoción de la plataforma | Octubre de 2026
+
+CONTENIDO
+
+afiche-01-comunidad.png
+afiche-01-comunidad-facebook.jpg
+Presentación de la plataforma con la foto de grupo autorizada.
+
+afiche-02-herramientas.png
+afiche-02-herramientas-facebook.jpg
+Presentación de las herramientas con una captura pública real de la Biblia.
+
+textos-listos.txt
+Mensajes para WhatsApp distrital y nacional; recordatorio breve y dos textos de Facebook.
+
+fuentes/biblia-movil-real.png
+Captura de https://www.ujeladea.org/biblia?version=RVR1960&book=PSA&chapter=23,
+tomada sin iniciar sesión y sin datos personales, el 16 de octubre de 2026.
+
+COMO PUBLICAR
+
+Formato final: 1080 x 1350 px, vertical 4:5. El JPG es práctico para Facebook;
+el PNG conserva la imagen sin la compresión adicional del JPG.
+
+Primero publicar el afiche de presentación con su texto y el enlace clicable.
+Después publicar el afiche de herramientas como segunda pieza de la serie.
+El enlace dentro de una imagen no es clicable: incluir siempre
+https://www.ujeladea.org/ en el texto que acompaña la publicación.
+
+Para WhatsApp, elegir el mensaje del público correspondiente de textos-listos.txt.
+Se puede acompañar con el primer afiche y mantener el enlace en el mensaje.
+
+CRITERIO EDITORIAL
+
+Emisor: UJELADEA, organización juvenil del Distrito El Alto dependiente de UJELAB.
+Audiencia: jóvenes del distrito; jóvenes y directivas de UJELAB en Bolivia.
+Invitación: conocer la plataforma, utilizar sus recursos y compartirla.
+No se presenta como un lanzamiento de la directiva nacional de UJELAB.
+No se promocionan descuentos ni criterios aún pendientes de la dinámica del campamento.
+
+CREACION
+
+Afiches creados con la herramienta integrada imagegen, con el logo existente,
+la fotografía de grupo autorizada y la captura pública de la plataforma como referencias.
+Exportaciones PNG/JPG adaptadas con Sharp, sin cambiar el contenido del afiche.
+Los prompts completos se conservan en prompts-imagegen.txt.
+
+El material se preparó localmente. Publicarlo en Facebook o enviarlo a los grupos
+corresponde a la directiva; no se enviaron mensajes ni se publicaron posts desde esta tarea.
