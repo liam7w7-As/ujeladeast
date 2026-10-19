@@ -1,0 +1,68 @@
+MODO: herramienta integrada image_gen; no CLI ni API externa.
+TAXONOMIA: ads-marketing.
+FECHA DE PREPARACION: 2026-10-19, America/La_Paz.
+
+REFERENCIAS
+- C:/Users/UnseR/Downloads/p1.png: estilo editorial vertical, aportado por el usuario.
+- C:/Users/UnseR/Downloads/p2.png: estilo editorial complementario, aportado por el usuario.
+- public/logo-ujeladea.png: identidad de UJELADEA.
+
+FACEBOOK V1
+Original: C:/Users/UnseR/.codex/generated_images/01a0f3ff-099a-73a3-b053-fbf45733c7cb/exec-86e13519-72b0-42f1-bc05-72f7f93592ed.png
+
+Use case: ads-marketing.
+Asset type: a finished Spanish promotional poster for Facebook, portrait 4:5 aspect ratio, ideally 1080 x 1350 pixels, sharp readable typography, not a mockup.
+Primary request: Create the final poster for UJELADEA's fundraising gala dinner for youth societies. Use the provided p1 and p2 posters ONLY as graphic style references, replacing ALL their English text, dates and content with the Spanish event information below.
+Input images: image 1 p1 is a vertical graphic style reference; image 2 p2 is a companion editorial graphic style reference; image 3 is the actual UJELADEA logo, a small supporting brand asset. Preserve the logo identity, use its white artwork on a burgundy patch, do not reproduce any green background.
+Art direction: sophisticated youthful editorial gala invitation, not a wedding invitation. Strong black/white contrast, fine subtle white-paper grain, giant bold condensed sans-serif title, one elegant italic subtitle, clean asymmetric editorial grid, a few restrained hand-drawn white swashes like the references. Accent blocks in deep UJELADEA burgundy #8f1937 rather than the references' red. Plenty of hierarchy, crisp printing, excellent phone legibility. No emojis.
+Composition: compact organizer/logo row at the top. Main headline dominant and fully readable, no cropped essential text. Below, a wide framed photographic image of an elegantly set communal dinner table, white plates, neatly folded burgundy cloth napkins, polished cutlery, simple glass water tumblers, a modest white flower arrangement and candles in focus, warm realistic lighting. No people needed, no venue facade, do not portray the real El Tabernáculo hall, no invented photos of organizers. The photograph occupies roughly one third of the poster. Incorporate subtitle near or within the photo's black frame. Under the image use a strong orderly event-information strip with the date and start time, followed by the venue. Then two clear price columns and compact included-experiences line. Footer with both contact names and exact phone numbers, each on its own clearly separated side/line.
+ALL of the following Spanish text must appear, with correct accents and exactly these names and digits, arranged in a considered hierarchy:
+"UJELADEA PRESENTA"
+"CENA DE GALA"
+"Una Mesa, Un Propósito"
+"ACTIVIDAD PRO CAMPAMENTO"
+"21 NOVIEMBRE 2026"
+"DESDE LAS 17:00"
+"Salón comedor"
+"Junta Mensual El Tabernáculo"
+"Bs 30" with "POR PERSONA"
+"Bs 50" with "POR DOS PERSONAS"
+"Incluye cena, bocaditos y sesión de fotos"
+"Ministerio invitado"
+"Refrescos a la venta"
+"Vestimenta de gala"
+"Para las sociedades de jóvenes"
+"INFORMES E INSCRIPCIONES"
+"Hno. Adalid · 67337082"
+"Hna. Keila · 74083007"
+Constraints: Prices are 30 bolivianos per one person and 50 bolivianos total for two people, not 50 per person, not couples-only. Drinks are sold separately; do not imply included drinks. Invited ministry has no specified name so only say Ministerio invitado. Clear dignified Christian youth context. No alcohol, wine, champagne, wine glasses, nightclub imagery, wedding couples, hearts, gold glitter, invented names, QR codes, registration deadlines or promises, extra logos, watermarks or placeholder English text. All content must fit within 5 percent margins, including the bottom phone numbers. Make this an exceptional polished finished graphic, faithful to the energy and layout language of the supplied templates.
+
+ESTADOS Y TIKTOK V1
+Original: C:/Users/UnseR/.codex/generated_images/01a0f3ff-099a-73a3-b053-fbf45733c7cb/exec-7d528482-4173-4643-b9cd-b160f19a4620.png
+Referencia principal: original Facebook V1 anterior.
+
+Use case: ads-marketing.
+Asset type: a finished Spanish event poster for WhatsApp Status and TikTok photo posts, tall portrait 9:16 aspect ratio, ideally 1080 x 1920 pixels. This must be a distinct recomposed vertical layout, NOT the 4:5 artwork centered with blank bars, NOT a screenshot or mockup.
+Primary request: Recompose the first reference image (the finished UJELADEA gala poster) into a beautiful cohesive 9:16 story. Preserve its exact branding, palette, photographic dinner-table look, paper texture, bold editorial title, italic subtitle, black framing and all event information. Second reference is the original small UJELADEA logo; use its identity accurately without the green backdrop. Third reference p1 shows the desired energetic vertical template composition only, DO NOT copy its English text, dates, price or empty panel.
+Style: black and soft white textured paper, UJELADEA burgundy #8f1937 accent blocks, powerful extra-bold condensed sans-serif type, elegant italic serif subtitle, restrained white swashes, modern Christian youth fundraiser gala. No gold-glitter wedding aesthetic. Keep the warm elegant dinner-table photograph, burgundy napkins, white plates, water tumblers, flowers and candles; no alcohol, wine or champagne, no wine glasses.
+Composition for 9:16: small centered logo and organizer row near upper region, very large fully readable title CENA DE GALA on one or two lines, a generous framed dinner-table photograph around the middle third of the poster with subtitle as its lower black band. Bold date/time/place strip, followed by clearly separated price columns, included-experiences line and ministry/drinks/dress information. Set both registration contacts in a highly legible final block. Keep the WHOLE informative block between roughly y=100 and y=1590 on a 1080x1920 canvas, keep type at least 70px from the left edge and 150px from the right edge. The lowest 250px can contain only continuing paper texture and restrained nonessential decorative strokes to leave room for app UI; do not add any text about these margins. Do not squeeze text. Ensure contact numbers are large, fully visible, above bottom overlay area.
+Exact event text (all must be present, correct spelling/accents/digits, no new factual content):
+"UJELADEA PRESENTA"
+"CENA DE GALA"
+"Una Mesa, Un Propósito"
+"ACTIVIDAD PRO CAMPAMENTO"
+"21 NOVIEMBRE 2026"
+"DESDE LAS 17:00"
+"Salón comedor"
+"Junta Mensual El Tabernáculo"
+"Bs 30" and "POR PERSONA"
+"Bs 50" and "POR DOS PERSONAS"
+"Incluye cena, bocaditos y sesión de fotos"
+"Ministerio invitado"
+"Refrescos a la venta"
+"Vestimenta de gala"
+"Para las sociedades de jóvenes"
+"INFORMES E INSCRIPCIONES"
+"Hno. Adalid · 67337082"
+"Hna. Keila · 74083007"
+Constraints: prices 30 bolivianos one person, 50 total for two people, not romantic couples-only. Drinks are sold separately. No invented ministry name, address, program details, registration deadline, QR code or external logos. No emojis. No English from p1. Do not crop any important text. Finished print-quality image with balanced spacing and visual continuity with the first reference.

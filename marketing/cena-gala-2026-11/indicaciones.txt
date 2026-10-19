@@ -1,0 +1,39 @@
+CENA DE GALA UJELADEA - 21 DE NOVIEMBRE DE 2026
+
+Archivos finales
+- cena-gala-facebook-v1.png / .jpg: 1080 x 1350, Facebook y publicaciones verticales.
+- cena-gala-estados-tiktok-v1.png / .jpg: 1080 x 1920, estados de WhatsApp y publicaciones de fotos en TikTok.
+- texto-publicacion.txt: invitacion para acompanar el afiche.
+- prompts-imagegen.txt: especificaciones exactas usadas en las dos generaciones.
+
+Datos confirmados por la organizacion
+Titulo: Cena de Gala.
+Subtitulo: Una Mesa, Un Propósito.
+Fecha: 21 de noviembre de 2026.
+Inicio: desde las 17:00.
+Lugar: salon comedor de la Junta Mensual El Tabernaculo.
+Publico: sociedades de jovenes.
+Entrada: Bs 30 por persona; Bs 50 por dos personas, total.
+Incluye: cena, bocaditos y sesion de fotos.
+Programa: ministerio invitado, sin nombre confirmado.
+Bebidas: refrescos a la venta, no incluidos en la entrada.
+Vestimenta: de gala, formal y elegante.
+Organiza: UJELADEA.
+Finalidad: actividad pro campamento.
+Informes e inscripciones: Hno. Adalid 67337082; Hna. Keila 74083007.
+
+Produccion
+Generados con la herramienta integrada de imagenes de Codex, sin API externa.
+Referencias graficas suministradas por el usuario: p1.png y p2.png.
+Logo de referencia: public/logo-ujeladea.png.
+La fotografia de mesa es una ilustracion fotografica generada; no es una foto real del salon ni una garantia de su decoracion.
+Los dos formatos tienen una composicion adaptada; no se recorto informacion.
+Los originales generados se conservan en la carpeta generated_images de Codex.
+Las exportaciones usan ajuste contain para no perder texto, PNG y JPG de alta calidad.
+Los archivos se prepararon para entrega; no se publico ni envio nada a redes sociales.
+No se modifico el sitio, la PWA ni la base de datos.
+
+Revision
+Texto, fecha, tarifas, condicion de bebidas y telefonos revisados visualmente.
+Comprobar la vista previa de cada red antes de publicar: sus botones y descripciones pueden cubrir partes del afiche.
+No se invento nombre del ministerio, plazo de inscripcion, menu especifico ni direccion adicional.
