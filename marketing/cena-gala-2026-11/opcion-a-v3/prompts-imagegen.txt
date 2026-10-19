@@ -1,0 +1,66 @@
+OPCION A V3 - AFINADO SOLICITADO POR EL ORGANIZADOR
+
+Modo: herramienta integrada image_gen (edicion de la opcion A v2).
+Salida: PNG y JPG, 1080 x 1350, conservando las versiones anteriores.
+La fotografia es ilustrativa, no una imagen real del lugar.
+
+Cambios visuales solicitados
+- Eliminar "PRESENTA".
+- Eliminar el ano 2026 de la fecha mostrada en el afiche.
+- Sustituir "ACTIVIDAD PRO CAMPAMENTO" por "PRO CAMPAMENTO".
+- Eliminar toda la fila "Incluye cena, bocaditos y sesion de fotos".
+- Eliminar toda la fila "Para las sociedades de jovenes".
+- Conservar el estilo de la opcion A y ajustar el espacio.
+
+Datos conservados en la imagen
+Cena de Gala. Una Mesa, Un Propósito.
+21 de noviembre, desde las 17:00.
+JM El Tabernáculo.
+Bs 30 por persona; Bs 50 por dos personas.
+Ministerio invitado. Refrescos a la venta. Vestimenta de gala.
+Hno. Adalid: 67337082.
+Hna. Keila: 74083007.
+
+El ano del evento confirmado sigue siendo 2026; se omite unicamente en la imagen.
+La cena, los bocaditos, las fotos y el publico confirmado siguen siendo datos validos:
+no se muestran en este afiche por decision del organizador.
+
+Archivo editado
+marketing/cena-gala-2026-11/opciones-v2/cena-gala-a-elegante-v2.png
+
+Original generado
+C:/Users/UnseR/.codex/generated_images/01a0f3ff-099a-73a3-b053-fbf45733c7cb/exec-3f4f1a1d-72f4-4c91-86cf-ba7d41a58acd.png
+
+PROMPT EXACTO
+Use case: text-localization.
+Asset type: finished refined UJELADEA gala poster, portrait 4:5, ideally 1080 x 1350.
+Edit target: the supplied approved OPTION A dark burgundy gala poster. This is a precise refinement of this design, not a new design.
+Primary request: Keep the elegant high-contrast serif typography, oversized "Cena de Gala" headline, subtitle, original UJELADEA logo identity, rich black/burgundy dinner-cloth photography, white plate, candle and cutlery, pale rose/silver-white prices, burgundy rules and dignified visual mood. Apply these exact five simplifications:
+1. Remove "PRESENTA" completely from the upper organizer area and remove its accompanying empty decorative rule if necessary. Retain the UJELADEA logo, neatly centered at the top.
+2. Remove "2026" completely from the main date. The date should now show "21 NOVIEMBRE", without any year.
+3. Replace "ACTIVIDAD PRO CAMPAMENTO" with only "PRO CAMPAMENTO", keeping this as a subtle elegant centered line.
+4. Remove the ENTIRE row reading "Incluye cena, bocaditos y sesión de fotos", along with its now-unneeded separator spacing. Do not replace it with an alternative included-experiences row.
+5. Remove the ENTIRE row reading "Para las sociedades de jóvenes", along with its now-unneeded separator spacing. Do not replace it with another audience line.
+Refine the vertical spacing after those removals so it remains a complete professionally balanced poster, neither empty gaps nor compact content all at one end. Rebalance the breathing room gently. Keep the photograph essentially unchanged. Keep all remaining data unchanged, especially the three items "Ministerio invitado", "Refrescos a la venta", "Vestimenta de gala". Removing the includes row does NOT mean removing these three items.
+These are the ONLY final text contents allowed (the logo can contain its UJELADEA wordmark):
+"Cena de Gala"
+"Una Mesa, Un Propósito"
+"PRO CAMPAMENTO"
+"21 NOVIEMBRE"
+"DESDE LAS 17:00"
+"JM El Tabernáculo"
+"Bs 30" with "por persona"
+"Bs 50" with "por dos personas"
+"Ministerio invitado"
+"Refrescos a la venta"
+"Vestimenta de gala"
+"INFORMES E INSCRIPCIONES"
+"Hno. Adalid · 67337082"
+"Hna. Keila · 74083007"
+Critical exact phone digits: Adalid 6 7 3 3 7 0 8 2 = 67337082. Keila 7 4 0 8 3 0 0 7 = 74083007. Keep them clean, readable, fully within the canvas. Keep 50 bolivianos total for two people and 30 for one.
+Forbidden anywhere in the final image: PRESENTA, 2026, ACTIVIDAD, Incluye, cena/bocaditos/fotos as an added descriptive row, Para las sociedades de jóvenes, Salón, comedor, Junta Mensual. Do not add any other text, new facts, QR codes, logos, icons, alcohol or wedding imagery. Do not modify the title, event subtitle, place, prices or contacts beyond the requested removals. Preserve the 4:5 composition and 5 percent margins.
+
+REVISION
+Remociones, estilo, fecha, lugar, precios y ambos telefonos comprobados visualmente.
+Dimensiones finales verificadas al exportar.
+Sin cambios en el sitio, PWA, base de datos ni publicaciones en redes.

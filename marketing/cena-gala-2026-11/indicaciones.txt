@@ -1,6 +1,12 @@
 CENA DE GALA UJELADEA - 21 DE NOVIEMBRE DE 2026
 
-Propuestas actuales
+Version actual: opcion A afinada, v3
+- opcion-a-v3/cena-gala-a-v3.png / .jpg: 1080 x 1350.
+- opcion-a-v3/prompts-imagegen.txt: prompt y cambios solicitados por el organizador.
+- Sin Presenta, sin ano visible, solo PRO CAMPAMENTO, sin fila Incluye ni fila de sociedades.
+- La fecha del evento sigue siendo el 21 de noviembre de 2026; solo se omite el ano en el afiche.
+
+Propuestas anteriores v2, conservadas como referencia
 - opciones-v2/cena-gala-a-elegante-v2.png / .jpg: 1080 x 1350, propuesta oscura y editorial.
 - opciones-v2/cena-gala-b-contemporanea-v2.png / .jpg: 1080 x 1350, propuesta clara y contemporanea.
 - opciones-v2/prompts-imagegen.txt: especificaciones de las nuevas propuestas y su revision.
