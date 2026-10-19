@@ -1,0 +1,47 @@
+UJELADEA-CAMP - SOMOS UNO EN CRISTO
+
+Archivos finales de esta propuesta
+- campamento-facebook-whatsapp-v1.png / .jpg: 1080 x 1350.
+- campamento-estados-tiktok-v1.png / .jpg: 1080 x 1920.
+- texto-invitacion.txt: texto basado en el mensaje del organizador.
+- prompts-imagegen.txt: especificaciones de generacion y ajuste vertical.
+- fuentes/: fotografias originales aportadas por el usuario, sin modificar.
+
+Datos confirmados
+Evento: UJELADEA-CAMP.
+Lema: SOMOS UNO EN CRISTO.
+Fecha: 25 al 30 de diciembre de 2026.
+Lugar: Hotel Tamampaya.
+Precio: 420 Bs.
+Inscripciones hasta el 20 de diciembre.
+Cupos limitados.
+Versiculo aportado por el organizador: "Para que sean uno, así como nosotros." San Juan 17:11.
+Informes e inscripciones:
+Hna. Lizeth: 73213608.
+Hna. Angela: 77746133.
+Web: ujeladea.org.
+
+Restricciones de contenido
+No agregar transporte, alojamiento, alimentacion ni un listado de lo que incluye.
+No inventar actividades, invitados, horarios, descuentos, reservas ni otros contactos.
+No usar los precios o telefonos de la cena de gala.
+
+Diseno y produccion
+Herramienta integrada image_gen, sin CLI ni API externa.
+Composicion editorial de naturaleza, papel rasgado y tipografia verde.
+Referencia principal del lugar: hotel-fachada.png.
+Apoyo: piscina.png y comedor.png.
+Se uso el modelo horizontal aportado solo como referencia de principios de composicion.
+No se copiaron textos, ninos, marcas de agua ni otros logos del modelo.
+La version vertical fue recompuesta y tiene mayor margen visual inferior.
+Las imagenes finales son composiciones asistidas por IA a partir de las fotos:
+los originales del hotel se conservan para comprobar y revisar la fidelidad visual.
+No se publico ni envio nada a redes sociales.
+No se modifico la plataforma, la PWA, los datos ni las rachas.
+
+Verificacion
+Texto, fecha, precio, plazo, sitio y los dos contactos revisados visualmente.
+No aparece el listado de inclusiones.
+Tamanos PNG/JPG comprobados al exportar, sin recorte de texto.
+Comprobar la vista previa de TikTok y WhatsApp antes de publicar, porque los controles
+y el largo de la descripcion de cada plataforma pueden cubrir partes de cualquier imagen.

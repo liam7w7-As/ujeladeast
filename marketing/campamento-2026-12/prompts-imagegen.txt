@@ -1,0 +1,111 @@
+UJELADEA-CAMP - PROMPTS DE LA PROPUESTA V1
+Modo: herramienta integrada image_gen; sin CLI ni API externa.
+Taxonomia: ads-marketing y compositing para el ajuste final.
+
+REFERENCIAS DE FOTOGRAFIA
+fuentes/hotel-fachada.png: foto principal del hotel y jardin.
+fuentes/piscina.png: foto secundaria.
+fuentes/comedor.png: foto secundaria.
+public/logo-ujeladea.png: identidad UJELADEA.
+La cuarta foto aportada, fuentes/hotel-vista-lateral.png, se conserva como alternativa.
+Modelo de diseno: codex-clipboard-02271b93-b9c2-4a44-a398-f3d83f385d56.png,
+aportado por el usuario y utilizado solo como referencia grafica, no incluido como entrega.
+
+FACEBOOK Y WHATSAPP 4:5
+Original generado:
+C:/Users/UnseR/.codex/generated_images/01a0f3ff-099a-73a3-b053-fbf45733c7cb/exec-74d6c654-46d1-4328-8140-12e33b12d2d3.png
+
+Use case: ads-marketing.
+Asset type: finished Spanish Christian youth camp promotional poster for Facebook and WhatsApp sharing, PORTRAIT 4:5 composition, ideally 1080 x 1350. Not a landscape banner and not a physical mockup.
+Primary request: Design an original modern, inviting UJELADEA-CAMP poster using the supplied REAL Hotel Tamampaya photographs and the editorial torn-paper photo/information separation of the style reference, adapted intelligently for a mobile-readable vertical poster aimed at ages 17-28.
+Input image roles, in order:
+1. ACTUAL MAIN VENUE PHOTO: white two-storey hotel, lawn, tree with red flowers and UNLIT wood stack. Use this actual photo as the main visual.
+2. ACTUAL SUPPORT PHOTO: turquoise rectangular pool bordered by stone and dense green vegetation.
+3. ACTUAL SUPPORT PHOTO: open timber-roof dining terrace, white tablecloths and brick floor.
+4. Actual UJELADEA logo: supporting small white identity mark; no green background.
+5. STYLE REFERENCE ONLY: wide green/off-white kids-camp template with torn-paper split. Borrow only the graphic principles (strong forest-green type, clean paper texture, torn edge). Do NOT reproduce its children, watermarks, logo, text, fake pine forest, numbers or layout dimensions.
+Photography fidelity is essential: PLACE the actual supplied venue photos as faithful photographic inserts. Cropping and subtle natural exposure/color balancing are allowed; DO NOT regenerate, renovate, beautify buildings, repaint walls, replace windows, change landscaping, relight into night, ignite the wood, invent fairy lights, add people, add amenities or change the pool/dining terrace. Keep the real place recognizable and daylight authentic.
+Art direction: contemporary editorial nature retreat, forest green, soft near-white paper, subtle burgundy accent for the registration/price to connect UJELADEA branding, a very restrained warm yellow accent if useful. Crisp bold typography, grown-up youthful atmosphere, no childish clipart, no saturated green overlay hiding the location. A well-designed restrained collage, not a travel brochure full of boxes.
+Composition: top roughly 40 percent a beautiful broad main hotel-photo view, with actual pool and dining photos as two smaller neatly arranged supporting photo inserts. Small logo in an unobtrusive top corner. A clean torn-paper edge transitions into a near-white lower information surface. Make "UJELADEA-CAMP" the unmistakable primary title, with "UJELADEA" smaller and "CAMP" very large if needed; it may be arranged over two lines but must read as the event name. Slogan prominently beneath, solid high-contrast type, not thin outline text. Date, Hotel Tamampaya and Bs420 each have clear prominence; the price can be a tasteful ticket-like graphic. Below, the registration deadline, limited spaces, compact Bible verse and two clearly separated registration contacts. Place the site address as a small but legible final call to action. Every line fits, contacts large enough to read on mobile, 5 percent outer margins. Keep the photo balance and title hierarchy genuinely beautiful.
+Exact Spanish text, all required, accents and digits must be correct:
+"UJELADEA-CAMP"
+"SOMOS UNO EN CRISTO"
+"25 AL 30 DE DICIEMBRE"
+"HOTEL TAMAMPAYA"
+"420 Bs"
+"Inscripciones hasta el 20 de diciembre"
+"CUPOS LIMITADOS"
+"Para que sean uno, así como nosotros."
+"San Juan 17:11"
+"INFORMES E INSCRIPCIONES"
+"Hna. Lizeth · 73213608"
+"Hna. Angela · 77746133"
+"ujeladea.org"
+Critical phone accuracy: Lizeth 7 3 2 1 3 6 0 8 = 73213608. Angela 7 7 7 4 6 1 3 3 = 77746133.
+Constraints: The user expressly does NOT want a list of what the cost includes. NO text about transport, alojamiento, alimentación, todo incluido, meals or packages. No invented activities, guests, church services, deadlines, contact names, QR codes, discounts, price tiers or new logos. Do not import gala prices/contacts. No emojis in the poster. Do not add 2028 from the reference. No stock young people or invented venue visuals. No decorative icons overloading the design. Deliver one polished complete original graphic, making the real destination and event easy to understand.
+
+ESTADOS Y TIKTOK 9:16 - GENERACION INICIAL
+Original inicial, sustituido en la entrega por la revision de margenes:
+C:/Users/UnseR/.codex/generated_images/01a0f3ff-099a-73a3-b053-fbf45733c7cb/exec-71227b05-f512-4ea3-8549-3a66aee517ba.png
+
+Use case: ads-marketing.
+Asset type: finished UJELADEA-CAMP promotional poster for WhatsApp Status and TikTok photo posts, tall PORTRAIT 9:16, ideally 1080 x 1920. Recompose rather than stretch or put the 4:5 graphic inside blank bars.
+Primary request: Adapt the supplied first reference (the new UJELADEA-CAMP poster) into a cohesive tall story version with the same torn-paper nature-retreat identity, typography, forest-green/near-white/burgundy palette, mustard detail and clear information hierarchy.
+Image roles:
+1. Approved-direction 4:5 poster: graphic layout/style and exact event-information reference.
+2. Original REAL hotel exterior photo with two-storey white building, lawn, flowering tree and unlit log stack: actual main-photo source.
+3. Original REAL pool photo: supporting actual photo.
+4. Original REAL dining-terrace photo: supporting actual photo.
+5. Original UJELADEA logo: small identity source.
+Use the actual photo sources faithfully: crop/adjust exposure subtly but do not invent scenery, renovate the hotel, replace windows or roofs, change amenities, ignite wood, add people, fairy lights or nighttime lighting. Keep the venue in authentic daylight and recognizable. No stock children or scouts, no invented mountain lodge.
+Composition: tall mobile-native editorial travel/camp invitation. Main hotel photograph at top with a small white logo; two supporting pool/dining inserts with restrained torn edges; dramatic bold title with UJELADEA smaller and CAMP dominant; slogan below; event dates, Hotel Tamampaya and Bs420 highly legible; registration deadline and limited-space note; compact Bible verse; two readable contact lines and ujeladea.org. Use extra height for well-balanced spacing, never crowd the text.
+IMPORTANT mobile margin discipline: keep all essential text including phone numbers and site within the central region, roughly y=130 to y=1580 on 1080x1920, at least 70px from the left and 150px from the right. The bottom 250-300px should be only a continuation of the torn-paper/leaf/forest graphic background, without essential text, for phone-app UI overlays. Do not add any written explanation about safe margins. All key text must have strong contrast and remain large enough to read.
+ALL final Spanish text exactly:
+"UJELADEA-CAMP"
+"SOMOS UNO EN CRISTO"
+"25 AL 30 DE DICIEMBRE"
+"HOTEL TAMAMPAYA"
+"420 Bs"
+"Inscripciones hasta el 20 de diciembre"
+"CUPOS LIMITADOS"
+"Para que sean uno, así como nosotros."
+"San Juan 17:11"
+"INFORMES E INSCRIPCIONES"
+"Hna. Lizeth · 73213608"
+"Hna. Angela · 77746133"
+"ujeladea.org"
+Phone accuracy is crucial: Lizeth 7 3 2 1 3 6 0 8 (73213608); Angela 7 7 7 4 6 1 3 3 (77746133). Date 25 through 30 December; registration deadline 20 December; price420, not any other price.
+Do NOT include transport, accommodation, food, meals, all-inclusive, or any itemized inclusion list: the user expressly excluded it. No extra activities, speakers, ministries, QR codes, discount claims, new phone numbers, hashtags, English text or logos. No emojis. No dates/contacts copied from a gala. No 2028. Preserve the warm Christian youth/community tone. One polished complete flat poster image, not a mockup.
+
+ESTADOS Y TIKTOK 9:16 - REVISION FINAL DE MARGENES
+Original utilizado para las exportaciones finales:
+C:/Users/UnseR/.codex/generated_images/01a0f3ff-099a-73a3-b053-fbf45733c7cb/exec-5b2f4f10-22b8-4eb5-b691-24ca3df85344.png
+
+Use case: compositing.
+Edit target: the provided 9:16 UJELADEA-CAMP poster.
+Primary request: Keep exactly the same graphic identity, photo contents, torn-paper collage, colors, all text and factual information, but make a SINGLE layout adjustment for phone-app safety: shift and compact the composition upward so that ALL meaningful text including both phone numbers and "ujeladea.org" ends no lower than 78 percent of the image height. On a 1080x1920 final canvas the website baseline must be above y=1500. The bottom 400 pixels must be purely nonessential continuing paper/forest/leaf texture, without contacts or text.
+To accomplish this gracefully, reduce the HEIGHT of the top photographic collage by about 20 percent and the giant CAMP title height by about 10 percent, and move the whole lower information block up correspondingly. Do not just crop away anything, do not distort text or photographs, and do not shrink important text to illegibility. Extend the existing designed leaf/paper lower background down to preserve a complete cohesive 9:16 graphic. This is a mobile-native recomposition, not a centered smaller poster with bars.
+Preserve exactly these visible facts and spelling:
+"UJELADEA-CAMP"
+"SOMOS UNO EN CRISTO"
+"25 AL 30 DE DICIEMBRE"
+"HOTEL TAMAMPAYA"
+"420 Bs"
+"Inscripciones hasta el 20 de diciembre"
+"CUPOS LIMITADOS"
+"Para que sean uno, así como nosotros."
+"San Juan 17:11"
+"INFORMES E INSCRIPCIONES"
+"Hna. Lizeth · 73213608"
+"Hna. Angela · 77746133"
+"ujeladea.org"
+Critical exact digits: Lizeth 73213608 (7 3 2 1 3 6 0 8); Angela 77746133 (7 7 7 4 6 1 3 3).
+Do not add or remove content, do not introduce transport/accommodation/food/inclusions, new dates, a QR code, people, camp activities or new facilities. Preserve the same real hotel/pool/dining photo depictions and original UJELADEA logo. Return only the polished corrected full 9:16 poster.
+
+REVISION DE ENTREGA
+Datos de ambas composiciones revisados visualmente, especialmente:
+25 al 30 de diciembre, plazo 20 de diciembre, 420 Bs,
+Lizeth 73213608 y Angela 77746133, Hotel Tamampaya y ujeladea.org.
+Los margenes de la version vertical se ampliaron respecto a la primera generacion;
+el resultado debe revisarse en la vista previa de la app concreta antes de publicarse.
+Los originales fotograficos aportados por el usuario no se alteran ni se sustituyen.
