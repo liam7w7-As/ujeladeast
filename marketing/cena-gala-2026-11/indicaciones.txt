@@ -1,6 +1,13 @@
 CENA DE GALA UJELADEA - 21 DE NOVIEMBRE DE 2026
 
-Archivos finales
+Propuestas actuales
+- opciones-v2/cena-gala-a-elegante-v2.png / .jpg: 1080 x 1350, propuesta oscura y editorial.
+- opciones-v2/cena-gala-b-contemporanea-v2.png / .jpg: 1080 x 1350, propuesta clara y contemporanea.
+- opciones-v2/prompts-imagegen.txt: especificaciones de las nuevas propuestas y su revision.
+- Lugar actualizado por la organizacion: JM El Tabernáculo.
+- Las versiones v1 siguientes se conservan como historico: no fueron aprobadas y muestran la denominacion anterior del lugar.
+
+Versiones anteriores, no usar para publicar
 - cena-gala-facebook-v1.png / .jpg: 1080 x 1350, Facebook y publicaciones verticales.
 - cena-gala-estados-tiktok-v1.png / .jpg: 1080 x 1920, estados de WhatsApp y publicaciones de fotos en TikTok.
 - texto-publicacion.txt: invitacion para acompanar el afiche.
@@ -11,7 +18,7 @@ Titulo: Cena de Gala.
 Subtitulo: Una Mesa, Un Propósito.
 Fecha: 21 de noviembre de 2026.
 Inicio: desde las 17:00.
-Lugar: salon comedor de la Junta Mensual El Tabernaculo.
+Lugar: JM El Tabernáculo.
 Publico: sociedades de jovenes.
 Entrada: Bs 30 por persona; Bs 50 por dos personas, total.
 Incluye: cena, bocaditos y sesion de fotos.

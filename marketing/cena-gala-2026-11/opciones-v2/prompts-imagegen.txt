@@ -1,0 +1,94 @@
+NUEVAS PROPUESTAS V2 - CENA DE GALA UJELADEA
+
+Modo: herramienta integrada image_gen. No se uso CLI ni API externa.
+Formato de comparacion: 4:5, exportado a 1080 x 1350 en PNG y JPG.
+Referencia de identidad: public/logo-ujeladea.png.
+Las propuestas sustituyen el enfoque grafico anterior, que no convencio al organizador.
+Correccion confirmada: el lugar debe decir solamente "JM El Tabernáculo".
+Los telefonos, precios y demas datos del evento no cambian.
+Las fotografias son ilustrativas y generadas, no imagenes del lugar real.
+
+OPCION A: ELEGANTE Y EDITORIAL
+Original inicial, no exportado como entrega:
+C:/Users/UnseR/.codex/generated_images/01a0f3ff-099a-73a3-b053-fbf45733c7cb/exec-f0ecfb47-d5ed-4a63-bcef-828893c413b2.png
+Original final corregido, usado en las exportaciones:
+C:/Users/UnseR/.codex/generated_images/01a0f3ff-099a-73a3-b053-fbf45733c7cb/exec-c428c876-98f9-45ff-a13b-b488634a5b64.png
+
+Use case: ads-marketing.
+Asset type: an exceptional finished Spanish fundraising gala dinner poster, portrait 4:5 composition, ideally 1080 x 1350. This is OPTION A, a NEW DESIGN, not a variation on an old boxed church flyer.
+Primary request: Design a sophisticated contemporary editorial gala invitation for UJELADEA youth societies, with refined dramatic black, deep burgundy #8f1937 and restrained warm silver/white, abundant typographic breathing room and beautifully organized information.
+Input image role: the supplied image is only the actual UJELADEA identity/logo. Use the white mark small and accurately in the top organizer area, without reproducing any green backdrop. It is NOT a layout reference.
+Art direction: a quiet stylish fashion-magazine invitation. Express gala through strong high-contrast elegant serif typography (crisp modern Didone-like), a large tasteful title "Cena de Gala", and a close-up photographic still life along the bottom-right: a white ceramic plate on a richly textured deep burgundy dinner cloth, folded napkin, polished cutlery and a tiny candle, intimate directional studio lighting. No people, no actual venue. Let this photograph integrate full bleed into the black/burgundy surface, not a framed table photograph or inset rectangle. Most informative type sits in clear non-photo areas. No white scribbles, black boxed panels, giant logo patch, grunge texture, clipart, gradients, wedding flourishes, script overload, borders, decorative cards, or generic banquet stock-photo composition. A polished young-adult event, respectful and elegant rather than wedding or nightclub.
+Layout: small organizer row on top; title has true visual prominence, subtitle delicately italic; big date and time neatly paired under title; venue unmistakable and concise; two clear prices in a restrained divided horizontal row; included items and ministry/dress/drinks arranged using clean alignments and thin fine rules, not many icons; two registration contact rows at bottom with readable digits and adequate contrast. Minimum 5 percent margin. All text must be readable on a phone. Use full image height intelligently and not too many tiny words.
+VERBATIM TEXT, all must appear without any unconfirmed additions:
+"UJELADEA PRESENTA"
+"Cena de Gala"
+"Una Mesa, Un Propósito"
+"ACTIVIDAD PRO CAMPAMENTO"
+"21 NOVIEMBRE 2026"
+"DESDE LAS 17:00"
+"JM El Tabernáculo"
+"Bs 30" paired with "por persona"
+"Bs 50" paired with "por dos personas"
+"Incluye cena, bocaditos y sesión de fotos"
+"Ministerio invitado"
+"Refrescos a la venta"
+"Vestimenta de gala"
+"Para las sociedades de jóvenes"
+"INFORMES E INSCRIPCIONES"
+"Hno. Adalid · 67337082"
+"Hna. Keila · 74083007"
+Critical correction: venue must say ONLY "JM El Tabernáculo". Never include "Salón", "Comedor", "Salón comedor" or spell out "Junta Mensual".
+Constraints: Bs50 is total for TWO people, not per person and not limited to romantic couples. Refreshments sold separately, not included. Do not introduce a menu, ministry name, deadline, QR code, sponsor or address. No wine, champagne, wine glasses, alcohol, nightclub or wedding imagery. No emojis. All phone digits must be exact. This image is final artwork, not a printed-paper mockup.
+
+REVISION A: TELEFONO Y CONTRASTE
+
+Use case: text-localization.
+Edit target: the supplied OPTION A dark UJELADEA gala poster.
+Primary request: Make a precise production correction only, preserving the whole current design, title, photography, layout, venue "JM El Tabernáculo", date, prices and all facts.
+1. In the bottom contact area, replace the ENTIRE Adalid contact line with clearly rendered exact text "Hno. Adalid · 67337082". This phone number MUST be 6 7 3 3 7 0 8 2, contiguous "67337082", with a clear zero as the sixth digit, NOT a three. Use clean sharply rendered readable typography.
+2. Confirm the other contact line remains exactly "Hna. Keila · 74083007", digits 7 4 0 8 3 0 0 7.
+3. Increase the legibility of the large date number "21" and both price values "Bs 30" and "Bs 50" against the dark background by using a brighter pale rose or silver-white ink; keep all supporting labels and remaining art unchanged.
+Constraints: no other revisions. Do not introduce any additional text, icons or objects, do not change the image aspect ratio, photo, venue, subtitle, spelling, prices or date. Venue remains only "JM El Tabernáculo"; never add Salón or comedor. Ensure the bottom phones are clear and fully in the canvas. Return the finished corrected poster.
+
+OPCION B: CLARA Y CONTEMPORANEA
+Original final:
+C:/Users/UnseR/.codex/generated_images/01a0f3ff-099a-73a3-b053-fbf45733c7cb/exec-c4ad6643-275c-4701-9045-0328ace2c550.png
+
+Use case: ads-marketing.
+Asset type: finished Spanish social event poster, portrait 4:5, ideally 1080 x 1350. OPTION B: a completely new light, contemporary youth gala editorial design.
+Primary request: Create a bold, beautifully balanced, youthful yet elegant fundraising dinner invitation for UJELADEA, different from conventional dark luxury gala invites and different from black grunge photo-frame templates.
+Input image: only the actual small white UJELADEA logo as a supporting identity insert. Render the correct white mark small on a deep burgundy ground, with no green background. Do not treat it as a layout reference.
+Creative direction: clean bright white background with exceptionally subtle paper texture, very large expressive burgundy modern sans-serif typography, editorial art direction. Use "CENA" with a refined smaller italic "de" and "GALA" as a compelling large title, with the subtitle in a beautiful smaller serif italic. Make it feel like an excellent contemporary cultural-event poster aimed at young adults, not a wedding invitation, nightclub, restaurant menu or app dashboard.
+Visual anchor: a single photographic overhead elegant white ceramic dinner plate with burgundy folded linen napkin, silver fork and knife and a small arrangement of white flowers on white table linen. This is an art-directed close detail, not a hall or a grand banquet table. It can bleed gracefully into the right side of the layout but never cover event text. Use a deep burgundy left-aligned date accent and precise minimal type, restrained clean burgundy and black rules, plentiful white space, excellent phone readability. Do not put the photo in a rectangular frame. Do not put every piece of information into boxes. No rounded cards, starbursts, scribbles, gold glitter, ornate borders or gradients.
+Layout: discreet organizer at top, title/subtitle unmistakable. Date/time and venue highly visible. Two price options equally clear, 30 for one person and 50 total for two. Include line and supporting facts in restrained compact readable grouping. Reserve the bottom for both contact names and exact digits in a very high-contrast accessible two-column area. Every required line fits inside 5 percent margins; no cropped important text.
+All required text verbatim, correct Spanish accents and phone digits:
+"UJELADEA PRESENTA"
+"CENA DE GALA"
+"Una Mesa, Un Propósito"
+"ACTIVIDAD PRO CAMPAMENTO"
+"21 NOVIEMBRE 2026"
+"DESDE LAS 17:00"
+"JM El Tabernáculo"
+"Bs 30" with "por persona"
+"Bs 50" with "por dos personas"
+"Incluye cena, bocaditos y sesión de fotos"
+"Ministerio invitado"
+"Refrescos a la venta"
+"Vestimenta de gala"
+"Para las sociedades de jóvenes"
+"INFORMES E INSCRIPCIONES"
+"Hno. Adalid · 67337082"
+"Hna. Keila · 74083007"
+Critical: venue ONLY "JM El Tabernáculo". Never use Salón, comedor, Salón comedor or Junta Mensual.
+Phone number accuracy is vital: Adalid = 6 7 3 3 7 0 8 2 (67337082); Keila = 7 4 0 8 3 0 0 7 (74083007). Do not render any other digits.
+Avoid any alcohol, wine/champagne glasses, couples, hearts, invented address, ministry name, registration deadlines, QR codes, watermarks, extra claims or logos. No emojis. Guests are youth societies, not a couples-only event. Drinks explicitly sold separately. Final flat graphic image, not a physical poster mockup.
+
+VERIFICACION
+Datos revisados visualmente: fecha 21 de noviembre de 2026, desde las 17:00,
+JM El Tabernáculo, Bs 30 por persona, Bs 50 por dos personas,
+cena, bocaditos y sesion de fotos; refrescos a la venta,
+Hno. Adalid 67337082, Hna. Keila 74083007.
+La variante inicial A no se entrega: se corrigio la lectura del telefono
+y el contraste de las tarifas y la fecha antes de exportar.
+No se publicaron los afiches ni se modifico la plataforma.
