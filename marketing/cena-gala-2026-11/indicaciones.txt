@@ -1,6 +1,11 @@
 CENA DE GALA UJELADEA - 21 DE NOVIEMBRE DE 2026
 
-Version actual: opcion A afinada, v3
+Version actual: opcion A, v4
+- opcion-a-v4/cena-gala-a-v4.png / .jpg: 1080 x 1350.
+- opcion-a-v4/prompts-imagegen.txt: prompt de la edicion.
+- Etiquetas de entrada: Personal (Bs 30) y Bi-Personal (Bs 50).
+
+Version anterior afinada, v3, conservada como referencia
 - opcion-a-v3/cena-gala-a-v3.png / .jpg: 1080 x 1350.
 - opcion-a-v3/prompts-imagegen.txt: prompt y cambios solicitados por el organizador.
 - Sin Presenta, sin ano visible, solo PRO CAMPAMENTO, sin fila Incluye ni fila de sociedades.

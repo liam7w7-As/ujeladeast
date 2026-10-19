@@ -1,0 +1,30 @@
+OPCION A V4 - ETIQUETAS DE ENTRADA
+
+Modo: edicion con la herramienta integrada image_gen.
+Origen: opcion-a-v3/cena-gala-a-v3.png.
+Salida: cena-gala-a-v4.png y .jpg, 1080 x 1350.
+Se conservan las versiones anteriores.
+
+Cambios solicitados
+- "por persona" pasa a "Personal".
+- "por dos personas" pasa a "Bi-Personal".
+- Se mantienen Bs 30 y Bs 50, respectivamente.
+- Sin otros cambios solicitados de composicion o contenido.
+
+Original generado:
+C:/Users/UnseR/.codex/generated_images/01a0f3ff-099a-73a3-b053-fbf45733c7cb/exec-0faffabf-658f-4c06-ba4b-863a6fabdd66.png
+
+PROMPT EXACTO
+Use case: text-localization.
+Edit target: the supplied UJELADEA Cena de Gala poster, OPTION A v3, portrait 4:5.
+Primary request: Change ONLY TWO small price-label text elements in this image:
+- Beneath "Bs 30", replace "por persona" with exactly "Personal".
+- Beneath "Bs 50", replace "por dos personas" with exactly "Bi-Personal" (capital B, capital P, with a standard hyphen).
+Match the existing elegant serif typography, off-white color, baseline alignment and visual scale. Center each new label under its corresponding price. Do not change the prices, spacing of the overall layout or any other elements.
+Invariants: preserve the identical photograph, black/burgundy cloth, plate, cutlery, candle, white UJELADEA logo, large title "Cena de Gala", subtitle "Una Mesa, Un Propósito", "PRO CAMPAMENTO", "21 NOVIEMBRE", "DESDE LAS 17:00", "JM El Tabernáculo", prices "Bs 30" and "Bs 50", supporting row "Ministerio invitado", "Refrescos a la venta", "Vestimenta de gala", and registration block.
+Contacts MUST remain EXACTLY "Hno. Adalid · 67337082" and "Hna. Keila · 74083007". Do not alter or redraw their digits incorrectly. Adalid digits: 6 7 3 3 7 0 8 2. Keila digits: 7 4 0 8 3 0 0 7.
+Do not reintroduce PRESENTA, ACTIVIDAD, the year 2026, an includes line, an audience line, Salón or comedor. Do not add anything. Preserve the complete canvas, 4:5 aspect ratio, margins and all decorative details. This is the same approved artwork with exactly the two requested label replacements, not a redesign.
+
+Verificacion visual: etiquetas, tarifas y telefonos 67337082 y 74083007 correctos.
+Se mantienen las omisiones de la version v3 y JM El Tabernáculo.
+Dimensiones de exportacion verificadas. Sin cambios en la plataforma.
