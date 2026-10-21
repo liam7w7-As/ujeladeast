@@ -1,6 +1,12 @@
 UJELADEA-CAMP - SOMOS UNO EN CRISTO
 
-Archivos finales de esta propuesta
+Propuesta actual v2, mas cercana al modelo de referencia
+- opcion-referencia-v2/campamento-referencia-v2.png / .jpg: 1080 x 1350.
+- opcion-referencia-v2/prompts-imagegen.txt: prompt y alcance de esta nueva opcion.
+- Dos columnas: fotografia verde a la izquierda y papel claro a la derecha.
+- Se entrega primero esta direccion 4:5 para revision; no hay una nueva adaptacion 9:16 todavia.
+
+Propuesta anterior v1, no aprobada, conservada como historico
 - campamento-facebook-whatsapp-v1.png / .jpg: 1080 x 1350.
 - campamento-estados-tiktok-v1.png / .jpg: 1080 x 1920.
 - texto-invitacion.txt: texto basado en el mensaje del organizador.

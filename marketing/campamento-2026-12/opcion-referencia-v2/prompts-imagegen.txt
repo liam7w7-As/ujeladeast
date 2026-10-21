@@ -1,0 +1,58 @@
+OPCION V2 - ESTILO CERCANO AL MODELO APORTADO
+
+Modo: herramienta integrada image_gen.
+Salida: campamento-referencia-v2.png y .jpg, 1080 x 1350.
+Se entrega primero la propuesta 4:5 para revisar la direccion visual.
+Aun no se ha adaptado este nuevo estilo a 9:16.
+Las versiones anteriores se conservan.
+
+Diseno: dos columnas, fotografia verde a la izquierda y papel claro a la derecha.
+Una sola fotografia, un borde rasgado vertical y precio en etiqueta clara.
+Referencias: modelo aportado por el usuario, fuentes/hotel-fachada.png y public/logo-ujeladea.png.
+
+Datos conservados y revisados visualmente:
+25 al 30 de diciembre. Hotel Tamampaya. 420 Bs.
+Inscripciones hasta el 20 de diciembre. Cupos limitados.
+Hna. Lizeth 73213608. Hna. Angela 77746133.
+SOMOS UNO EN CRISTO. San Juan 17:11. ujeladea.org.
+Sin listado de transporte, alojamiento o alimentacion.
+
+Original generado:
+C:/Users/UnseR/.codex/generated_images/01a0f3ff-099a-73a3-b053-fbf45733c7cb/exec-6905dfb3-db5b-4730-9041-c7e3eacfb358.png
+
+PROMPT EXACTO
+Use case: ads-marketing.
+Asset type: a NEW finished Spanish UJELADEA-CAMP poster, portrait 4:5 aspect ratio, ideally 1080 x 1350.
+Primary request: Follow the FIRST supplied style reference much more closely in layout, typography and restraint. The previous brush-lettered collage proposal was rejected. Create a clean two-column split poster, NOT a stacked collage with multiple photos.
+Input roles:
+Image 1 is the user's preferred design reference: two sharply distinguished VERTICAL side-by-side zones, left photograph with forest-green treatment, right warm off-white paper carrying large solid green sans-serif type, with ONE irregular vertical torn-paper edge between them. This precise graphic architecture is what the user wants. Do NOT reproduce its children, English words, watermark, original logos, 2028, dollar price or fake activities.
+Image 2 is the ACTUAL Hotel Tamampaya exterior photograph. This must be the ONLY venue photograph in the new poster, used faithfully as the full-height left image field. Crop intelligently so the white hotel facade and unlit wood stack remain identifiable. Preserve actual architecture/landscaping; no renovation, invented mountains, people, pool, night lighting or lit bonfire. A restrained forest-green duotone treatment matching the reference is allowed, but keep recognizable photographic detail.
+Image 3 is the actual UJELADEA logo, a small supporting identity source. Render it accurately, small and monochrome forest green on the light area or white on the dark area; do not copy its preview background.
+LAYOUT IS THE KEY:
+- Left approximately 43 percent width: one uninterrupted real venue photograph, green-toned like the reference. Near the lower part put the camp date large and clean in mustard/off-white and a simple off-white luggage-tag-shaped price label reading "420 Bs", just as the reference uses a date and a price tag. The date is "25 AL 30" with "DICIEMBRE" beneath, unmistakable. Minimal small "CUPOS LIMITADOS" near the price.
+- Right approximately 57 percent width: subtly textured light warm-white paper, generous clean inset padding, completely separate from the photo via ONE vertical torn edge. Small UJELADEA logo at the top, then a clean brand/event headline with "UJELADEA" smaller and "CAMP" very large, bold, solid forest-green sans serif just like the reference. The event reads UJELADEA-CAMP but may use two typographic lines. The title must NOT use brush fonts, distress or rough paint strokes.
+- Below headline: "SOMOS UNO EN CRISTO" as a clear substantial smaller slogan, elegant and legible, no painted banner.
+- Then a small verse, venue, registration deadline, contact heading and BOTH contact names with each phone on its own readable line. Site as the clear final footer.
+Preserve a quiet, fresh, young-adult camp identity: deep forest green, near-white paper, a modest mustard accent only. NO burgundy/red, no oversized leaves framing every edge, no multiple torn snapshots, no tilted photo cards, no grunge, no paintbrush strips, no brush lettering, no stickers except the simple price tag, no rounded UI cards. A couple of very small nature line motifs like the reference are acceptable, but not pine trees suggesting a different location.
+All exact required Spanish information:
+"UJELADEA-CAMP" (can be split typographically into UJELADEA and CAMP)
+"SOMOS UNO EN CRISTO"
+"25 AL 30 DE DICIEMBRE" (can be arranged as 25 AL 30 / DICIEMBRE)
+"HOTEL TAMAMPAYA"
+"420 Bs"
+"Inscripciones hasta el 20 de diciembre"
+"CUPOS LIMITADOS"
+"Para que sean uno, así como nosotros."
+"San Juan 17:11"
+"INFORMES E INSCRIPCIONES"
+"Hna. Lizeth"
+"73213608"
+"Hna. Angela"
+"77746133"
+"ujeladea.org"
+Phone digits are critical: Lizeth 7 3 2 1 3 6 0 8; Angela 7 7 7 4 6 1 3 3. Keep every phone exact, never omit either.
+No inclusion list of transport/accommodation/food. No invented activities, guests, schedule, discounts, new phone numbers, new dates, QR codes, social-media icons without URLs, emojis or watermarks. No giant year copied from the template. Do NOT add fictitious young people. All text must fit within a 5 percent outer margin, with readable generous type. The final is a refined vertically oriented cousin of the ORIGINAL two-column reference, not a remix of a previous generated collage. Return one polished complete poster.
+
+La composicion es asistida por IA; los originales fotograficos se conservan.
+No se modifico la plataforma, PWA, base de datos o rachas.
+No se publico nada en redes.
