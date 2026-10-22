@@ -1,0 +1,53 @@
+OPCION GUINDA V3 - UJELADEA-CAMP
+
+Solicitud: usar el color resaltante de UJELADEA en las letras y el filtro de la imagen.
+Modo: edicion con herramienta integrada image_gen.
+Color de referencia: guinda #8f1937.
+Se conservan la composicion en dos columnas, los datos, el papel claro y la fecha mostaza.
+No se cambia la informacion del evento ni se agrega el listado de inclusiones.
+
+Archivos finales:
+campamento-guinda-v3.png y campamento-guinda-v3.jpg, 1080 x 1350.
+Las versiones anteriores se conservan.
+Esta revision es 4:5; todavia no es la adaptacion 9:16.
+
+Referencia editada:
+../opcion-referencia-v2/campamento-referencia-v2.png
+
+Original generado:
+C:/Users/UnseR/.codex/generated_images/01a0f3ff-099a-73a3-b053-fbf45733c7cb/exec-ecda8aea-2638-4381-b370-c980c1922f87.png
+
+PROMPT EXACTO
+Use case: style-transfer.
+Edit target: the supplied UJELADEA-CAMP two-column poster, portrait 4:5.
+Primary request: Make ONLY a brand-color substitution. The user wants UJELADEA's signature GUINDA / deep burgundy instead of forest green, both for the lettering and for the translucent photographic color treatment. Preserve the exact existing layout, typography, sizes, positions, torn-paper split, photo content, subtle paper texture and all factual information.
+Color instructions:
+- Replace every forest-green graphic element on the light paper side with UJELADEA burgundy #8f1937: logo, main UJELADEA/CAMP lettering, slogan, verse lettering, venue, rules, foliage motifs, icons, deadline text, registration heading background, contact lettering/icons and site.
+- Replace the current green duotone overlay across the whole left photograph with an equally tasteful deep wine/burgundy duotone derived from #8f1937. Preserve the photo's original tonal detail and recognizability: white hotel facade, roof, windows, palms, unlit log stack and lawn. This is a GRAPHIC COLOR FILTER, not repainting or rebuilding the actual hotel. No green cast should remain in the photographic filter. Keep it visible, not crushed to black or oversaturated bright red.
+- Change the green lettering and tag hole in the off-white price tag to the same burgundy.
+- Preserve the off-white paper and tag, the mustard/gold date accent and the white text where used on a dark background, keeping excellent contrast. Do not introduce purple, blue or orange.
+Text and content invariants, do not alter or omit any:
+UJELADEA logo / small 2026 within logo
+"UJELADEA" and "CAMP"
+"SOMOS UNO EN CRISTO"
+"Para que sean uno, así como nosotros."
+"San Juan 17:11"
+"HOTEL TAMAMPAYA"
+"Inscripciones hasta el" / "20 de diciembre"
+"INFORMES E INSCRIPCIONES"
+"Hna. Lizeth" and exact phone "73213608" (7 3 2 1 3 6 0 8)
+"Hna. Angela" and exact phone "77746133" (7 7 7 4 6 1 3 3)
+"ujeladea.org"
+"25 AL 30" / "DE DICIEMBRE"
+"420 Bs"
+"CUPOS LIMITADOS"
+Constraints: ONLY recolor, do not redesign, add content or change any number. Do not add transport/accommodation/food/inclusion details, new event information, QR codes or photos. Do not invent people or physical improvements. Keep 4:5 aspect ratio and all edges/margins intact. Final output is the same poster, now clearly identified by UJELADEA's burgundy, with no remaining forest-green type or green photo tint.
+
+REVISION
+Color guinda presente en tipografia, logo, iconos, reglas y filtro fotografico.
+Datos revisados visualmente: 25 al 30 de diciembre, 420 Bs,
+Hotel Tamampaya, inscripciones hasta el 20 de diciembre,
+Hna. Lizeth 73213608, Hna. Angela 77746133, ujeladea.org.
+Dimensiones finales comprobadas en la exportacion.
+Sin cambios en los originales fotograficos, la plataforma o la base de datos.
+No se publico ni se envio nada a redes sociales.

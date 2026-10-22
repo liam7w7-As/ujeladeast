@@ -1,6 +1,11 @@
 UJELADEA-CAMP - SOMOS UNO EN CRISTO
 
-Propuesta actual v2, mas cercana al modelo de referencia
+Propuesta actual v3, con el guinda de UJELADEA
+- opcion-guinda-v3/campamento-guinda-v3.png / .jpg: 1080 x 1350.
+- opcion-guinda-v3/prompts-imagegen.txt: prompt de la edicion de color.
+- Guinda #8f1937 en letras, iconos, logo y filtro de la fotografia; datos sin cambios.
+
+Propuesta anterior v2, conservada como referencia
 - opcion-referencia-v2/campamento-referencia-v2.png / .jpg: 1080 x 1350.
 - opcion-referencia-v2/prompts-imagegen.txt: prompt y alcance de esta nueva opcion.
 - Dos columnas: fotografia verde a la izquierda y papel claro a la derecha.
