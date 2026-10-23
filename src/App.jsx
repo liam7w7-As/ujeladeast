@@ -16,6 +16,9 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import RecoverPassword from './pages/RecoverPassword'
+import AuthCallback from './pages/AuthCallback'
+import AccountSetupGate from './components/layout/AccountSetupGate'
+const Account = lazy(() => import('./pages/Account'))
 const Feed = lazy(() => import('./pages/Feed'))
 const Hymnal = lazy(() => import('./pages/Hymnal'))
 const BibleStudy = lazy(() => import('./pages/BibleStudy'))
@@ -47,7 +50,7 @@ function App() {
         <OfflineBanner />
         <UpdatePrompt />
         <SpotlightBackground />
-        <Suspense fallback={<div role="status" className="p-24 text-center">Cargando...</div>}><Routes>
+        <AccountSetupGate><Suspense fallback={<div role="status" className="p-24 text-center">Cargando...</div>}><Routes>
           <Route path="/" element={<Home />} />
           <Route path="/nosotros" element={<About />} />
           <Route path="/estudio-biblico" element={<About study />} />
@@ -56,6 +59,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/recuperar" element={<RecoverPassword />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/completar-perfil" element={<Account onboarding />} />
+          <Route path="/cuenta" element={<Account />} />
           <Route path="/himnario" element={<Hymnal />} />
           <Route path="/biblia" element={<Suspense fallback={<div role="status" className="p-24 text-center">Abriendo Biblia...</div>}><Bible /></Suspense>} />
           <Route path="/estudios" element={<BibleStudy />} />
@@ -79,7 +85,7 @@ function App() {
             <Route path="notificaciones" element={<AdminNotifications />} />
             <Route path="buscar" element={<AdminSearchResults />} />
           </Route>
-        </Routes></Suspense>
+        </Routes></Suspense></AccountSetupGate>
 
         {/* Componentes Globales */}
         <ChatWidget />

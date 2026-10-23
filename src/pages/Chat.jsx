@@ -194,11 +194,7 @@ export default function Chat() {
             {!currentSession ? (
               /* Estado vacío — pantalla de bienvenida */
               <div className="flex-1 flex flex-col items-center justify-center gap-6 p-8">
-                <div className="relative">
-                  <img src={ujeladitoAvatar} alt="UJELADITO"
-                    className="w-20 h-20 rounded-full object-cover border-2 border-[#8f1937]/50 shadow-[0_0_40px_rgba(143,25,55,0.25)]" />
-                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-[#09090b]" />
-                </div>
+                <img src="/images/ui/chat-welcome-v1.webp" alt="" width="120" height="120" className="h-28 w-28 object-contain" />
                 <div className="text-center max-w-sm">
                   <h2 className="text-xl font-bold text-white mb-1.5">
                     ¡Hola{profile?.full_name ? ', ' + profile.full_name.split(' ')[0] : ''}!

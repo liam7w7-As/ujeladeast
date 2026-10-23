@@ -94,12 +94,12 @@ function Navbar({ activeItem = 'home' }) {
                 <HeartHandshake size={16} />
                 SOS
               </Link>
-              <div className="flex items-center gap-2 max-w-[120px] ml-2">
+              <Link to="/cuenta" title="Mi cuenta" aria-label="Mi cuenta" className="flex items-center gap-2 max-w-[120px] ml-2">
                 <ProfileAvatar profile={profile} metadata={user.user_metadata} className="h-8 w-8 shrink-0" />
                 <span className="font-label-sm text-sm text-on-surface truncate">
                   {profile?.full_name || user.email.split('@')[0]}
                 </span>
-              </div>
+              </Link>
               <motion.button 
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}

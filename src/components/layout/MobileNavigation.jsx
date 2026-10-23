@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpenText, HouseHeart, MessagesSquare, Music4, NotebookPen, PanelsTopLeft, Library, Users, MessageCircle, LogIn, LogOut, PlusSquare, HeartHandshake, Shield, Globe } from 'lucide-react';
+import { BookOpenText, HouseHeart, MessagesSquare, Music4, NotebookPen, PanelsTopLeft, Library, Users, MessageCircle, LogIn, LogOut, PlusSquare, HeartHandshake, Shield, Globe, UserRound } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { useAuth } from '../../hooks/useAuth';
 import ProfileAvatar from '../ui/ProfileAvatar';
@@ -61,6 +61,7 @@ export default function MobileNavigation({ onCreate }) {
       <div className="mobile-more-content">
         {user ? <div className="mobile-more-profile"><ProfileAvatar profile={profile} metadata={user.user_metadata} /><div><strong>{profile?.full_name || 'Tu cuenta'}</strong><p>{profile?.church_name || user.email}</p></div></div> : <div className="mobile-guest-actions"><Link to="/login" onClick={() => setOpen(false)}>Iniciar sesión<LogIn size={18} /></Link><Link to="/register" onClick={() => setOpen(false)}>Crear cuenta<PlusSquare size={18} /></Link></div>}
         <div className="mobile-more-links">{extraLinks.map(({ to, label, Icon, state }) => <Link key={label} to={to} state={state} onClick={() => setOpen(false)}><Icon size={23} /><span>{label}</span></Link>)}</div>
+        {user && <Link className="mobile-account-action" to="/cuenta" onClick={() => setOpen(false)}><UserRound size={19} />Mi cuenta</Link>}
         {profile?.role === 'admin' && <Link className="mobile-account-action" to="/admin" onClick={() => setOpen(false)}><Shield size={19} />Administración</Link>}
         {canChangeDomain && <Link className="mobile-account-action" to={MIGRATION_REVIEW_PATH} onClick={() => setOpen(false)}><Globe size={19} />Nuevo dominio: ujeladea.org</Link>}
         <InstallButton className="mobile-account-action" onSelect={() => setOpen(false)} />

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, BookMarked, Compass, Home, Library, LogIn, LogOut, MessageCircle, Music2, PlusSquare, Users } from 'lucide-react';
+import { BookOpen, BookMarked, Compass, Home, Library, LogIn, LogOut, MessageCircle, Music2, PlusSquare, Users, UserRound } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { useAuth } from '../../hooks/useAuth';
 import NotificationBell from '../ui/NotificationBell';
@@ -52,6 +52,7 @@ export default function FeedNavigation({ onCreate }) {
       <div className="overflow-y-auto p-4">
         {user && <div className="flex items-center gap-3 border-b border-white/10 pb-4 mb-2"><ProfileAvatar profile={profile} metadata={user.user_metadata} /><div className="min-w-0"><p className="text-sm font-semibold break-words">{profile?.full_name || 'Tu cuenta'}</p><p className="text-xs text-white/50 break-words">{profile?.church_name}</p></div></div>}
         {links.map(({ to, label, Icon }) => <Link key={to} to={to} onClick={() => setMenuOpen(false)} className="flex items-center gap-4 rounded-lg px-3 py-3 text-sm hover:bg-white/5"><Icon size={21} />{label}</Link>)}
+        {user && <Link to="/cuenta" onClick={() => setMenuOpen(false)} className="flex items-center gap-4 rounded-lg px-3 py-3 text-sm hover:bg-white/5"><UserRound size={21} />Mi cuenta</Link>}
         {user ? <button type="button" onClick={signOut} className="flex items-center gap-4 px-3 py-3 text-sm text-rose-300"><LogOut size={21} />Cerrar sesión</button> : <Link to="/login" className="flex items-center gap-4 px-3 py-3 text-sm text-rose-300"><LogIn size={21} />Iniciar sesión</Link>}
         {error && <p role="alert" className="p-3 text-sm text-red-300">{error}</p>}
       </div>

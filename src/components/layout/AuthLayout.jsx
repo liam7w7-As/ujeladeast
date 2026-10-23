@@ -4,7 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import MobileNavigation from './MobileNavigation';
 import '../../pages/auth.css';
 
-export default function AuthLayout({ title, subtitle, active, children }) {
+export default function AuthLayout({ title, subtitle, active, children, showGuest = true }) {
   const reduced = useReducedMotion();
   return <div className="auth-page">
     <MobileNavigation />
@@ -15,7 +15,7 @@ export default function AuthLayout({ title, subtitle, active, children }) {
         <header className="auth-heading"><h1>{title}</h1><p>{subtitle}</p></header>
         {active && <nav aria-label="Acceso a tu cuenta" className="auth-tabs">{[{ to: '/login', label: 'Iniciar sesión', id: 'login' }, { to: '/register', label: 'Crear cuenta', id: 'register' }].map(item => <Link key={item.id} to={item.to} aria-current={active === item.id ? 'page' : undefined}>{item.label}{active === item.id && <motion.span layoutId="auth-tab" transition={{ duration: reduced ? 0 : 0.2 }} />}</Link>)}</nav>}
         {children}
-        <Link to="/feed" className="auth-guest">Seguir como invitado<ArrowLeft size={16} /></Link>
+        {showGuest && <Link to="/feed" className="auth-guest">Seguir como invitado<ArrowLeft size={16} /></Link>}
       </motion.div>
     </main>
   </div>;

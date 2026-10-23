@@ -17,6 +17,9 @@
     { "source": "/login", "destination": "/app.html" },
     { "source": "/register", "destination": "/app.html" },
     { "source": "/recuperar", "destination": "/app.html" },
+    { "source": "/auth/callback", "destination": "/app.html" },
+    { "source": "/completar-perfil", "destination": "/app.html" },
+    { "source": "/cuenta", "destination": "/app.html" },
     { "source": "/chat", "destination": "/app.html" },
     { "source": "/admin/:path*", "destination": "/app.html" }
   ],
@@ -26,8 +29,16 @@
       "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }]
     },
     {
-      "source": "/:page(login|register|recuperar|estudios|chat)",
+      "source": "/:page(login|register|recuperar|estudios|chat|cuenta|completar-perfil)",
       "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }]
+    },
+    {
+      "source": "/auth/:path*",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
+        { "key": "Cache-Control", "value": "no-store" },
+        { "key": "Referrer-Policy", "value": "no-referrer" }
+      ]
     },
     {
       "source": "/admin/:path*",
