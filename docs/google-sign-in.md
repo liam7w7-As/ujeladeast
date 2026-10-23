@@ -48,6 +48,25 @@ Never put the secret in source code, a `VITE_` variable, screenshots, or chat.
 Branding may require additional verified-domain/privacy-policy information;
 complete Google's requirements before making the provider public.
 
+Branding values approved by the owner on 2026-10-23:
+
+- App name: `UJELADEA`.
+- Public support, developer contact, and privacy email: `delap4787@gmail.com`.
+- Home page: `https://www.ujeladea.org/`.
+- Privacy policy: `https://www.ujeladea.org/privacidad`.
+- Organization domain: `ujeladea.org`.
+
+The privacy page is public, pre-rendered without JavaScript, linked from the
+homepage and authentication screens, and accessible with an incomplete Google
+profile. Verify its deployed URL returns the policy before entering it in Google.
+The policy documents the actual chat flow, including the first profile name sent
+with AI requests, and offers contact-based data and account deletion requests.
+
+Complete these fields in Google Auth Platform > Branding, then use Audience >
+Publish app for the public rollout. Branding verification and publishing can be
+separate steps. Basic Google sign-in scopes have exceptions to test-user limits;
+do not assume every account is blocked solely because the app says Testing.
+
 ## 2. Supabase dashboard
 
 In Authentication > Sign In / Providers > Google, enable Google and enter the

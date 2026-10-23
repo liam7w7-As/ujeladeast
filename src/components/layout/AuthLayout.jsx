@@ -16,6 +16,7 @@ export default function AuthLayout({ title, subtitle, active, children, showGues
         {active && <nav aria-label="Acceso a tu cuenta" className="auth-tabs">{[{ to: '/login', label: 'Iniciar sesión', id: 'login' }, { to: '/register', label: 'Crear cuenta', id: 'register' }].map(item => <Link key={item.id} to={item.to} aria-current={active === item.id ? 'page' : undefined}>{item.label}{active === item.id && <motion.span layoutId="auth-tab" transition={{ duration: reduced ? 0 : 0.2 }} />}</Link>)}</nav>}
         {children}
         {showGuest && <Link to="/feed" className="auth-guest">Seguir como invitado<ArrowLeft size={16} /></Link>}
+        <p className="auth-privacy"><Link to="/privacidad">Política de privacidad</Link></p>
       </motion.div>
     </main>
   </div>;

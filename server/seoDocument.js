@@ -2,6 +2,7 @@ import { createElement as h } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { InstitutionContent, StudyIntroduction, PublicLinks } from '../src/components/seo/PublicContent.js';
 import PublicationContent from '../src/components/seo/PublicationContent.js';
+import PrivacyContent from '../src/components/seo/PrivacyContent.js';
 import { serializedSchema } from '../src/lib/seo.js';
 import { publicPages } from '../src/lib/siteContent.js';
 import { HomeHero, HomeIntro, HomeResources, HomeGalleryPreview, HomeConnect } from '../src/components/seo/HomeContent.js';
@@ -24,6 +25,7 @@ export function staticContent(path) {
   const brand = h('a', { href: '/', 'aria-label': 'UJELADEA inicio' }, h('img', { src: '/logo-ujeladea.png', width: 96, height: 96, alt: 'UJELADEA', className: 'institution-logo' }));
   if (path === '/') return h('main', { className: 'landing-main' }, h(HomeHero), h('section', { className: 'landing-story' }, h(HomeIntro)), h(HomeResources), h(HomeGalleryPreview), h(HomeConnect));
   if (path === '/nosotros') return h('main', { className: 'institution-main' }, brand, h(InstitutionContent));
+  if (path === '/privacidad') return h('main', { className: 'institution-main' }, brand, h(PrivacyContent));
   if (path === '/estudio-biblico') return h('main', { className: 'institution-main' }, brand, h(StudyIntroduction));
   const page = publicPages[path];
   return page ? h('main', { className: 'institution-main institution-content' }, brand, h('h1', null, page.heading), h('p', null, page.description), h(PublicLinks)) : null;

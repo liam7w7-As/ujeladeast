@@ -66,6 +66,8 @@
 .landing-connect { border-top: 1px solid #ffffff18; padding: 64px 0; background: #171317; text-align: center; }
 .landing-connect > div > p:not(.landing-kicker) { max-width: 60ch; margin: 0 auto 28px; font-size: 15px; line-height: 1.8; color: #bfb8bf; }
 .landing-connect .social-links { justify-content: center; margin-bottom: 24px; }
+.landing-legal { margin-top: 24px; padding-top: 20px; border-top: 1px solid #ffffff18; }
+.landing-legal a { display: inline-flex; align-items: center; min-height: 44px; color: #d0bdc5; font-size: 13px; text-decoration: underline; text-underline-offset: 4px; }
 .landing-page footer { margin-top: 0; }
 @keyframes photo-reveal { from { opacity: .7; } to { opacity: 1; } }
 @media (min-width: 1600px) { .landing-hero-copy { width: min(100% - 120px, 1440px); } }

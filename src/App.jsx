@@ -10,6 +10,7 @@ import OfflineBanner from './components/ui/OfflineBanner'
 import UpdatePrompt from './components/ui/UpdatePrompt'
 import RouteMetadata from './components/seo/Metadata'
 import About from './pages/About'
+import Privacy from './pages/Privacy'
 import Publication from './pages/Publication'
 
 import Home from './pages/Home'
@@ -53,6 +54,7 @@ function App() {
         <AccountSetupGate><Suspense fallback={<div role="status" className="p-24 text-center">Cargando...</div>}><Routes>
           <Route path="/" element={<Home />} />
           <Route path="/nosotros" element={<About />} />
+          <Route path="/privacidad" element={<Privacy />} />
           <Route path="/estudio-biblico" element={<About study />} />
           <Route path="/publicaciones/:id" element={<Publication />} />
           <Route path="/feed" element={<Feed />} />

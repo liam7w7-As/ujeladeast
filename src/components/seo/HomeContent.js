@@ -60,7 +60,8 @@ export function HomeConnect() {
       h('h2', { id: 'connect-title' }, 'Sigamos compartiendo.'),
       h('p', null, organization.invitation),
       h(SocialLinks),
-      h('a', { className: 'landing-text-link', href: '/feed' }, 'Ir a la comunidad', h(ArrowUpRight, { size: 19, 'aria-hidden': true }))),
+      h('a', { className: 'landing-text-link', href: '/feed' }, 'Ir a la comunidad', h(ArrowUpRight, { size: 19, 'aria-hidden': true })),
+      h('nav', { className: 'landing-legal', 'aria-label': 'Informaci\u00f3n legal' }, h('a', { href: '/privacidad' }, 'Pol\u00edtica de privacidad'))),
   );
 }
 

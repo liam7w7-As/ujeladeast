@@ -43,7 +43,7 @@ const browser = await chromium.launch({ headless: true, channel: 'chrome' });
 try {
   const crawler = await browser.newContext({ javaScriptEnabled: false });
   const page = await crawler.newPage();
-  for (const path of ['/', '/nosotros', '/estudio-biblico', `/publicaciones/${id}`]) {
+  for (const path of ['/', '/nosotros', '/estudio-biblico', '/privacidad', `/publicaciones/${id}`]) {
     const response = await page.goto(base + path);
     assert.equal(response.status(), 200);
     assert.equal(await page.locator('h1').count(), 1);
@@ -67,6 +67,13 @@ try {
     assert.ok(await app.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     assert.ok(await app.locator('.institution-logo').evaluate(img => img.complete && img.naturalWidth > 0));
     await app.screenshot({ path: `${output}/nosotros-${width}.png`, fullPage: true });
+    await app.goto(base + '/privacidad');
+    await app.waitForSelector('.privacy-content');
+    await app.getByRole('heading', { name: 'Política de privacidad', exact: true }).waitFor();
+    assert.equal(await app.title(), publicPages['/privacidad'].title);
+    assert.ok(await app.getByRole('link', { name: 'delap4787@gmail.com', exact: true }).first().isVisible());
+    assert.ok(await app.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+    await app.screenshot({ path: `${output}/privacidad-${width}.png`, fullPage: true });
     await app.goto(base + `/publicaciones/${id}`);
     await app.waitForSelector('.publication-actions');
     assert.ok((await app.locator('.publication-text').innerText()).includes('esperanza'));

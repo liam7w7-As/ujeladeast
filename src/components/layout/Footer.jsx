@@ -6,7 +6,7 @@ import '../ui/social-links.css'
 const footerGroups = [
   {
     title: 'Plataforma',
-    links: [['Inicio', '/'], ['Quiénes somos', '/nosotros'], ['Comunidad', '/feed'], ['Recursos', '/recursos']],
+    links: [['Inicio', '/'], ['Quiénes somos', '/nosotros'], ['Comunidad', '/feed'], ['Recursos', '/recursos'], ['Privacidad', '/privacidad']],
   },
   {
     title: 'Crecer juntos',

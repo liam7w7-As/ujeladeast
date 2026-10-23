@@ -18,6 +18,7 @@ export const organization = {
 export const publicPages = {
   '/': { title: 'UJELADEA | Juventud Los Amigos en El Alto, Bolivia', heading: 'UJELADEA', description: 'Conoce UJELADEA, organizaci\u00f3n juvenil de El Alto dependiente de UJELAB. Comunidad cristiana, estudio b\u00edblico, Biblia, himnario y recursos para crecer en la fe.' },
   '/nosotros': { title: 'Qui\u00e9nes somos | UJELADEA, Distrito El Alto', heading: 'Qui\u00e9nes somos', description: 'Somos UJELADEA: j\u00f3venes de m\u00e1s de 30 iglesias Los Amigos en El Alto, Bolivia. Conoce nuestra relaci\u00f3n con UJELAB e INELA y c\u00f3mo integrarte.' },
+  '/privacidad': { title: 'Pol\u00edtica de privacidad | UJELADEA', heading: 'Pol\u00edtica de privacidad', description: 'Conoce qu\u00e9 datos utiliza UJELADEA, c\u00f3mo funciona el acceso con Google y c\u00f3mo solicitar acceso, correcci\u00f3n o eliminaci\u00f3n de tu informaci\u00f3n.' },
   '/feed': { title: 'Comunidad, reflexiones y noticias | UJELADEA', heading: 'Comunidad', description: 'Comparte la vida de nuestra comunidad: reflexiones cristianas, devocionales y anuncios de UJELADEA, la juventud Los Amigos del Distrito El Alto.' },
   '/himnario': { title: 'Himnario INELA, CALA y coros | UJELADEA', heading: 'Himnario', description: 'Encuentra alabanzas por n\u00famero o t\u00edtulo en el himnario INELA, el himnario CALA y los coros de UJELADEA. Canta y consulta las letras tambi\u00e9n sin conexi\u00f3n.' },
   '/biblia': { title: 'Biblia en espa\u00f1ol y lectura sin conexi\u00f3n | UJELADEA', heading: 'Biblia', description: 'Lee la Biblia en espa\u00f1ol, compara versiones y guarda tus vers\u00edculos favoritos. Descarga las versiones disponibles para leer y buscar sin conexi\u00f3n.' },
@@ -29,5 +30,5 @@ export const publicPages = {
 export const publicNavigation = [
   ['Qui\u00e9nes somos', '/nosotros'], ['Comunidad', '/feed'], ['Biblia', '/biblia'],
   ['Himnario', '/himnario'], ['Estudio b\u00edblico', '/estudio-biblico'],
-  ['Sociedades', '/sociedades'], ['Recursos', '/recursos'],
+  ['Sociedades', '/sociedades'], ['Recursos', '/recursos'], ['Privacidad', '/privacidad'],
 ];

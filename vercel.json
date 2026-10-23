@@ -5,6 +5,7 @@
   },
   "rewrites": [
     { "source": "/nosotros", "destination": "/seo-pages/nosotros.html" },
+    { "source": "/privacidad", "destination": "/seo-pages/privacidad.html" },
     { "source": "/estudio-biblico", "destination": "/seo-pages/estudio-biblico.html" },
     { "source": "/feed", "destination": "/seo-pages/feed.html" },
     { "source": "/himnario", "destination": "/seo-pages/himnario.html" },

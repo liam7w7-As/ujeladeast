@@ -84,6 +84,12 @@ async function layout(page, name, selector = '.auth-content') {
 }
 
 try {
+  const privacy = await setup({ authenticated: true, google: true, profile: { ...original, church_name: '' } });
+  await privacy.page.goto(`${base}/privacidad`);
+  await privacy.page.getByRole('heading', { name: 'Política de privacidad', exact: true }).waitFor();
+  assert.ok(privacy.page.url().endsWith('/privacidad'), 'an incomplete Google profile can still read privacy');
+  assert.deepEqual(privacy.state.writes, []);
+
   const disabled = await setup({ provider: false });
   await disabled.page.goto(`${base}/login`, { waitUntil: 'domcontentloaded' });
   await disabled.page.getByRole('button', { name: 'Continuar con Google' }).click();

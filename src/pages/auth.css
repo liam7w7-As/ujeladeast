@@ -39,6 +39,8 @@
 .auth-submit:disabled { opacity: .5; cursor: wait; }
 .auth-guest { display: flex; align-items: center; justify-content: center; gap: 9px; color: #9caaa2; min-height: 48px; margin-top: 23px; font-size: 12px; }
 .auth-guest svg { order: -1; }
+.auth-privacy { margin-top: 12px; text-align: center; color: #b6b0b4; font-size: 12px; line-height: 1.7; }
+.auth-privacy a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: underline; text-underline-offset: 4px; }
 .auth-error { display: flex; gap: 9px; padding: 13px; border-left: 2px solid #ef94a6; background: #ef94a60b; color: #f6b6c2; font-size: 12px; line-height: 1.8; }
 .auth-error svg { flex-shrink: 0; margin-top: 3px; }
 .auth-progress { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; color: #9aaaa1; font-size: 11px; }
