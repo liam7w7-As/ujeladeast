@@ -100,12 +100,12 @@ export default function UpdatePrompt() {
   return <AppDialog open={(needRefresh || activated) && !dismissed} onClose={later} busy={updating} title="Nueva versión disponible">
     <div className="overflow-y-auto p-5 sm:p-6">
       <Download size={32} className="mb-4 text-rose-300" aria-hidden="true" />
-      <p className="text-sm leading-6 text-white/80">Las mejoras ya están listas. Actualiza para abrir la nueva versión de UJELADEA.</p>
-      <p className="mt-3 text-sm leading-6 text-white/60">La app se recargará. Termina lo que estés escribiendo antes de continuar.</p>
+      <p className="text-sm leading-6 text-on-surface">Las mejoras ya están listas. Actualiza para abrir la nueva versión de UJELADEA.</p>
+      <p className="mt-3 text-sm leading-6 text-muted">La app se recargará. Termina lo que estés escribiendo antes de continuar.</p>
       {error && <p role="alert" className="mt-4 text-sm leading-6 text-amber-200">{error}</p>}
       <div className="mt-6 flex flex-wrap justify-end gap-3">
-        <button type="button" onClick={later} disabled={updating} className="min-h-11 rounded-lg px-4 text-sm font-medium hover:bg-white/10 disabled:opacity-50">Más tarde</button>
-        <button type="button" onClick={update} disabled={updating} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#8f1937] px-5 text-sm font-semibold text-white hover:bg-[#a61c3f] disabled:opacity-60">{updating ? <LoaderCircle size={18} className="animate-spin" /> : <Download size={18} />}{updating ? 'Actualizando...' : 'Actualizar'}</button>
+        <button type="button" onClick={later} disabled={updating} className="min-h-11 rounded-lg px-4 text-sm font-medium hover:bg-ink/10 disabled:opacity-50">Más tarde</button>
+        <button type="button" onClick={update} disabled={updating} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-[#8f1937] px-5 text-sm font-semibold text-on-brand hover:bg-[#a61c3f] disabled:opacity-60">{updating ? <LoaderCircle size={18} className="animate-spin" /> : <Download size={18} />}{updating ? 'Actualizando...' : 'Actualizar'}</button>
       </div>
     </div>
   </AppDialog>;

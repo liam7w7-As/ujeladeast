@@ -59,7 +59,7 @@ export default function Hymnal() {
                 }}
                 className={`whitespace-nowrap px-5 py-2.5 rounded-lg font-label-md text-sm uppercase tracking-wider transition-all duration-300 ${
                   activeHymnary === h.id 
-                    ? 'bg-primary-container text-white'
+                    ? 'bg-primary-container text-on-brand'
                     : 'bg-glass-bg border border-surface-border text-on-surface-variant hover:border-surface-variant hover:text-on-surface'
                 }`}
               >

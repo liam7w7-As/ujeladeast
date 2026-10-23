@@ -206,7 +206,7 @@ export default function AdminStudies() {
   return (
     <div className="flex flex-col gap-6">
       <header>
-        <h1 className="text-2xl font-bold text-white mb-2">Gestión de Estudios Bíblicos</h1>
+        <h1 className="text-2xl font-bold text-on-surface mb-2">Gestión de Estudios Bíblicos</h1>
         <p className="text-on-surface-variant text-sm">Administra los planes anuales, semanas y lecciones de estudio.</p>
       </header>
 
@@ -223,8 +223,8 @@ export default function AdminStudies() {
           <div className="md:col-span-4 flex flex-col gap-4">
             <div className="glass-card rounded-2xl p-4">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="font-semibold text-white">Planes de Estudio</h2>
-                <button onClick={handleCreatePlan} className="text-primary hover:text-white transition-colors" title="Crear Plan">
+                <h2 className="font-semibold text-on-surface">Planes de Estudio</h2>
+                <button onClick={handleCreatePlan} className="text-primary hover:text-on-surface transition-colors" title="Crear Plan">
                   <span className="material-symbols-outlined text-[20px]">add_circle</span>
                 </button>
               </div>
@@ -239,8 +239,8 @@ export default function AdminStudies() {
                         onClick={() => setSelectedPlan(plan)}
                         className={`w-full text-left p-3 rounded-xl transition-colors border ${
                           selectedPlan?.id === plan.id 
-                            ? 'bg-primary/10 border-primary text-white' 
-                            : 'bg-surface-container border-surface-border text-on-surface-variant hover:text-white hover:border-white/20'
+                            ? 'bg-primary/10 border-primary text-on-surface'
+                            : 'bg-surface-container border-surface-border text-on-surface-variant hover:text-on-surface hover:border-ink/20'
                         }`}
                       >
                         <p className="font-medium text-sm">{plan.title}</p>
@@ -258,8 +258,8 @@ export default function AdminStudies() {
             {selectedPlan ? (
               <div className="glass-card rounded-2xl p-6">
                 <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-lg font-bold text-white">{selectedPlan.title}</h2>
-                  <button onClick={handleCreateWeek} className="text-xs bg-surface-container hover:bg-white/10 px-3 py-1.5 rounded-lg border border-surface-border text-on-surface-variant transition-colors flex items-center gap-1">
+                  <h2 className="text-lg font-bold text-on-surface">{selectedPlan.title}</h2>
+                  <button onClick={handleCreateWeek} className="text-xs bg-surface-container hover:bg-ink/10 px-3 py-1.5 rounded-lg border border-surface-border text-on-surface-variant transition-colors flex items-center gap-1">
                     <span className="material-symbols-outlined text-[16px]">add</span> Nueva Semana
                   </button>
                 </div>
@@ -279,7 +279,7 @@ export default function AdminStudies() {
                           >
                             <div className="flex items-center gap-3">
                               <span className="material-symbols-outlined text-on-surface-variant transition-transform" style={{ transform: isExpanded ? 'rotate(90deg)' : 'none' }}>chevron_right</span>
-                              <span className="font-semibold text-white text-sm">Semana {week.week_number}: {week.title}</span>
+                              <span className="font-semibold text-on-surface text-sm">Semana {week.week_number}: {week.title}</span>
                             </div>
                             <span className="text-xs text-on-surface-variant bg-black/20 px-2 py-1 rounded-md">{weekLessons.length} lecciones</span>
                           </button>
@@ -288,11 +288,11 @@ export default function AdminStudies() {
                             <div className="p-4 bg-black/20">
                               <div className="space-y-2">
                                 {weekLessons.map(lesson => (
-                                  <div key={lesson.id} className="flex items-center justify-between p-3 rounded-lg border border-surface-border/50 bg-surface-container hover:bg-white/5 transition-colors group">
+                                  <div key={lesson.id} className="flex items-center justify-between p-3 rounded-lg border border-surface-border/50 bg-surface-container hover:bg-ink/5 transition-colors group">
                                     <div className="flex items-center gap-3">
                                       <span className="w-6 h-6 rounded bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">{lesson.day_number}</span>
                                       <div>
-                                        <p className="text-sm font-medium text-white">{lesson.title}</p>
+                                        <p className="text-sm font-medium text-on-surface">{lesson.title}</p>
                                         <p className="text-xs text-on-surface-variant">{lesson.scripture_ref}</p>
                                       </div>
                                     </div>
@@ -308,7 +308,7 @@ export default function AdminStudies() {
                                 ))}
                                 <button 
                                   onClick={() => handleOpenEditLesson(week)}
-                                  className="w-full p-3 rounded-lg border border-dashed border-surface-border text-on-surface-variant hover:text-white hover:border-primary/50 transition-colors flex items-center justify-center gap-2 text-sm mt-2"
+                                  className="w-full p-3 rounded-lg border border-dashed border-surface-border text-on-surface-variant hover:text-on-surface hover:border-primary/50 transition-colors flex items-center justify-center gap-2 text-sm mt-2"
                                 >
                                   <span className="material-symbols-outlined text-[18px]">add</span> Añadir Lección
                                 </button>
@@ -334,10 +334,10 @@ export default function AdminStudies() {
         /* Formulario Creador/Editor de Lecciones */
         <div className="glass-card rounded-2xl p-6">
           <div className="flex justify-between items-center mb-6 pb-4 border-b border-surface-border">
-            <h2 className="text-xl font-bold text-white">
+            <h2 className="text-xl font-bold text-on-surface">
               {editingLessonId ? 'Editar Lección' : 'Crear Nueva Lección'} <span className="text-on-surface-variant text-sm font-normal ml-2">(Semana {selectedWeek?.week_number})</span>
             </h2>
-            <button onClick={() => setIsEditingLesson(false)} className="text-on-surface-variant hover:text-white flex items-center gap-1 text-sm">
+            <button onClick={() => setIsEditingLesson(false)} className="text-on-surface-variant hover:text-on-surface flex items-center gap-1 text-sm">
               <span className="material-symbols-outlined text-[18px]">close</span> Cancelar
             </button>
           </div>
@@ -348,27 +348,27 @@ export default function AdminStudies() {
               <div className="flex gap-4">
                 <div className="w-24">
                   <label className="block text-xs text-on-surface-variant mb-1">Día #</label>
-                  <input type="number" min="1" max="7" value={lessonForm.day_number} onChange={e => setLessonForm({...lessonForm, day_number: e.target.value})} className="w-full bg-surface-container border border-surface-border rounded-xl p-2.5 text-sm text-white focus:border-primary outline-none" />
+                  <input type="number" min="1" max="7" value={lessonForm.day_number} onChange={e => setLessonForm({...lessonForm, day_number: e.target.value})} className="w-full bg-surface-container border border-surface-border rounded-xl p-2.5 text-sm text-on-surface focus:border-primary outline-none" />
                 </div>
                 <div className="flex-1">
                   <label className="block text-xs text-on-surface-variant mb-1">Título de la lección</label>
-                  <input type="text" value={lessonForm.title} onChange={e => setLessonForm({...lessonForm, title: e.target.value})} placeholder="Ej. El Principio de la Sabiduría" className="w-full bg-surface-container border border-surface-border rounded-xl p-2.5 text-sm text-white focus:border-primary outline-none" />
+                  <input type="text" value={lessonForm.title} onChange={e => setLessonForm({...lessonForm, title: e.target.value})} placeholder="Ej. El Principio de la Sabiduría" className="w-full bg-surface-container border border-surface-border rounded-xl p-2.5 text-sm text-on-surface focus:border-primary outline-none" />
                 </div>
               </div>
               
               <div>
                 <label className="block text-xs text-on-surface-variant mb-1">Referencia Bíblica Central</label>
-                <input type="text" value={lessonForm.scripture_ref} onChange={e => setLessonForm({...lessonForm, scripture_ref: e.target.value})} placeholder="Ej. Proverbios 1:7" className="w-full bg-surface-container border border-surface-border rounded-xl p-2.5 text-sm text-white focus:border-primary outline-none" />
+                <input type="text" value={lessonForm.scripture_ref} onChange={e => setLessonForm({...lessonForm, scripture_ref: e.target.value})} placeholder="Ej. Proverbios 1:7" className="w-full bg-surface-container border border-surface-border rounded-xl p-2.5 text-sm text-on-surface focus:border-primary outline-none" />
               </div>
 
               <div>
                 <label className="block text-xs text-on-surface-variant mb-1">Texto del Versículo (Opcional - Soporta HTML/negritas)</label>
-                <textarea rows="3" value={lessonForm.scripture_text} onChange={e => setLessonForm({...lessonForm, scripture_text: e.target.value})} placeholder="El principio de la sabiduría es el temor de Jehová..." className="w-full bg-surface-container border border-surface-border rounded-xl p-2.5 text-sm text-white focus:border-primary outline-none font-serif leading-relaxed"></textarea>
+                <textarea rows="3" value={lessonForm.scripture_text} onChange={e => setLessonForm({...lessonForm, scripture_text: e.target.value})} placeholder="El principio de la sabiduría es el temor de Jehová..." className="w-full bg-surface-container border border-surface-border rounded-xl p-2.5 text-sm text-on-surface focus:border-primary outline-none font-serif leading-relaxed"></textarea>
               </div>
 
               <div>
                 <label className="block text-xs text-on-surface-variant mb-1">Enseñanza / Comentario (Soporta HTML básico)</label>
-                <textarea rows="6" value={lessonForm.teaching} onChange={e => setLessonForm({...lessonForm, teaching: e.target.value})} placeholder="Desarrollo de la lección..." className="w-full bg-surface-container border border-surface-border rounded-xl p-2.5 text-sm text-white focus:border-primary outline-none"></textarea>
+                <textarea rows="6" value={lessonForm.teaching} onChange={e => setLessonForm({...lessonForm, teaching: e.target.value})} placeholder="Desarrollo de la lección..." className="w-full bg-surface-container border border-surface-border rounded-xl p-2.5 text-sm text-on-surface focus:border-primary outline-none"></textarea>
               </div>
             </div>
 
@@ -389,7 +389,7 @@ export default function AdminStudies() {
                     
                     <div className="mb-3">
                       <label className="block text-[10px] uppercase text-on-surface-variant mb-1">Pregunta {idx + 1}</label>
-                      <input type="text" value={q.text} onChange={(e) => updateQuestion(idx, 'text', e.target.value)} placeholder="¿Qué significa este pasaje para ti?" className="w-full bg-black/20 border border-surface-border/50 rounded-lg p-2 text-sm text-white focus:border-primary outline-none" />
+                      <input type="text" value={q.text} onChange={(e) => updateQuestion(idx, 'text', e.target.value)} placeholder="¿Qué significa este pasaje para ti?" className="w-full bg-black/20 border border-surface-border/50 rounded-lg p-2 text-sm text-on-surface focus:border-primary outline-none" />
                     </div>
                   </div>
                 ))}
@@ -403,9 +403,9 @@ export default function AdminStudies() {
           </div>
 
           <div className="mt-8 pt-6 border-t border-surface-border flex justify-end gap-3">
-            <button onClick={() => setIsEditingLesson(false)} className="px-6 py-2.5 rounded-xl border border-surface-border text-on-surface-variant hover:text-white transition-colors text-sm font-medium">Cancelar</button>
-            <button onClick={handleSaveLesson} disabled={loading} className="px-6 py-2.5 rounded-xl bg-primary hover:bg-inverse-primary text-white transition-colors text-sm font-bold flex items-center gap-2">
-              {loading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> : <span className="material-symbols-outlined text-[18px]">save</span>}
+            <button onClick={() => setIsEditingLesson(false)} className="px-6 py-2.5 rounded-xl border border-surface-border text-on-surface-variant hover:text-on-surface transition-colors text-sm font-medium">Cancelar</button>
+            <button onClick={handleSaveLesson} disabled={loading} className="px-6 py-2.5 rounded-xl bg-primary hover:bg-inverse-primary text-on-surface transition-colors text-sm font-bold flex items-center gap-2">
+              {loading ? <div className="w-4 h-4 border-2 border-ink/30 border-t-white rounded-full animate-spin"></div> : <span className="material-symbols-outlined text-[18px]">save</span>}
               Guardar Lección
             </button>
           </div>

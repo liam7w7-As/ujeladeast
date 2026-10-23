@@ -6,8 +6,8 @@ import StudyRecoveriesAdmin from '../../components/admin/StudyRecoveriesAdmin';
 
 const STATUS = { 'not-started': 'Sin iniciar', active: 'Activo', inactive: 'Sin actividad reciente', completed: 'Completado' };
 const STATUS_STYLE = { 'not-started': 'text-on-surface-variant', active: 'text-emerald-400', inactive: 'text-amber-300', completed: 'text-sky-300' };
-const inputClass = 'min-w-0 rounded-lg border border-surface-border bg-surface-container px-3 py-2.5 text-sm text-white outline-none focus:border-primary w-full';
-const buttonClass = 'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-surface-border hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed';
+const inputClass = 'min-w-0 rounded-lg border border-surface-border bg-surface-container px-3 py-2.5 text-sm text-on-surface outline-none focus:border-primary w-full';
+const buttonClass = 'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-surface-border hover:bg-ink/10 disabled:opacity-40 disabled:cursor-not-allowed';
 const dateFormatter = new Intl.DateTimeFormat('es-BO', { timeZone: STUDY_TIME_ZONE, dateStyle: 'medium' });
 const formatDate = value => value ? dateFormatter.format(new Date(value)) : 'Sin registro';
 const lessonLabel = lesson => lesson ? `S${lesson.week_number} · D${lesson.day_number}: ${lesson.title}` : null;
@@ -105,7 +105,7 @@ export default function AdminStudyTracking() {
       {views}
       <header className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h1 className="text-2xl font-bold text-white break-words">Seguimiento de estudios</h1>
+          <h1 className="text-2xl font-bold text-on-surface break-words">Seguimiento de estudios</h1>
           <p className="mt-1 text-xs text-on-surface-variant">Rachas reales, sin días recuperados. Criterio del campamento.</p>
           {loadedAt && !error && <p className="mt-1 text-xs text-on-surface-variant">Actualizado: {loadedAt.toLocaleTimeString('es-BO', { hour: '2-digit', minute: '2-digit', timeZone: STUDY_TIME_ZONE })}</p>}
         </div>
@@ -126,7 +126,7 @@ export default function AdminStudyTracking() {
           : !plans.length ? <p className="py-12 text-center text-on-surface-variant">Todavía no hay planes de estudio.</p>
             : selected ? (
               <section className="space-y-6">
-                <button type="button" onClick={() => setSelectedId(null)} className="inline-flex items-center gap-2 text-sm text-on-surface-variant hover:text-white"><ArrowLeft size={18} />Volver al listado</button>
+                <button type="button" onClick={() => setSelectedId(null)} className="inline-flex items-center gap-2 text-sm text-on-surface-variant hover:text-on-surface"><ArrowLeft size={18} />Volver al listado</button>
                 <div className="border-b border-surface-border pb-5">
                   <h2 className="text-xl font-semibold break-words">{selected.full_name || 'Sin nombre'}</h2>
                   <p className="text-sm text-on-surface-variant break-words">{selected.church_name || 'Sin iglesia registrada'}</p>
@@ -176,7 +176,7 @@ export default function AdminStudyTracking() {
                     <thead className="border-b border-surface-border text-xs text-on-surface-variant"><tr>{['Joven / Iglesia', 'Avance', 'Última / Próxima lección', 'Racha general', 'Último estudio del plan'].map(label => <th key={label} scope="col" className="px-3 py-3 font-medium">{label}</th>)}</tr></thead>
                     <tbody className="divide-y divide-surface-border/60">
                       {filtered.slice(currentPage * 20, currentPage * 20 + 20).map(row => <tr key={row.id} className="hover:bg-white/[0.03]">
-                        <td className="px-3 py-4 max-w-56"><div className="flex items-start gap-3">{row.avatar_url && <img src={row.avatar_url} alt="" className="h-8 w-8 shrink-0 rounded-full object-cover" />}<div className="min-w-0"><button type="button" onClick={() => setSelectedId(row.id)} className="text-left font-semibold text-white hover:text-primary underline-offset-4 hover:underline break-words">{row.full_name || 'Sin nombre'}</button><p className="text-xs text-on-surface-variant mt-1 break-words">{row.church_name || 'Sin iglesia registrada'}</p></div></div></td>
+                        <td className="px-3 py-4 max-w-56"><div className="flex items-start gap-3">{row.avatar_url && <img src={row.avatar_url} alt="" className="h-8 w-8 shrink-0 rounded-full object-cover" />}<div className="min-w-0"><button type="button" onClick={() => setSelectedId(row.id)} className="text-left font-semibold text-on-surface hover:text-primary underline-offset-4 hover:underline break-words">{row.full_name || 'Sin nombre'}</button><p className="text-xs text-on-surface-variant mt-1 break-words">{row.church_name || 'Sin iglesia registrada'}</p></div></div></td>
                         <td className="px-3 py-4"><p className="tabular-nums whitespace-nowrap">{row.completed.size}/{data.lessons.length} · {row.percentage}%</p><progress aria-label={`Avance de ${row.full_name || 'usuario'}`} value={row.percentage} max="100" className="mt-2 h-1.5 w-24 accent-emerald-400" /><p className={`text-xs mt-1 ${STATUS_STYLE[row.status]}`}>{STATUS[row.status]}</p></td>
                         <td className="px-3 py-4 max-w-72"><p className="break-words">{lessonLabel(row.lastCompleted) || 'Sin lecciones completadas'}</p><p className="mt-1 text-xs text-on-surface-variant break-words">Próxima: {lessonLabel(row.nextLesson) || (data.lessons.length ? 'Plan completado' : 'Sin lecciones')}</p></td>
                         <td className="px-3 py-4 whitespace-nowrap"><span className="inline-flex items-center gap-1.5"><Flame size={16} className={row.streak ? 'text-amber-300' : 'text-on-surface-variant'} />{row.streak} días</span><p className="mt-1 text-xs text-on-surface-variant">Récord: {row.max_streak || 0}</p></td>

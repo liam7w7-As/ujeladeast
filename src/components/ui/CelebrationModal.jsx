@@ -34,7 +34,7 @@ export default function CelebrationModal({ show, data, onClose }) {
               🎉
             </motion.div>
 
-            <h2 className="text-2xl font-black text-white mb-2">¡Lección Completada!</h2>
+            <h2 className="text-2xl font-black text-on-surface mb-2">¡Lección Completada!</h2>
             <p className="text-on-surface-variant text-sm mb-8">Has dado un gran paso en tu crecimiento espiritual hoy.</p>
 
             <div className="flex w-full justify-between gap-4 mb-8">
@@ -45,7 +45,7 @@ export default function CelebrationModal({ show, data, onClose }) {
                 className="flex-1 bg-surface-container rounded-2xl p-4 flex flex-col items-center border border-surface-border/50"
               >
                 <span className="material-symbols-outlined text-secondary mb-1">star</span>
-                <span className="text-2xl font-black text-white">+{data?.xp || 10}</span>
+                <span className="text-2xl font-black text-on-surface">+{data?.xp || 10}</span>
                 <span className="text-[10px] text-on-surface-variant uppercase font-bold tracking-wider">XP Ganado</span>
               </motion.div>
               <motion.div 
@@ -55,7 +55,7 @@ export default function CelebrationModal({ show, data, onClose }) {
                 className="flex-1 bg-surface-container rounded-2xl p-4 flex flex-col items-center border border-surface-border/50"
               >
                 <span className="material-symbols-outlined text-orange-500 mb-1">local_fire_department</span>
-                <span className="text-2xl font-black text-white">{data?.streak || 1}</span>
+                <span className="text-2xl font-black text-on-surface">{data?.streak || 1}</span>
                 <span className="text-[10px] text-on-surface-variant uppercase font-bold tracking-wider">Racha Días</span>
               </motion.div>
             </div>
@@ -64,7 +64,7 @@ export default function CelebrationModal({ show, data, onClose }) {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               onClick={onClose}
-              className="w-full bg-gradient-to-r from-primary-container to-[#a61c3f] text-white font-bold py-3.5 rounded-xl transition-all shadow-[0_0_20px_rgba(143,25,55,0.4)]"
+              className="w-full bg-gradient-to-r from-primary-container to-[#a61c3f] text-on-surface font-bold py-3.5 rounded-xl transition-all shadow-[0_0_20px_rgba(143,25,55,0.4)]"
             >
               Continuar
             </motion.button>

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageShell from '../components/layout/PageShell';
+import ContentIcon from '../components/ui/ContentIcon';
 import { useAuth } from '../hooks/useAuth';
 import { useChat } from '../hooks/useChat';
 import ujeladitoAvatar from '../assets/ujeladito-avatar.png';
@@ -26,15 +27,15 @@ function MessageBubble({ message }) {
     <div className={`flex items-end gap-3 ${isBot ? 'justify-start' : 'justify-end'}`}>
       {isBot && (
         <img src={ujeladitoAvatar} alt="UJELADITO"
-          className="w-7 h-7 rounded-full object-cover shrink-0 mb-1 border border-white/10 shadow-sm" />
+          className="w-7 h-7 rounded-full object-cover shrink-0 mb-1 border border-ink/10 shadow-sm" />
       )}
       <div className={`max-w-[70%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm ${
         isBot
-          ? 'bg-[#18181c] border border-white/8 text-white/90 rounded-bl-sm'
-          : 'bg-gradient-to-br from-[#8f1937] to-[#7a1530] text-white rounded-br-sm'
+          ? 'bg-surface border border-ink/8 text-on-surface rounded-bl-sm'
+          : 'bg-gradient-to-br from-[#8f1937] to-[#7a1530] text-on-brand rounded-br-sm'
       }`}>
         <p className="whitespace-pre-wrap">{message.content}</p>
-        <p className={`text-[10px] mt-1 ${isBot ? 'text-white/20' : 'text-white/35'}`}>
+        <p className={`text-[10px] mt-1 ${isBot ? 'text-muted' : 'text-on-brand/80'}`}>
           {formatDistanceToNow(new Date(message.created_at), { addSuffix: true, locale: es })}
         </p>
       </div>
@@ -46,11 +47,11 @@ function TypingIndicator() {
   return (
     <div className="flex items-end gap-3">
       <img src={ujeladitoAvatar} alt="UJELADITO"
-        className="w-7 h-7 rounded-full object-cover shrink-0 mb-1 border border-white/10" />
-      <div className="bg-[#18181c] border border-white/8 px-4 py-3 rounded-2xl rounded-bl-sm flex gap-1.5 items-center">
-        <span className="w-1.5 h-1.5 rounded-full bg-white/40 animate-bounce [animation-delay:0ms]" />
-        <span className="w-1.5 h-1.5 rounded-full bg-white/40 animate-bounce [animation-delay:150ms]" />
-        <span className="w-1.5 h-1.5 rounded-full bg-white/40 animate-bounce [animation-delay:300ms]" />
+        className="w-7 h-7 rounded-full object-cover shrink-0 mb-1 border border-ink/10" />
+      <div className="bg-surface border border-ink/8 px-4 py-3 rounded-2xl rounded-bl-sm flex gap-1.5 items-center">
+        <span className="w-1.5 h-1.5 rounded-full bg-ink/40 animate-bounce [animation-delay:0ms]" />
+        <span className="w-1.5 h-1.5 rounded-full bg-ink/40 animate-bounce [animation-delay:150ms]" />
+        <span className="w-1.5 h-1.5 rounded-full bg-ink/40 animate-bounce [animation-delay:300ms]" />
       </div>
     </div>
   );
@@ -120,26 +121,26 @@ export default function Chat() {
         El contenido es un flex row centrado con ancho máximo.
       */}
       <div
-        className="chat-page-frame fixed inset-0 top-0 flex flex-col bg-[#09090b]"
+        className="chat-page-frame fixed inset-0 top-0 flex flex-col bg-background"
         style={{ paddingTop: '72px' }}  /* altura navbar */
       >
         <div className="flex-1 flex min-h-0 max-w-[1100px] mx-auto w-full">
 
           {/* ── Sidebar ── */}
-          <aside className="w-64 shrink-0 flex-col border-r border-white/6 bg-[#0a0a0d] hidden md:flex">
+          <aside className="w-64 shrink-0 flex-col border-r border-ink/6 bg-background hidden md:flex">
             {/* Header sidebar */}
-            <div className="p-4 border-b border-white/6 flex items-center justify-between shrink-0">
+            <div className="p-4 border-b border-ink/6 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2.5">
                 <img src={ujeladitoAvatar} alt="UJELADITO"
                   className="w-7 h-7 rounded-full object-cover border border-[#8f1937]/40" />
-                <span className="font-bold text-white/90 text-sm tracking-tight">UJELADITO</span>
+                <span className="font-bold text-on-surface text-sm tracking-tight">UJELADITO</span>
               </div>
               <button
                 onClick={handleNewChat}
-                className="w-7 h-7 rounded-lg bg-[#8f1937]/15 hover:bg-[#8f1937]/30 border border-[#8f1937]/25 flex items-center justify-center text-[#8f1937] transition-colors"
+                className="w-7 h-7 rounded-lg bg-[#8f1937]/15 hover:bg-[#8f1937]/30 border border-[#8f1937]/25 flex items-center justify-center text-primary transition-colors"
                 title="Nueva conversación"
               >
-                <span className="material-symbols-outlined text-[16px]">edit_note</span>
+                <ContentIcon name="edit_note" className="text-[16px]" />
               </button>
             </div>
 
@@ -147,12 +148,12 @@ export default function Chat() {
             <div className="flex-1 overflow-y-auto p-2 min-h-0">
               {loading && sessions.length === 0 ? (
                 <div className="flex items-center justify-center py-8">
-                  <div className="w-4 h-4 border border-white/20 border-t-white/60 rounded-full animate-spin" />
+                  <div className="w-4 h-4 border border-ink/20 border-t-white/60 rounded-full animate-spin" />
                 </div>
               ) : sessions.length === 0 ? (
                 <div className="text-center py-8 px-3">
-                  <p className="text-white/25 text-xs">Sin conversaciones aún</p>
-                  <button onClick={handleNewChat} className="mt-2 text-[#8f1937] text-xs hover:underline">
+                  <p className="text-muted text-xs">Sin conversaciones aún</p>
+                  <button onClick={handleNewChat} className="mt-2 text-primary text-xs hover:underline">
                     Iniciar una →
                   </button>
                 </div>
@@ -162,17 +163,15 @@ export default function Chat() {
                     key={session.id}
                     className={`group flex items-start gap-2 rounded-lg px-3 py-2 cursor-pointer transition-all mb-0.5 ${
                       currentSession?.id === session.id
-                        ? 'bg-[#8f1937]/12 border border-[#8f1937]/25 text-white'
-                        : 'hover:bg-white/4 border border-transparent text-white/60 hover:text-white/80'
+                        ? 'bg-[#8f1937]/12 border border-[#8f1937]/25 text-on-surface'
+                        : 'hover:bg-ink/4 border border-transparent text-muted hover:text-on-surface'
                     }`}
                     onClick={() => switchSession(session)}
                   >
-                    <span className="material-symbols-outlined text-[14px] shrink-0 mt-0.5 opacity-50">
-                      {CTX_ICONS[session.context_type] || 'chat_bubble'}
-                    </span>
+                    <ContentIcon name={CTX_ICONS[session.context_type] || 'chat_bubble'} className="text-[14px] shrink-0 mt-0.5 opacity-50" />
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium truncate">{session.title}</p>
-                      <p className="text-[10px] text-white/25 mt-0.5">
+                      <p className="text-[10px] text-muted mt-0.5">
                         {formatDistanceToNow(new Date(session.updated_at), { addSuffix: true, locale: es })}
                       </p>
                     </div>
@@ -180,7 +179,7 @@ export default function Chat() {
                       onClick={(e) => { e.stopPropagation(); setDeleteConfirm(session); }}
                       className="opacity-0 group-hover:opacity-100 w-5 h-5 rounded flex items-center justify-center text-red-400/50 hover:text-red-400 transition-all shrink-0"
                     >
-                      <span className="material-symbols-outlined text-[13px]">delete</span>
+                      <ContentIcon name="delete" className="text-[13px]" />
                     </button>
                   </div>
                 ))
@@ -196,10 +195,10 @@ export default function Chat() {
               <div className="flex-1 flex flex-col items-center justify-center gap-6 p-8">
                 <img src="/images/ui/chat-welcome-v1.webp" alt="" width="120" height="120" className="h-28 w-28 object-contain" />
                 <div className="text-center max-w-sm">
-                  <h2 className="text-xl font-bold text-white mb-1.5">
+                  <h2 className="text-xl font-bold text-on-surface mb-1.5">
                     ¡Hola{profile?.full_name ? ', ' + profile.full_name.split(' ')[0] : ''}!
                   </h2>
-                  <p className="text-white/40 text-sm leading-relaxed">
+                  <p className="text-muted text-sm leading-relaxed">
                     Soy UJELADITO, tu asistente espiritual de UJELADEA. ¿Sobre qué quieres conversar hoy?
                   </p>
                 </div>
@@ -213,9 +212,9 @@ export default function Chat() {
                     <button
                       key={item.ctx}
                       onClick={() => createSession(item.ctx).then(() => getSessions())}
-                      className="flex items-center gap-2 p-3 bg-[#18181c] border border-white/8 rounded-xl text-white/50 hover:text-white hover:border-white/15 hover:bg-white/5 transition-all text-xs font-medium"
+                      className="flex items-center gap-2 p-3 bg-surface border border-ink/8 rounded-xl text-muted hover:text-on-surface hover:border-ink/15 hover:bg-ink/5 transition-all text-xs font-medium"
                     >
-                      <span className="material-symbols-outlined text-[16px] text-[#8f1937]">{item.icon}</span>
+                      <ContentIcon name={item.icon} className="text-[16px] text-primary" />
                       {item.label}
                     </button>
                   ))}
@@ -224,15 +223,13 @@ export default function Chat() {
             ) : (
               <>
                 {/* Header del chat */}
-                <div className="shrink-0 flex items-center gap-3 px-5 py-3 border-b border-white/6 bg-[#0a0a0d]">
+                <div className="shrink-0 flex items-center gap-3 px-5 py-3 border-b border-ink/6 bg-background">
                   <img src={ujeladitoAvatar} alt="UJELADITO"
-                    className="w-8 h-8 rounded-full object-cover border border-white/10" />
+                    className="w-8 h-8 rounded-full object-cover border border-ink/10" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-white/90 font-semibold text-sm truncate">{currentSession.title}</p>
-                    <p className="text-white/35 text-xs flex items-center gap-1.5">
-                      <span className="material-symbols-outlined text-[11px]">
-                        {CTX_ICONS[currentSession.context_type] || 'chat_bubble'}
-                      </span>
+                    <p className="text-on-surface font-semibold text-sm truncate">{currentSession.title}</p>
+                    <p className="text-muted text-xs flex items-center gap-1.5">
+                      <ContentIcon name={CTX_ICONS[currentSession.context_type] || 'chat_bubble'} className="text-[11px]" />
                       {sending ? 'escribiendo...' : CTX_LABELS[currentSession.context_type] || 'General'}
                     </p>
                   </div>
@@ -241,7 +238,7 @@ export default function Chat() {
                 {/* Banner riesgo */}
                 {showRiskBanner && (
                   <div className="shrink-0 bg-amber-500/10 border-b border-amber-500/20 px-5 py-3 flex items-start gap-3">
-                    <span className="material-symbols-outlined text-amber-400 shrink-0 text-[18px]">warning</span>
+                    <ContentIcon name="warning" className="text-amber-400 shrink-0 text-[18px]" />
                     <div className="flex-1">
                       <p className="text-amber-300 text-xs font-semibold">¿Necesitas ayuda urgente?</p>
                       <p className="text-amber-200/60 text-xs mt-0.5">
@@ -249,7 +246,7 @@ export default function Chat() {
                       </p>
                     </div>
                     <button onClick={() => setShowRiskBanner(false)} className="text-amber-400/40 hover:text-amber-400 shrink-0">
-                      <span className="material-symbols-outlined text-[15px]">close</span>
+                      <ContentIcon name="close" className="text-[15px]" />
                     </button>
                   </div>
                 )}
@@ -258,11 +255,11 @@ export default function Chat() {
                 <div className="flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-4 min-h-0">
                   {loading ? (
                     <div className="flex items-center justify-center flex-1">
-                      <div className="w-5 h-5 border border-white/15 border-t-white/50 rounded-full animate-spin" />
+                      <div className="w-5 h-5 border border-ink/15 border-t-white/50 rounded-full animate-spin" />
                     </div>
                   ) : messages.length === 0 ? (
                     <div className="flex items-center justify-center flex-1">
-                      <p className="text-white/25 text-sm">Escribe tu primer mensaje para comenzar</p>
+                      <p className="text-muted text-sm">Escribe tu primer mensaje para comenzar</p>
                     </div>
                   ) : (
                     messages.map(msg => <MessageBubble key={msg.id} message={msg} />)
@@ -274,7 +271,7 @@ export default function Chat() {
                         {error}
                       </p>
                       <br />
-                      <button onClick={() => setError(null)} className="text-[10px] text-white/25 mt-1 hover:text-white/50">
+                      <button onClick={() => setError(null)} className="text-[10px] text-muted mt-1 hover:text-muted">
                         Cerrar
                       </button>
                     </div>
@@ -283,8 +280,8 @@ export default function Chat() {
                 </div>
 
                 {/* Input — fijo al fondo del contenedor */}
-                <div className="shrink-0 px-5 py-4 border-t border-white/6 bg-[#0a0a0d]">
-                  <div className="flex items-end gap-2 bg-[#18181c] border border-white/10 rounded-2xl px-4 py-3 focus-within:border-[#8f1937]/40 transition-colors">
+                <div className="shrink-0 px-5 py-4 border-t border-ink/6 bg-background">
+                  <div className="flex items-end gap-2 bg-surface border border-ink/10 rounded-2xl px-4 py-3 focus-within:border-[#8f1937]/40 transition-colors">
                     <textarea
                       ref={inputRef}
                       value={inputValue}
@@ -297,7 +294,7 @@ export default function Chat() {
                       onKeyDown={handleKeyDown}
                       placeholder="Escribe tu mensaje..."
                       disabled={sending}
-                      className="flex-1 bg-transparent text-white text-sm placeholder:text-white/25 resize-none outline-none leading-relaxed disabled:opacity-50 overflow-hidden"
+                      className="flex-1 bg-transparent text-on-surface text-sm placeholder:text-muted resize-none outline-none leading-relaxed disabled:opacity-50 overflow-hidden"
                       style={{ minHeight: '22px', maxHeight: '96px', height: '22px' }}
                     />
                     <button
@@ -308,11 +305,11 @@ export default function Chat() {
                       {sending ? (
                         <span className="w-3.5 h-3.5 border border-white/25 border-t-white rounded-full animate-spin" />
                       ) : (
-                        <span className="material-symbols-outlined text-white text-[18px]">send</span>
+                        <ContentIcon name="send" className="text-on-brand text-[18px]" />
                       )}
                     </button>
                   </div>
-                  <p className="text-center text-white/15 text-[10px] mt-2">
+                  <p className="text-center text-muted text-[10px] mt-2">
                     Enter para enviar &nbsp;·&nbsp; Shift+Enter nueva línea
                   </p>
                 </div>
@@ -326,16 +323,16 @@ export default function Chat() {
       {deleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setDeleteConfirm(null)} />
-          <div className="relative z-10 bg-[#0e0e12] border border-white/10 rounded-2xl p-6 max-w-sm w-full shadow-2xl">
-            <span className="material-symbols-outlined text-3xl text-red-400 block mb-3">delete_forever</span>
-            <h3 className="font-bold text-white text-base mb-1.5">¿Eliminar conversación?</h3>
-            <p className="text-white/45 text-sm mb-5">
-              Se eliminará <strong className="text-white/65">"{deleteConfirm.title}"</strong> y todos sus mensajes.
+          <div className="relative z-10 bg-background border border-ink/10 rounded-2xl p-6 max-w-sm w-full shadow-2xl">
+            <ContentIcon name="delete_forever" className="text-3xl text-red-400 block mb-3" />
+            <h3 className="font-bold text-on-surface text-base mb-1.5">¿Eliminar conversación?</h3>
+            <p className="text-muted text-sm mb-5">
+              Se eliminará <strong className="text-muted">"{deleteConfirm.title}"</strong> y todos sus mensajes.
             </p>
             <div className="flex gap-2">
               <button
                 onClick={() => setDeleteConfirm(null)}
-                className="flex-1 py-2 rounded-xl border border-white/10 text-white/50 hover:text-white text-sm transition-colors"
+                className="flex-1 py-2 rounded-xl border border-ink/10 text-muted hover:text-on-surface text-sm transition-colors"
               >
                 Cancelar
               </button>

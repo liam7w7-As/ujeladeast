@@ -136,7 +136,7 @@ export default function Dashboard() {
           </div>
           <div className="relative z-10">
             <p className="text-xs text-on-surface-variant uppercase tracking-wider mb-2">Usuarios Registrados</p>
-            <h3 className="text-3xl font-bold text-white mb-1">{stats.users}</h3>
+            <h3 className="text-3xl font-bold text-on-surface mb-1">{stats.users}</h3>
             <Link to="/admin/usuarios" className="text-xs text-secondary hover:underline">Ver todos →</Link>
           </div>
         </div>
@@ -147,7 +147,7 @@ export default function Dashboard() {
           </div>
           <div className="relative z-10">
             <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Total Posts</p>
-            <h3 className="text-3xl font-bold text-white mb-1">{stats.posts}</h3>
+            <h3 className="text-3xl font-bold text-on-surface mb-1">{stats.posts}</h3>
             <Link to="/admin/posts" className="text-xs text-secondary hover:underline">Gestionar posts →</Link>
           </div>
         </div>
@@ -158,7 +158,7 @@ export default function Dashboard() {
           </div>
           <div className="relative z-10">
             <p className="text-xs text-on-surface-variant uppercase tracking-wider mb-2">Himnos & Coros</p>
-            <h3 className="text-3xl font-bold text-white mb-1">{stats.hymns}</h3>
+            <h3 className="text-3xl font-bold text-on-surface mb-1">{stats.hymns}</h3>
             <Link to="/admin/himnario" className="text-xs text-secondary hover:underline">Ver himnario →</Link>
           </div>
         </div>
@@ -169,7 +169,7 @@ export default function Dashboard() {
           </div>
           <div className="relative z-10">
             <p className="text-xs text-on-surface-variant uppercase tracking-wider mb-2">Estudios Bíblicos</p>
-            <h3 className="text-3xl font-bold text-white mb-1">{stats.studies}</h3>
+            <h3 className="text-3xl font-bold text-on-surface mb-1">{stats.studies}</h3>
             <Link to="/admin/estudios" className="text-xs text-secondary hover:underline">Gestionar estudios →</Link>
           </div>
         </div>
@@ -180,7 +180,7 @@ export default function Dashboard() {
           </div>
           <div className="relative z-10">
             <p className="text-xs text-on-surface-variant uppercase tracking-wider mb-2">Sociedades</p>
-            <h3 className="text-3xl font-bold text-white mb-1">{stats.societies}</h3>
+            <h3 className="text-3xl font-bold text-on-surface mb-1">{stats.societies}</h3>
             <Link to="/admin/sociedades" className="text-xs text-secondary hover:underline">Gestionar sociedades →</Link>
           </div>
         </div>
@@ -191,7 +191,7 @@ export default function Dashboard() {
           </div>
           <div className="relative z-10">
             <p className="text-xs text-on-surface-variant uppercase tracking-wider mb-2">Recursos Subidos</p>
-            <h3 className="text-3xl font-bold text-white mb-1">{stats.resources}</h3>
+            <h3 className="text-3xl font-bold text-on-surface mb-1">{stats.resources}</h3>
             <Link to="/admin/recursos" className="text-xs text-secondary hover:underline">Gestionar recursos →</Link>
           </div>
         </div>
@@ -201,7 +201,7 @@ export default function Dashboard() {
         {/* Recent Activity Table */}
         <div className="lg:col-span-2 glass-card rounded-xl overflow-hidden flex flex-col">
           <div className="p-6 border-b border-surface-border flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-white">Actividad Reciente</h2>
+            <h2 className="text-lg font-semibold text-on-surface">Actividad Reciente</h2>
           </div>
           <div className="overflow-x-auto flex-1">
             <table className="w-full text-left border-collapse">
@@ -217,7 +217,7 @@ export default function Dashboard() {
                 {recentActivity.length === 0 ? (
                   <tr><td colSpan="4" className="p-8 text-center text-on-surface-variant">Sin actividad reciente</td></tr>
                 ) : recentActivity.map((act) => (
-                  <tr key={act.id} className="border-b border-surface-border/30 hover:bg-white/5 transition-colors">
+                  <tr key={act.id} className="border-b border-surface-border/30 hover:bg-ink/5 transition-colors">
                     <td className="p-4">
                       <div className="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-on-surface-variant">
                         <span className="material-symbols-outlined text-sm">
@@ -225,7 +225,7 @@ export default function Dashboard() {
                         </span>
                       </div>
                     </td>
-                    <td className="p-4 text-white font-medium">{act.title}</td>
+                    <td className="p-4 text-on-surface font-medium">{act.title}</td>
                     <td className="p-4 text-on-surface-variant">{act.author}</td>
                     <td className="p-4 text-on-surface-variant text-sm">{timeAgo(act.date)}</td>
                   </tr>
@@ -238,19 +238,19 @@ export default function Dashboard() {
         {/* Quick Actions & System Status */}
         <div className="flex flex-col gap-6">
           <div className="glass-card rounded-xl p-6">
-            <h2 className="text-lg font-semibold text-white mb-6">Acciones Rápidas</h2>
+            <h2 className="text-lg font-semibold text-on-surface mb-6">Acciones Rápidas</h2>
             <div className="grid grid-cols-2 gap-4">
               <Link to="/admin/notificaciones" className="bg-surface-container hover:bg-primary-container/20 border border-surface-border hover:border-primary/50 rounded-xl p-4 flex flex-col items-center justify-center gap-3 transition-colors group">
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <span className="material-symbols-outlined text-primary">campaign</span>
                 </div>
-                <span className="text-xs text-center text-white font-medium">Notificar</span>
+                <span className="text-xs text-center text-on-surface font-medium">Notificar</span>
               </Link>
               <Link to="/admin/estudios" className="bg-surface-container hover:bg-primary-container/20 border border-surface-border hover:border-primary/50 rounded-xl p-4 flex flex-col items-center justify-center gap-3 transition-colors group">
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <span className="material-symbols-outlined text-primary">add_box</span>
                 </div>
-                <span className="text-xs text-center text-white font-medium">Estudio</span>
+                <span className="text-xs text-center text-on-surface font-medium">Estudio</span>
               </Link>
             </div>
           </div>

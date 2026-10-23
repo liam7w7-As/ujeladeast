@@ -1,7 +1,7 @@
 .social-links { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-.social-links a { position: relative; display: grid; place-items: center; width: 46px; height: 46px; flex-shrink: 0; color: #fff; background: #ffffff08; border: 1px solid #ffffff24; border-radius: 8px; transition: background .2s, border-color .2s, transform .2s; }
+.social-links a { position: relative; display: grid; place-items: center; width: 46px; height: 46px; flex-shrink: 0; color: var(--color-on-surface); background: color-mix(in srgb, var(--color-ink) 3%, transparent); border: 1px solid color-mix(in srgb, var(--color-ink) 14%, transparent); border-radius: 8px; transition: background .2s, border-color .2s, transform .2s; }
 .social-links img { width: 21px; height: 21px; filter: invert(1); }
-.social-links a:hover { transform: translateY(-3px); background: #ffffff18; border-color: #ffffff60; }
+.social-links a:hover { transform: translateY(-3px); background: color-mix(in srgb, var(--color-ink) 9%, transparent); border-color: color-mix(in srgb, var(--color-ink) 38%, transparent); }
 .social-links a[data-network=instagram]:hover { background: #76213f; }
 .social-links a[data-network=facebook]:hover { background: #1459ad; }
 .social-links a[data-network=youtube]:hover { background: #96202c; }

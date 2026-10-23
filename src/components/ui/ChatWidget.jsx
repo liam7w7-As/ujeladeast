@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../../hooks/useAuth';
 import { useChat } from '../../hooks/useChat';
+import ContentIcon from './ContentIcon';
 import ujeladitoAvatar from '../../assets/ujeladito-avatar.png';
 
 // Palabras de riesgo para detección en modo SOS
@@ -29,14 +30,14 @@ function MessageBubble({ message, isBot }) {
         <img
           src={ujeladitoAvatar}
           alt="UJELADITO"
-          className="w-7 h-7 rounded-full object-cover shrink-0 mb-1 border border-white/10"
+          className="w-7 h-7 rounded-full object-cover shrink-0 mb-1 border border-ink/10"
         />
       )}
       <div
         className={`max-w-[80%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${
           isBot
-            ? 'bg-[#1a1a1f] border border-white/8 text-white/90 rounded-bl-sm'
-            : 'bg-[#8f1937] text-white rounded-br-sm shadow-md'
+            ? 'bg-surface border border-ink/8 text-on-surface rounded-bl-sm'
+            : 'bg-[#8f1937] text-on-brand rounded-br-sm shadow-md'
         }`}
       >
         {message.content}
@@ -55,12 +56,12 @@ function TypingIndicator() {
       <img
         src={ujeladitoAvatar}
         alt="UJELADITO"
-        className="w-7 h-7 rounded-full object-cover shrink-0 mb-1 border border-white/10"
+        className="w-7 h-7 rounded-full object-cover shrink-0 mb-1 border border-ink/10"
       />
-      <div className="bg-[#1a1a1f] border border-white/8 px-4 py-3 rounded-2xl rounded-bl-sm flex gap-1.5 items-center">
-        <span className="w-2 h-2 rounded-full bg-white/40 animate-bounce [animation-delay:0ms]" />
-        <span className="w-2 h-2 rounded-full bg-white/40 animate-bounce [animation-delay:150ms]" />
-        <span className="w-2 h-2 rounded-full bg-white/40 animate-bounce [animation-delay:300ms]" />
+      <div className="bg-surface border border-ink/8 px-4 py-3 rounded-2xl rounded-bl-sm flex gap-1.5 items-center">
+        <span className="w-2 h-2 rounded-full bg-ink/40 animate-bounce [animation-delay:0ms]" />
+        <span className="w-2 h-2 rounded-full bg-ink/40 animate-bounce [animation-delay:150ms]" />
+        <span className="w-2 h-2 rounded-full bg-ink/40 animate-bounce [animation-delay:300ms]" />
       </div>
     </motion.div>
   );
@@ -179,31 +180,31 @@ export default function ChatWidget({ contextType: externalContextType, extraCont
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.85, y: 30 }}
             transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-            className="public-chat-panel fixed bottom-6 right-6 z-50 w-[360px] flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-[#0e0e12] origin-bottom-right"
+            className="public-chat-panel fixed bottom-6 right-6 z-50 w-[360px] flex flex-col rounded-2xl overflow-hidden shadow-2xl border border-ink/10 bg-background origin-bottom-right"
             style={{ height: '520px' }}
           >
             {/* Header */}
             <div className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-[#8f1937] to-[#a61c3f] shrink-0">
               <img src={ujeladitoAvatar} alt="UJELADITO" className="w-9 h-9 rounded-full object-cover border-2 border-white/30" />
               <div className="flex-1 min-w-0">
-                <p className="font-bold text-white text-sm">UJELADITO</p>
-                <p className="text-white/70 text-xs">
+                <p className="font-bold text-on-brand text-sm">UJELADITO</p>
+                <p className="text-on-brand/80 text-xs">
                   {sending ? '✦ escribiendo...' : 'Asistente espiritual de UJELADEA'}
                 </p>
               </div>
               <div className="flex items-center gap-1">
                 <Link
                   to="/chat"
-                  className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors text-white/80"
+                  className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors text-on-brand/80"
                   title="Abrir chat completo"
                 >
-                  <span className="material-symbols-outlined text-[18px]">open_in_full</span>
+                  <ContentIcon name="open_in_full" className="text-[18px]" />
                 </Link>
                 <button
                   onClick={handleClose}
-                  className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors text-white/80"
+                  className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors text-on-brand/80"
                 >
-                  <span className="material-symbols-outlined text-[18px]">close</span>
+                  <ContentIcon name="close" className="text-[18px]" />
                 </button>
               </div>
             </div>
@@ -211,13 +212,13 @@ export default function ChatWidget({ contextType: externalContextType, extraCont
             {/* Banner de riesgo */}
             {showRiskBanner && (
               <div className="shrink-0 bg-amber-500/20 border-b border-amber-500/30 px-4 py-3 flex items-start gap-2">
-                <span className="material-symbols-outlined text-amber-400 text-[20px] shrink-0 mt-0.5">warning</span>
+                <ContentIcon name="warning" className="text-amber-400 text-[20px] shrink-0 mt-0.5" />
                 <div className="flex-1 min-w-0">
                   <p className="text-amber-300 text-xs font-semibold">¿Estás en una situación difícil?</p>
                   <p className="text-amber-200/80 text-xs mt-0.5">Si necesitas ayuda urgente, por favor habla con tu líder de sociedad o un adulto de confianza. No estás solo/a.</p>
                 </div>
                 <button onClick={() => setShowRiskBanner(false)} className="text-amber-400/60 hover:text-amber-400 shrink-0">
-                  <span className="material-symbols-outlined text-[16px]">close</span>
+                  <ContentIcon name="close" className="text-[16px]" />
                 </button>
               </div>
             )}
@@ -227,12 +228,12 @@ export default function ChatWidget({ contextType: externalContextType, extraCont
               <div className="flex-1 flex flex-col items-center justify-center gap-4 p-6 text-center">
                 <img src={ujeladitoAvatar} alt="UJELADITO" className="w-16 h-16 rounded-full object-cover opacity-70" />
                 <div>
-                  <p className="text-white font-semibold mb-1">¡Hola! Soy UJELADITO 👋</p>
-                  <p className="text-white/50 text-sm">Inicia sesión para poder acompañarte espiritualmente.</p>
+                  <p className="text-on-surface font-semibold mb-1">¡Hola! Soy UJELADITO 👋</p>
+                  <p className="text-muted text-sm">Inicia sesión para poder acompañarte espiritualmente.</p>
                 </div>
                 <Link
                   to="/login"
-                  className="px-5 py-2 bg-[#8f1937] text-white rounded-xl text-sm font-medium hover:bg-[#a61c3f] transition-colors"
+                  className="px-5 py-2 bg-[#8f1937] text-on-brand rounded-xl text-sm font-medium hover:bg-[#a61c3f] transition-colors"
                 >
                   Iniciar sesión
                 </Link>
@@ -244,7 +245,7 @@ export default function ChatWidget({ contextType: externalContextType, extraCont
                   {messages.length === 0 && !sending && (
                     <div className="flex flex-col items-center justify-center h-full gap-3 opacity-60">
                       <img src={ujeladitoAvatar} alt="UJELADITO" className="w-12 h-12 rounded-full object-cover" />
-                      <p className="text-white/50 text-sm text-center">
+                      <p className="text-muted text-sm text-center">
                         ¡Hola{profile?.full_name ? ', ' + profile.full_name.split(' ')[0] : ''}! ¿En qué puedo ayudarte hoy?
                       </p>
                     </div>
@@ -256,15 +257,15 @@ export default function ChatWidget({ contextType: externalContextType, extraCont
                   {error && (
                     <div className="text-center">
                       <p className="text-red-400/80 text-xs bg-red-500/10 border border-red-500/20 rounded-xl px-3 py-2">{error}</p>
-                      <button onClick={() => setError(null)} className="text-xs text-white/40 mt-1 hover:text-white/60">Cerrar</button>
+                      <button onClick={() => setError(null)} className="text-xs text-muted mt-1 hover:text-muted">Cerrar</button>
                     </div>
                   )}
                   <div ref={messagesEndRef} />
                 </div>
 
                 {/* Input */}
-                <div className="shrink-0 border-t border-white/8 p-3 bg-[#0e0e12]">
-                  <div className="flex items-end gap-2 bg-[#1a1a1f] border border-white/10 rounded-xl px-3 py-2">
+                <div className="shrink-0 border-t border-ink/8 p-3 bg-background">
+                  <div className="flex items-end gap-2 bg-surface border border-ink/10 rounded-xl px-3 py-2">
                     <textarea
                       ref={inputRef}
                       value={inputValue}
@@ -273,7 +274,7 @@ export default function ChatWidget({ contextType: externalContextType, extraCont
                       placeholder="Escribe tu mensaje..."
                       rows={1}
                       disabled={sending}
-                      className="flex-1 bg-transparent text-white text-sm placeholder:text-white/30 resize-none outline-none max-h-24 leading-relaxed disabled:opacity-50"
+                      className="flex-1 bg-transparent text-on-surface text-sm placeholder:text-muted resize-none outline-none max-h-24 leading-relaxed disabled:opacity-50"
                       style={{ minHeight: '24px' }}
                     />
                     <motion.button
@@ -285,11 +286,11 @@ export default function ChatWidget({ contextType: externalContextType, extraCont
                       {sending ? (
                         <span className="w-3.5 h-3.5 border border-white/30 border-t-white rounded-full animate-spin" />
                       ) : (
-                        <span className="material-symbols-outlined text-white text-[18px]">send</span>
+                        <ContentIcon name="send" className="text-on-brand text-[18px]" />
                       )}
                     </motion.button>
                   </div>
-                  <p className="text-center text-white/20 text-[10px] mt-1.5">Enter para enviar · Shift+Enter nueva línea</p>
+                  <p className="text-center text-muted text-[10px] mt-1.5">Enter para enviar · Shift+Enter nueva línea</p>
                 </div>
               </>
             )}

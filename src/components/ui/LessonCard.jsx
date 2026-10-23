@@ -15,12 +15,12 @@ export default function LessonCard({ lesson, onClick, disabled, locked = false }
     >
       <div className="flex items-center gap-4 min-w-0">
         <div className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center font-bold ${
-          isCompleted ? 'bg-primary-container text-white' : 'bg-surface-container-high text-on-surface-variant'
+          isCompleted ? 'bg-primary-container text-on-brand' : 'bg-surface-container-high text-on-surface-variant'
         }`}>
           {isCompleted ? <Check size={18} /> : locked ? <LockKeyhole size={18} /> : day_number}
         </div>
         <div className="min-w-0 break-words">
-          <h4 className={`font-medium ${isCompleted ? 'text-on-surface' : 'text-on-surface-variant group-hover:text-white transition-colors'}`}>
+          <h4 className={`font-medium ${isCompleted ? 'text-on-surface' : 'text-on-surface-variant group-hover:text-on-surface transition-colors'}`}>
             {title}
           </h4>
           <span className="text-xs text-on-surface-variant/70">{scripture_ref}</span>

@@ -102,12 +102,12 @@ export default function AdminPosts() {
     <div className="flex flex-col gap-6">
       <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white mb-2">Gestión de Publicaciones</h1>
+          <h1 className="text-2xl font-bold text-on-surface mb-2">Gestión de Publicaciones</h1>
           <p className="text-on-surface-variant text-sm">Modera y administra todos los posts del sistema.</p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="px-4 py-2 bg-primary text-white rounded-xl font-medium flex items-center gap-2 hover:bg-primary/90 transition-colors"
+          className="px-4 py-2 bg-primary text-on-surface rounded-xl font-medium flex items-center gap-2 hover:bg-primary/90 transition-colors"
         >
           <span className="material-symbols-outlined text-[20px]">add</span>
           Crear Publicación
@@ -123,13 +123,13 @@ export default function AdminPosts() {
             placeholder="Buscar por título, contenido o autor..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-surface-container border border-surface-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary/60 transition-all"
+            className="w-full bg-surface-container border border-surface-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-on-surface focus:outline-none focus:border-primary/60 transition-all"
           />
         </div>
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
-          className="bg-surface-container border border-surface-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary/60 transition-all sm:w-48 cursor-pointer"
+          className="bg-surface-container border border-surface-border rounded-xl px-4 py-2.5 text-sm text-on-surface focus:outline-none focus:border-primary/60 transition-all sm:w-48 cursor-pointer"
         >
           <option value="all">Todas las categorías</option>
           {CATEGORIES.map(c => (
@@ -138,7 +138,7 @@ export default function AdminPosts() {
         </select>
         <button 
           onClick={loadPosts}
-          className="px-4 py-2.5 bg-surface-container border border-surface-border rounded-xl text-on-surface-variant hover:text-white transition-colors flex items-center justify-center"
+          className="px-4 py-2.5 bg-surface-container border border-surface-border rounded-xl text-on-surface-variant hover:text-on-surface transition-colors flex items-center justify-center"
         >
           <span className="material-symbols-outlined text-[20px]">refresh</span>
         </button>
@@ -175,9 +175,9 @@ export default function AdminPosts() {
                 </tr>
               ) : (
                 filteredPosts.map(p => (
-                  <tr key={p.id} className="hover:bg-white/5 transition-colors group">
+                  <tr key={p.id} className="hover:bg-ink/5 transition-colors group">
                     <td className="p-4">
-                      <p className="text-sm text-white line-clamp-2">{p.content}</p>
+                      <p className="text-sm text-on-surface line-clamp-2">{p.content}</p>
                       <p className="text-[10px] text-on-surface-variant/60 mt-1 uppercase tracking-wider">
                         {new Date(p.created_at).toLocaleDateString()}
                       </p>
@@ -194,7 +194,7 @@ export default function AdminPosts() {
                       <select
                         value={p.category || 'Otro'}
                         onChange={(e) => handleChangeCategory(p.id, e.target.value)}
-                        className="bg-surface-container border border-surface-border rounded-lg px-2 py-1 text-xs text-on-surface-variant hover:text-white focus:outline-none focus:border-primary/50 transition-colors cursor-pointer"
+                        className="bg-surface-container border border-surface-border rounded-lg px-2 py-1 text-xs text-on-surface-variant hover:text-on-surface focus:outline-none focus:border-primary/50 transition-colors cursor-pointer"
                       >
                         {CATEGORIES.map(c => (
                           <option key={c} value={c}>{c}</option>
@@ -230,12 +230,12 @@ export default function AdminPosts() {
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setDeleteConfirm(null)} />
           <div className="relative z-10 glass-card rounded-2xl p-6 max-w-sm w-full">
             <span className="material-symbols-outlined text-4xl text-red-400 block mb-4">warning</span>
-            <h3 className="font-bold text-white text-lg mb-2">¿Eliminar post?</h3>
+            <h3 className="font-bold text-on-surface text-lg mb-2">¿Eliminar post?</h3>
             <p className="text-on-surface-variant text-sm mb-6">
-              Estás a punto de eliminar un post de <strong className="text-white">{deleteConfirm.profiles?.full_name}</strong>. Esta acción no se puede deshacer.
+              Estás a punto de eliminar un post de <strong className="text-on-surface">{deleteConfirm.profiles?.full_name}</strong>. Esta acción no se puede deshacer.
             </p>
             <div className="flex gap-3">
-              <button onClick={() => setDeleteConfirm(null)} className="flex-1 py-2.5 rounded-xl border border-surface-border text-on-surface-variant hover:text-white transition-colors text-sm">Cancelar</button>
+              <button onClick={() => setDeleteConfirm(null)} className="flex-1 py-2.5 rounded-xl border border-surface-border text-on-surface-variant hover:text-on-surface transition-colors text-sm">Cancelar</button>
               <button onClick={() => handleDelete(deleteConfirm.id)} className="flex-1 py-2.5 rounded-xl bg-red-500/20 border border-red-500/40 hover:bg-red-500/30 text-red-400 font-semibold text-sm">Eliminar</button>
             </div>
           </div>

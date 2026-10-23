@@ -116,13 +116,13 @@ export default function ResourcesAdmin() {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h2 className="text-xl font-bold text-white">Gestión de Recursos</h2>
+        <h2 className="text-xl font-bold text-on-surface">Gestión de Recursos</h2>
         <p className="text-sm text-on-surface-variant mt-1">Sube, organiza y administra los archivos del distrito</p>
       </div>
 
       {/* Upload Form */}
       <div className="glass-card rounded-2xl p-6 md:p-8 border-primary-container/20">
-        <h3 className="font-semibold text-white text-lg mb-6 flex items-center gap-2">
+        <h3 className="font-semibold text-on-surface text-lg mb-6 flex items-center gap-2">
           <span className="material-symbols-outlined text-[20px] text-secondary">upload_file</span>
           Subir nuevo recurso
         </h3>
@@ -134,7 +134,7 @@ export default function ResourcesAdmin() {
               type="button"
               onClick={() => setUploadMode('file')}
               className={`flex-1 py-3 text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
-                uploadMode === 'file' ? 'bg-primary-container/30 text-primary' : 'text-on-surface-variant hover:text-white'
+                uploadMode === 'file' ? 'bg-primary-container/30 text-primary' : 'text-on-surface-variant hover:text-on-surface'
               }`}
             >
               <span className="material-symbols-outlined text-[18px]">upload_file</span>
@@ -145,7 +145,7 @@ export default function ResourcesAdmin() {
               type="button"
               onClick={() => setUploadMode('link')}
               className={`flex-1 py-3 text-sm font-medium flex items-center justify-center gap-2 transition-colors ${
-                uploadMode === 'link' ? 'bg-primary-container/30 text-primary' : 'text-on-surface-variant hover:text-white'
+                uploadMode === 'link' ? 'bg-primary-container/30 text-primary' : 'text-on-surface-variant hover:text-on-surface'
               }`}
             >
               <span className="material-symbols-outlined text-[18px]">link</span>
@@ -163,7 +163,7 @@ export default function ResourcesAdmin() {
               className={`cursor-pointer rounded-2xl border-2 border-dashed flex flex-col items-center justify-center gap-3 p-8 transition-all min-h-[160px] ${
                 dragging ? 'border-primary bg-primary-container/10 scale-105'
                 : selectedFile ? 'border-green-500/50 bg-green-500/5'
-                : 'border-surface-border hover:border-primary/50 hover:bg-white/2'
+                : 'border-surface-border hover:border-primary/50 hover:bg-ink/2'
               }`}
             >
               <input ref={fileInputRef} type="file" className="hidden" onChange={(e) => setSelectedFile(e.target.files[0])} />
@@ -196,7 +196,7 @@ export default function ResourcesAdmin() {
                   value={externalLink}
                   onChange={(e) => setExternalLink(e.target.value)}
                   placeholder="https://drive.google.com/... o https://onedrive.live.com/..."
-                  className="w-full bg-surface-container border border-surface-border rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary/60 transition-all"
+                  className="w-full bg-surface-container border border-surface-border rounded-xl pl-10 pr-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary/60 transition-all"
                 />
               </div>
               <div className="flex flex-wrap gap-2">
@@ -224,7 +224,7 @@ export default function ResourcesAdmin() {
                 value={form.title}
                 onChange={(e) => setForm(f => ({ ...f, title: e.target.value }))}
                 placeholder="Ej: Manual del Líder 2026"
-                className="bg-surface-container border border-surface-border rounded-xl px-4 py-3 text-sm text-white placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary/60 transition-all"
+                className="bg-surface-container border border-surface-border rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary/60 transition-all"
               />
             </div>
 
@@ -234,7 +234,7 @@ export default function ResourcesAdmin() {
                 <select
                   value={form.category}
                   onChange={(e) => setForm(f => ({ ...f, category: e.target.value }))}
-                  className="w-full appearance-none bg-surface-container border border-surface-border rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-primary/60 transition-all cursor-pointer"
+                  className="w-full appearance-none bg-surface-container border border-surface-border rounded-xl px-4 py-3 text-sm text-on-surface focus:outline-none focus:border-primary/60 transition-all cursor-pointer"
                 >
                   {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
@@ -249,7 +249,7 @@ export default function ResourcesAdmin() {
               >
                 <div className={`w-4 h-4 rounded-full bg-white transition-transform ${form.isFeatured ? 'translate-x-4' : 'translate-x-0'}`} />
               </div>
-              <span className="text-sm text-on-surface-variant group-hover:text-white transition-colors">
+              <span className="text-sm text-on-surface-variant group-hover:text-on-surface transition-colors">
                 Marcar como recurso destacado
               </span>
             </label>
@@ -290,7 +290,7 @@ export default function ResourcesAdmin() {
           <button
             onClick={handleUpload}
             disabled={uploading || (uploadMode === 'file' ? !selectedFile : !externalLink.trim())}
-            className="flex items-center gap-2 px-8 py-3 bg-primary-container hover:bg-primary-container/80 disabled:opacity-40 text-white rounded-xl font-semibold text-sm transition-all shadow-[0_0_15px_rgba(143,25,55,0.3)]"
+            className="flex items-center gap-2 px-8 py-3 bg-primary-container hover:bg-primary-container/80 disabled:opacity-40 text-on-brand rounded-xl font-semibold text-sm transition-all shadow-[0_0_15px_rgba(143,25,55,0.3)]"
           >
             {uploading ? (
               <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -304,14 +304,14 @@ export default function ResourcesAdmin() {
 
       {/* Resource list */}
       {error && <p role="alert" className="text-sm text-red-300">No se pudieron cargar los recursos. Intenta recargar la lista.</p>}
-      <label className="block text-sm text-on-surface-variant">Buscar recursos<input type="search" value={searchQuery} onChange={event => setSearchQuery(event.target.value)} className="mt-1 block w-full bg-surface-container border border-surface-border rounded-lg px-3 py-2 text-white" /></label>
+      <label className="block text-sm text-on-surface-variant">Buscar recursos<input type="search" value={searchQuery} onChange={event => setSearchQuery(event.target.value)} className="mt-1 block w-full bg-surface-container border border-surface-border rounded-lg px-3 py-2 text-on-surface" /></label>
       <div className="glass-card rounded-2xl overflow-hidden">
         <div className="p-5 border-b border-surface-border flex justify-between items-center">
-          <h3 className="font-semibold text-white flex items-center gap-2">
+          <h3 className="font-semibold text-on-surface flex items-center gap-2">
             <span className="material-symbols-outlined text-[18px] text-secondary">folder_open</span>
             Recursos ({filteredResources.length})
           </h3>
-          <button onClick={() => getResources('Todos')} className="text-on-surface-variant hover:text-white transition-colors" title="Recargar">
+          <button onClick={() => getResources('Todos')} className="text-on-surface-variant hover:text-on-surface transition-colors" title="Recargar">
             <span className="material-symbols-outlined text-[18px]">refresh</span>
           </button>
         </div>
@@ -330,13 +330,13 @@ export default function ResourcesAdmin() {
             {filteredResources.map(r => {
               const c = cfg(r.file_type);
               return (
-                <div key={r.id} className="flex items-center gap-4 p-4 hover:bg-white/3 transition-colors group">
+                <div key={r.id} className="flex items-center gap-4 p-4 hover:bg-ink/3 transition-colors group">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-surface-container border border-surface-border shrink-0">
                     <span className={`material-symbols-outlined text-[20px] ${c.color}`}>{c.icon}</span>
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-white text-sm truncate">{r.title}</p>
+                    <p className="font-medium text-on-surface text-sm truncate">{r.title}</p>
                     <p className="text-xs text-on-surface-variant flex gap-2 mt-0.5">
                       <span>{r.category}</span>
                       {r.file_size && <span>· {r.file_size}</span>}
@@ -365,7 +365,7 @@ export default function ResourcesAdmin() {
                         <button
                           type="button"
                           onClick={() => setPreviewResource(r)}
-                          className="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-white hover:bg-white/10 transition-colors"
+                          className="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-ink/10 transition-colors"
                           title="Ver archivo"
                         >
                           <span className="material-symbols-outlined text-[18px]">visibility</span>
@@ -401,12 +401,12 @@ export default function ResourcesAdmin() {
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setDeleteConfirm(null)} />
           <div className="relative z-10 glass-card rounded-2xl p-6 max-w-sm w-full">
             <span className="material-symbols-outlined text-4xl text-red-400 block mb-4">delete_forever</span>
-            <h3 className="font-bold text-white text-lg mb-2">¿Eliminar recurso?</h3>
+            <h3 className="font-bold text-on-surface text-lg mb-2">¿Eliminar recurso?</h3>
             <p className="text-on-surface-variant text-sm mb-6">
-              Esto eliminará <strong className="text-white">"{deleteConfirm.title}"</strong> del almacenamiento y la base de datos. No se puede deshacer.
+              Esto eliminará <strong className="text-on-surface">"{deleteConfirm.title}"</strong> del almacenamiento y la base de datos. No se puede deshacer.
             </p>
             <div className="flex gap-3">
-              <button onClick={() => setDeleteConfirm(null)} className="flex-1 py-2.5 rounded-xl border border-surface-border text-on-surface-variant hover:text-white transition-colors text-sm">Cancelar</button>
+              <button onClick={() => setDeleteConfirm(null)} className="flex-1 py-2.5 rounded-xl border border-surface-border text-on-surface-variant hover:text-on-surface transition-colors text-sm">Cancelar</button>
               <button onClick={() => handleDelete(deleteConfirm)} className="flex-1 py-2.5 rounded-xl bg-red-500/20 border border-red-500/40 hover:bg-red-500/30 text-red-400 font-semibold text-sm">Eliminar</button>
             </div>
           </div>

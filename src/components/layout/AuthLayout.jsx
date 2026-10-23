@@ -4,13 +4,14 @@ import { ArrowLeft, HeartHandshake } from 'lucide-react';
 import MobileNavigation from './MobileNavigation';
 import { coverPhoto, photoSrc, photoSrcSet } from '../../lib/communityPhotos';
 import { AVATAR_CHOICES } from '../../lib/avatars';
+import { AppearanceToggle } from '../ui/AppearanceControl';
 import '../../pages/auth.css';
 
 export default function AuthLayout({ title, subtitle, active, children, showGuest = true }) {
   const reduced = useReducedMotion();
   return <div className="auth-page" data-scene={Boolean(active)}>
     <MobileNavigation />
-    <header className="auth-desktop-header"><Link to="/" className="auth-brand"><img src="/logo-ujeladea.png" alt="" />UJELADEA<span>.</span></Link><Link to="/feed"><ArrowLeft size={17} />Volver a la comunidad</Link></header>
+    <header className="auth-desktop-header"><Link to="/" className="auth-brand"><img src="/logo-ujeladea.png" alt="" />UJELADEA<span>.</span></Link><div className="auth-desktop-actions"><AppearanceToggle /><Link to="/feed"><ArrowLeft size={17} />Volver a la comunidad</Link></div></header>
     <main className="auth-main">
       {active && <motion.aside className="auth-story" aria-label="Nuestra comunidad" initial={reduced ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.35 }}>
         <div className="auth-story-copy">

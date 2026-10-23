@@ -80,7 +80,7 @@ export default function ResourceCard({ resource, onPreview, onDownload }) {
 
       {/* Info */}
       <div className="flex-1">
-        <h3 className="font-semibold text-white text-sm leading-snug mb-2 group-hover:text-primary transition-colors line-clamp-2">
+        <h3 className="font-semibold text-on-surface text-sm leading-snug mb-2 group-hover:text-primary transition-colors line-clamp-2">
           {title}
         </h3>
         <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-on-surface-variant">
@@ -104,9 +104,9 @@ export default function ResourceCard({ resource, onPreview, onDownload }) {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={handlePreviewClick}
-            className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/25 text-white/90 hover:text-white text-xs sm:text-sm font-medium transition-all shadow-sm"
+            className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-ink/5 border border-ink/10 hover:bg-ink/10 hover:border-ink/25 text-on-surface hover:text-on-surface text-xs sm:text-sm font-medium transition-all shadow-sm"
           >
-            <ContentIcon className="text-[18px] text-white/80" name="visibility" />
+            <ContentIcon className="text-[18px] text-on-surface" name="visibility" />
             <span>Ver</span>
           </motion.button>
 
@@ -117,7 +117,7 @@ export default function ResourceCard({ resource, onPreview, onDownload }) {
             whileTap={{ scale: 0.98 }}
             onClick={handleDownloadClick}
             disabled={downloading}
-            className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-primary-container/25 border border-primary-container/40 hover:bg-primary-container hover:shadow-[0_0_15px_rgba(143,25,55,0.4)] text-white text-xs sm:text-sm font-medium transition-all disabled:opacity-60"
+            className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-primary-container/10 border border-primary-container/40 hover:bg-primary-container hover:shadow-[0_0_15px_rgba(143,25,55,0.4)] text-primary hover:text-on-brand text-xs sm:text-sm font-medium transition-all disabled:opacity-60"
           >
             <ContentIcon className="text-[18px]" name={downloading ? 'hourglass_top' : 'download'} />
             <span>{downloading ? 'Bajando...' : 'Descargar'}</span>

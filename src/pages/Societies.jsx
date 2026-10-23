@@ -57,7 +57,7 @@ export default function Societies() {
 
         {/* Header */}
         <header className="mb-10 animate-slide-up">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2 tracking-tight">Sociedades</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-on-surface mb-2 tracking-tight">Sociedades</h1>
           <p className="text-on-surface-variant">Encuentra las sociedades de jóvenes del distrito en El Alto</p>
         </header>
 
@@ -94,14 +94,14 @@ export default function Societies() {
           <div className="flex bg-surface-container border border-surface-border rounded-xl p-1 shrink-0 self-start sm:self-auto">
             <button
               onClick={() => setViewMode('grid')}
-              className={`px-3 py-2 rounded-lg flex items-center justify-center transition-colors ${viewMode === 'grid' ? 'bg-primary-container/30 text-primary' : 'text-on-surface-variant hover:text-white'}`}
+              className={`px-3 py-2 rounded-lg flex items-center justify-center transition-colors ${viewMode === 'grid' ? 'bg-primary-container/30 text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}
               title="Vista cuadrícula"
             >
               <ContentIcon className="text-[20px]" name="grid_view" />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`px-3 py-2 rounded-lg flex items-center justify-center transition-colors ${viewMode === 'list' ? 'bg-primary-container/30 text-primary' : 'text-on-surface-variant hover:text-white'}`}
+              className={`px-3 py-2 rounded-lg flex items-center justify-center transition-colors ${viewMode === 'list' ? 'bg-primary-container/30 text-primary' : 'text-on-surface-variant hover:text-on-surface'}`}
               title="Vista lista"
             >
               <ContentIcon className="text-[20px]" name="view_list" />

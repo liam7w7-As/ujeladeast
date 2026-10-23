@@ -1,47 +1,47 @@
-.domain-migration-notice { position: relative; margin: 0 0 32px; padding: 20px 0 24px; border-block: 1px solid #ffffff22; text-align: left; }
+.domain-migration-notice { position: relative; margin: 0 0 32px; padding: 20px 0 24px; border-block: 1px solid color-mix(in srgb, var(--color-ink) 13%, transparent); text-align: left; }
 .domain-migration-reopen { margin-bottom: 24px; }
 .domain-migration-brand { display: flex; align-items: center; gap: 12px; }
 .domain-migration-brand img { width: 34px; height: 40px; object-fit: contain; flex-shrink: 0; }
 .domain-migration-brand > div { min-width: 0; }
-.domain-migration-brand span { color: #c1dace; font-size: 12px; }
-.domain-migration-brand h2 { color: #f5f5f5; font-size: 19px; line-height: 1.35; font-weight: 700; overflow-wrap: anywhere; }
-.domain-migration-notice > p, .domain-migration-arrival-steps { max-width: 720px; color: #bbc0c8; font-size: 14px; line-height: 1.6; margin-top: 12px; }
+.domain-migration-brand span { color: var(--color-success); font-size: 12px; }
+.domain-migration-brand h2 { color: var(--color-on-surface); font-size: 19px; line-height: 1.35; font-weight: 700; overflow-wrap: anywhere; }
+.domain-migration-notice > p, .domain-migration-arrival-steps { max-width: 720px; color: var(--color-muted); font-size: 14px; line-height: 1.6; margin-top: 12px; }
 .domain-migration-arrival-steps { list-style: decimal; padding-left: 20px; }
 .domain-migration-arrival-steps li + li { margin-top: 8px; }
 .domain-migration-account { display: flex; align-items: center; gap: 8px; overflow-wrap: anywhere; }
-.domain-migration-account svg { flex-shrink: 0; color: #a5d9c1; }
+.domain-migration-account svg { flex-shrink: 0; color: var(--color-success); }
 .domain-migration-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 18px; }
 .domain-migration-primary, .domain-migration-secondary, .domain-migration-text-action { display: inline-flex; justify-content: center; align-items: center; gap: 8px; min-height: 44px; border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; cursor: pointer; }
 .domain-migration-primary { background: #8f1937; color: #fff; padding: 10px 16px; }
 .domain-migration-primary:hover { background: #a51e42; }
-.domain-migration-secondary { color: #ccd0d5; padding: 10px 14px; }
-.domain-migration-secondary:hover { background: #ffffff0a; }
+.domain-migration-secondary { color: var(--color-muted); padding: 10px 14px; }
+.domain-migration-secondary:hover { background: color-mix(in srgb, var(--color-ink) 4%, transparent); }
 .domain-migration-primary:disabled, .domain-migration-text-action:disabled { opacity: .45; cursor: not-allowed; }
 .domain-migration-primary svg, .domain-migration-secondary svg, .domain-migration-text-action svg { flex-shrink: 0; }
 .domain-migration-review { padding: 18px 22px 22px; overflow-y: auto; overscroll-behavior: contain; }
-.domain-migration-intro, .domain-migration-row p { color: #bcc3cb; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
-.domain-migration-status { display: flex; gap: 10px; align-items: center; margin: 18px 0 6px; color: #efd09c; font-size: 15px; font-weight: 600; }
+.domain-migration-intro, .domain-migration-row p { color: var(--color-muted); font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+.domain-migration-status { display: flex; gap: 10px; align-items: center; margin: 18px 0 6px; color: var(--color-primary); font-size: 15px; font-weight: 600; }
 .domain-migration-status svg { flex-shrink: 0; }
-.domain-migration-status[data-ready=true] { color: #a5d9c1; }
+.domain-migration-status[data-ready=true] { color: var(--color-success); }
 .domain-migration-list { list-style: none; margin: 0; padding: 0; }
-.domain-migration-row { display: flex; gap: 12px; padding: 18px 0; border-bottom: 1px solid #ffffff12; }
-.domain-migration-row > svg { color: #a9c7e8; flex-shrink: 0; margin-top: 2px; }
-.domain-migration-row[data-tone=good] > svg { color: #a5d9c1; }
-.domain-migration-row[data-tone=warning] > svg { color: #efd09c; }
+.domain-migration-row { display: flex; gap: 12px; padding: 18px 0; border-bottom: 1px solid color-mix(in srgb, var(--color-ink) 7%, transparent); }
+.domain-migration-row > svg { color: var(--color-info); flex-shrink: 0; margin-top: 2px; }
+.domain-migration-row[data-tone=good] > svg { color: var(--color-success); }
+.domain-migration-row[data-tone=warning] > svg { color: var(--color-primary); }
 .domain-migration-row > div { min-width: 0; }
-.domain-migration-row h3 { color: #f2f3f4; font-size: 14px; font-weight: 600; line-height: 1.5; margin-bottom: 4px; }
+.domain-migration-row h3 { color: var(--color-on-surface); font-size: 14px; font-weight: 600; line-height: 1.5; margin-bottom: 4px; }
 .domain-migration-row p + p { margin-top: 6px; }
 .domain-migration-pending { list-style: none; padding: 0; margin-top: 12px; }
 .domain-migration-pending li + li { margin-top: 12px; }
-.domain-migration-pending strong { color: #e3d4b8; font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
-.domain-migration-text-action { color: #eeb5c4; padding: 8px 0; text-align: left; }
+.domain-migration-pending strong { color: var(--color-warning); font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
+.domain-migration-text-action { color: var(--color-primary); padding: 8px 0; text-align: left; }
 .domain-migration-text-action:hover { text-decoration: underline; }
-.domain-migration-checkbox { display: flex; align-items: flex-start; gap: 10px; color: #d6d9de; font-size: 13px; line-height: 1.6; margin-top: 10px; padding-block: 6px; cursor: pointer; }
-.domain-migration-checkbox input { flex-shrink: 0; width: 19px; height: 19px; margin-top: 2px; accent-color: #aa3354; }
+.domain-migration-checkbox { display: flex; align-items: flex-start; gap: 10px; color: var(--color-on-surface); font-size: 13px; line-height: 1.6; margin-top: 10px; padding-block: 6px; cursor: pointer; }
+.domain-migration-checkbox input { flex-shrink: 0; width: 19px; height: 19px; margin-top: 2px; accent-color: var(--color-primary); }
 .domain-migration-consent { margin-top: 14px; }
 .domain-migration-checkbox:has(input:disabled) { opacity: .55; cursor: not-allowed; }
-.domain-migration-warning { color: #efd09c; font-size: 13px; line-height: 1.6; margin-top: 12px; }
-.domain-migration-footnote { margin-top: 18px; color: #9fa8b2; font-size: 12px; line-height: 1.6; }
-.domain-migration-loading { padding: 12px 0; font-size: 13px; color: #bcc3cb; }
+.domain-migration-warning { color: var(--color-primary); font-size: 13px; line-height: 1.6; margin-top: 12px; }
+.domain-migration-footnote { margin-top: 18px; color: var(--color-muted); font-size: 12px; line-height: 1.6; }
+.domain-migration-loading { padding: 12px 0; font-size: 13px; color: var(--color-muted); }
 .domain-migration-notice :focus-visible, .domain-migration-review :focus-visible { outline: 2px solid #eeb5c4; outline-offset: 3px; }
 @media (max-width: 420px) { .domain-migration-review { padding: 16px; } .domain-migration-actions { align-items: stretch; } .domain-migration-review .domain-migration-primary { width: 100%; } }

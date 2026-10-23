@@ -54,17 +54,17 @@ export default function ResourcePreviewModal({ resource, isOpen, onClose, onDown
           animate="visible"
           exit="hidden"
           variants={modalContent}
-          className="relative z-10 w-full max-w-5xl h-[92vh] max-h-[900px] flex flex-col bg-[#121217] border border-white/10 rounded-2xl shadow-2xl overflow-hidden"
+          className="relative z-10 w-full max-w-5xl h-[92vh] max-h-[900px] flex flex-col bg-surface border border-ink/10 rounded-2xl shadow-2xl overflow-hidden"
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-white/10 bg-[#16161c]/80 backdrop-blur-md shrink-0">
+          <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-ink/10 bg-surface/80 backdrop-blur-md shrink-0">
             <div className="flex items-center gap-3 min-w-0 pr-4">
               <ContentIcon className="text-primary text-2xl shrink-0" name={isPdf ? 'picture_as_pdf' : isImage ? 'image' : isVideo ? 'smart_display' : isAudio ? 'music_note' : 'description'} />
               <div className="min-w-0">
-                <h2 className="text-white text-sm sm:text-base font-semibold truncate leading-tight">
+                <h2 className="text-on-surface text-sm sm:text-base font-semibold truncate leading-tight">
                   {title}
                 </h2>
-                <div className="flex items-center gap-2 text-xs text-white/50 mt-0.5">
+                <div className="flex items-center gap-2 text-xs text-muted mt-0.5">
                   <span className="text-primary font-medium">{type || 'ARCHIVO'}</span>
                   {file_size && <span>• {file_size}</span>}
                 </div>
@@ -78,7 +78,7 @@ export default function ResourcePreviewModal({ resource, isOpen, onClose, onDown
                 target="_blank"
                 rel="noopener noreferrer"
                 title="Abrir en pestaña nueva"
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/80 hover:text-white text-xs font-medium border border-white/10 transition-colors"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-ink/5 hover:bg-ink/10 text-on-surface hover:text-on-surface text-xs font-medium border border-ink/10 transition-colors"
               >
                 <ContentIcon className="text-[16px]" name="open_in_new" />
                 <span>Pestaña nueva</span>
@@ -87,7 +87,7 @@ export default function ResourcePreviewModal({ resource, isOpen, onClose, onDown
               <button
                 onClick={() => onDownload(resource)}
                 title="Descargar archivo"
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-primary-container hover:bg-primary-container/80 text-white text-xs font-semibold shadow-md shadow-primary-container/20 transition-all active:scale-95"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-primary-container hover:bg-primary-container/80 text-on-brand text-xs font-semibold shadow-md shadow-primary-container/20 transition-all active:scale-95"
               >
                 <ContentIcon className="text-[16px]" name="download" />
                 <span className="hidden sm:inline">Descargar</span>
@@ -96,7 +96,7 @@ export default function ResourcePreviewModal({ resource, isOpen, onClose, onDown
               <button
                 onClick={onClose}
                 title="Cerrar vista previa"
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors ml-1"
+                className="w-8 h-8 rounded-lg flex items-center justify-center text-muted hover:text-on-surface hover:bg-ink/10 transition-colors ml-1"
               >
                 <ContentIcon className="text-[20px]" name="close" />
               </button>
@@ -104,12 +104,12 @@ export default function ResourcePreviewModal({ resource, isOpen, onClose, onDown
           </div>
 
           {/* Content Area */}
-          <div className="flex-1 bg-black/40 relative overflow-hidden flex items-center justify-center p-2 sm:p-4">
+          <div className="flex-1 bg-surface-container relative overflow-hidden flex items-center justify-center p-2 sm:p-4">
             {isPdf && (
               <iframe
                 src={`${file_url}#toolbar=1`}
                 title={title}
-                className="w-full h-full rounded-lg border border-white/5 bg-white/5"
+                className="w-full h-full rounded-lg border border-ink/5 bg-ink/5"
               />
             )}
 
@@ -135,13 +135,13 @@ export default function ResourcePreviewModal({ resource, isOpen, onClose, onDown
             )}
 
             {isAudio && (
-              <div className="w-full max-w-md p-6 bg-white/5 border border-white/10 rounded-2xl flex flex-col items-center gap-4 text-center">
+              <div className="w-full max-w-md p-6 bg-ink/5 border border-ink/10 rounded-2xl flex flex-col items-center gap-4 text-center">
                 <div className="w-20 h-20 rounded-full bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-400">
                   <ContentIcon className="text-4xl" name="music_note" />
                 </div>
                 <div>
-                  <h3 className="text-white font-medium text-base mb-1">{title}</h3>
-                  <p className="text-white/50 text-xs">{category || 'Audio UJELADEA'}</p>
+                  <h3 className="text-on-surface font-medium text-base mb-1">{title}</h3>
+                  <p className="text-muted text-xs">{category || 'Audio UJELADEA'}</p>
                 </div>
                 <audio src={file_url} controls autoPlay className="w-full mt-2" />
               </div>
@@ -151,18 +151,18 @@ export default function ResourcePreviewModal({ resource, isOpen, onClose, onDown
               <iframe
                 src={officeViewerUrl}
                 title={title}
-                className="w-full h-full rounded-lg border border-white/5 bg-white"
+                className="w-full h-full rounded-lg border border-ink/5 bg-white"
               />
             )}
 
             {!isPdf && !isImage && !isVideo && !isAudio && !isOffice && (
-              <div className="w-full max-w-md p-6 bg-white/5 border border-white/10 rounded-2xl flex flex-col items-center gap-4 text-center">
+              <div className="w-full max-w-md p-6 bg-ink/5 border border-ink/10 rounded-2xl flex flex-col items-center gap-4 text-center">
                 <div className="w-16 h-16 rounded-full bg-primary-container/20 border border-primary-container/30 flex items-center justify-center text-primary">
                   <ContentIcon className="text-3xl" name="attach_file" />
                 </div>
                 <div>
-                  <h3 className="text-white font-medium text-base mb-1">{title}</h3>
-                  <p className="text-white/50 text-xs">
+                  <h3 className="text-on-surface font-medium text-base mb-1">{title}</h3>
+                  <p className="text-muted text-xs">
                     {isExternalDrive ? 'Recurso alojado en Google Drive' : 'Este tipo de archivo se puede abrir externamente o descargar'}
                   </p>
                 </div>
@@ -171,14 +171,14 @@ export default function ResourcePreviewModal({ resource, isOpen, onClose, onDown
                     href={file_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-medium border border-white/10 flex items-center gap-1.5 transition-colors"
+                    className="px-4 py-2 rounded-xl bg-ink/10 hover:bg-ink/20 text-on-surface text-xs font-medium border border-ink/10 flex items-center gap-1.5 transition-colors"
                   >
                     <ContentIcon className="text-[16px]" name="open_in_new" />
                     Abrir en pestaña nueva
                   </a>
                   <button
                     onClick={() => onDownload(resource)}
-                    className="px-4 py-2 rounded-xl bg-primary-container hover:bg-primary-container/80 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                    className="px-4 py-2 rounded-xl bg-primary-container hover:bg-primary-container/80 text-on-brand text-xs font-semibold flex items-center gap-1.5 transition-colors"
                   >
                     <ContentIcon className="text-[16px]" name="download" />
                     Descargar

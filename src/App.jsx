@@ -10,6 +10,7 @@ import OfflineBanner from './components/ui/OfflineBanner'
 import UpdatePrompt from './components/ui/UpdatePrompt'
 import RouteMetadata from './components/seo/Metadata'
 import AppLoading from './components/ui/AppLoading'
+import { useAppearance } from './hooks/useAppearance'
 import About from './pages/About'
 import Privacy from './pages/Privacy'
 import Publication from './pages/Publication'
@@ -44,6 +45,7 @@ const AdminSearchResults = lazy(() => import('./pages/admin/AdminSearchResults')
 const Bible = lazy(() => import('./pages/Bible'))
 
 function App() {
+  useAppearance()
   return (
     <AuthProvider>
       <MotionConfig reducedMotion="user">

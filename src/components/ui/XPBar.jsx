@@ -14,7 +14,7 @@ export default function XPBar({ xp }) {
     >
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-container text-white font-bold text-sm shadow-[0_0_12px_rgba(143,25,55,0.4)]">
+          <span className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-container text-on-brand font-bold text-sm shadow-[0_0_12px_rgba(143,25,55,0.4)]">
             {level}
           </span>
           <span className="text-on-surface font-semibold text-sm">Nivel Actual</span>
@@ -22,7 +22,7 @@ export default function XPBar({ xp }) {
         <span className="text-primary font-black text-base">{xp} XP</span>
       </div>
       
-      <div className="w-full h-3 bg-surface-container rounded-full overflow-hidden relative border border-white/5">
+      <div className="w-full h-3 bg-surface-container rounded-full overflow-hidden relative border border-ink/5">
         <motion.div 
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}

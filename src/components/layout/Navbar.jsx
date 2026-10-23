@@ -7,6 +7,7 @@ import NotificationBell from '../ui/NotificationBell'
 import { HeartHandshake, LogOut, Menu, X } from 'lucide-react'
 import ProfileAvatar from '../ui/ProfileAvatar'
 import InstallButton from '../ui/InstallButton'
+import { AppearanceToggle } from '../ui/AppearanceControl'
 
 const navItems = [
   { label: 'Inicio', href: '/', id: 'home' },
@@ -38,7 +39,7 @@ function Navbar({ activeItem = 'home' }) {
           <motion.div 
             whileHover={{ scale: 1.08, rotate: 2 }}
             whileTap={{ scale: 0.95 }}
-            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#09090b] p-1 border border-white/10 shadow-[0_0_16px_rgba(143,25,55,0.35)] overflow-hidden"
+            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-container p-1 border border-ink/10 shadow-[0_0_16px_rgba(143,25,55,0.35)] overflow-hidden"
           >
             <img 
               src="/logo-ujeladea.png" 
@@ -46,7 +47,7 @@ function Navbar({ activeItem = 'home' }) {
               className="h-full w-full object-contain"
             />
           </motion.div>
-          <span className="font-inter text-sm font-bold tracking-wide text-white group-hover:text-primary transition-colors">
+          <span className="font-inter text-sm font-bold tracking-wide text-on-surface group-hover:text-primary transition-colors">
             UJELADEA
           </span>
         </Link>
@@ -60,8 +61,8 @@ function Navbar({ activeItem = 'home' }) {
                 aria-current={isActive ? 'page' : undefined}
                 className={`relative font-inter text-sm font-medium tracking-wide transition-colors duration-300 py-1 ${
                   isActive
-                    ? 'text-white font-semibold'
-                    : 'text-white/60 hover:text-white'
+                    ? 'text-on-surface font-semibold'
+                    : 'text-muted hover:text-on-surface'
                 }`}
                 to={item.href}
                 key={item.label}
@@ -88,7 +89,7 @@ function Navbar({ activeItem = 'home' }) {
                 to="/estudios"
                 state={{ openSOS: true }}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all hover:scale-105"
-                style={{ color: '#c9a84c', borderColor: 'rgba(201,168,76,0.35)', background: 'rgba(201,168,76,0.08)' }}
+                style={{ color: 'var(--color-warning)', borderColor: 'rgba(201,168,76,0.35)', background: 'rgba(201,168,76,0.08)' }}
                 title="Apoyo espiritual de UJELADITO"
               >
                 <HeartHandshake size={16} />
@@ -121,10 +122,11 @@ function Navbar({ activeItem = 'home' }) {
 
         {/* Mobile Toggle Button */}
         <InstallButton iconOnly />
+        <AppearanceToggle />
         {user && <NotificationBell />}
         <motion.button 
           whileTap={{ scale: 0.9 }}
-          className="xl:hidden flex shrink-0 items-center justify-center text-on-surface w-11 h-11 rounded-full hover:bg-white/10 transition-colors"
+          className="xl:hidden flex shrink-0 items-center justify-center text-on-surface w-11 h-11 rounded-full hover:bg-ink/10 transition-colors"
           aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
           aria-expanded={isMenuOpen}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -155,7 +157,7 @@ function Navbar({ activeItem = 'home' }) {
                     className={`font-inter text-base font-medium px-4 py-3 rounded-lg transition-colors ${
                       isActive 
                         ? 'bg-primary-container/20 text-primary border border-primary-container/30 font-semibold' 
-                        : 'text-on-surface-variant hover:bg-white/5 hover:text-white'
+                        : 'text-on-surface-variant hover:bg-ink/5 hover:text-on-surface'
                     }`}
                   >
                     {item.label}
@@ -171,7 +173,7 @@ function Navbar({ activeItem = 'home' }) {
                 state={{ openSOS: true }}
                 onClick={() => setIsMenuOpen(false)}
                 className="flex items-center gap-2 font-inter text-base font-semibold px-4 py-3 rounded-lg transition-colors border"
-                style={{ color: '#c9a84c', borderColor: 'rgba(201,168,76,0.25)', background: 'rgba(201,168,76,0.08)' }}
+                style={{ color: 'var(--color-warning)', borderColor: 'rgba(201,168,76,0.25)', background: 'rgba(201,168,76,0.08)' }}
               >
                 <HeartHandshake size={20} />
                 Apoyo Espiritual (SOS)

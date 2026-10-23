@@ -22,7 +22,7 @@ export default function SocietyCard({ society, viewMode = 'grid', onClick }) {
         </div>
 
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-white text-base truncate group-hover:text-primary transition-colors">{name}</h3>
+          <h3 className="font-semibold text-on-surface text-base truncate group-hover:text-primary transition-colors">{name}</h3>
           {zone && <p className="text-xs text-on-surface-variant mt-0.5">{zone}</p>}
           {president_name && (
             <p className="text-xs text-on-surface-variant mt-1 flex items-center gap-1">
@@ -87,7 +87,7 @@ export default function SocietyCard({ society, viewMode = 'grid', onClick }) {
       {/* Info */}
       <div className="p-5 flex flex-col gap-4 flex-grow">
         <div>
-          <h3 className="font-bold text-white text-lg group-hover:text-primary transition-colors">{name}</h3>
+          <h3 className="font-bold text-on-surface text-lg group-hover:text-primary transition-colors">{name}</h3>
           {president_name && (
             <p className="text-sm text-on-surface-variant mt-1 flex items-center gap-1.5">
               <ContentIcon className="text-[16px] text-secondary" name="person" />

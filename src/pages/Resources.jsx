@@ -60,7 +60,7 @@ export default function Resources() {
 
         {/* Header */}
         <div className="mb-12 animate-slide-up">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">Recursos</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-on-surface mb-3">Recursos</h1>
           <p className="text-on-surface-variant max-w-2xl">
             Material disponible para los jóvenes. Visualiza o descarga los documentos oficiales, formularios, presentaciones y herramientas de UJELADEA.
           </p>
@@ -70,7 +70,7 @@ export default function Resources() {
         {featured && (
           <section className="mb-12 animate-slide-up-delay-1">
             <div className="glass-card rounded-2xl overflow-hidden relative group border-secondary/20">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#09090b]/95 via-[#09090b]/80 to-transparent z-10" />
+              <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/80 to-transparent z-10" />
               <div className="absolute inset-0 bg-gradient-to-br from-primary-container/20 to-transparent z-0" />
 
               <div className="relative z-20 p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
@@ -78,7 +78,7 @@ export default function Resources() {
                   <span className="inline-block px-3 py-1 rounded-full border border-secondary text-secondary text-xs font-bold mb-4 uppercase tracking-wider">
                     ⭐ Destacado
                   </span>
-                  <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">{featured.title}</h2>
+                  <h2 className="text-2xl md:text-3xl font-bold text-on-surface mb-3">{featured.title}</h2>
                   <div className="flex flex-wrap items-center gap-3 text-on-surface-variant text-sm">
                     <span className="flex items-center gap-1">
                       <ContentIcon className="text-[16px]" name={featuredIcon} />
@@ -104,7 +104,7 @@ export default function Resources() {
                   <button
                     type="button"
                     onClick={() => setPreviewResource(featured)}
-                    className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-5 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    className="bg-ink/10 hover:bg-ink/20 border border-ink/20 text-on-surface px-5 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
                   >
                     <ContentIcon className="text-[20px]" name="visibility" />
                     Ver recurso
@@ -113,7 +113,7 @@ export default function Resources() {
                   <button
                     type="button"
                     onClick={() => handleDownload(featured)}
-                    className="bg-primary-container hover:bg-primary-container/80 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all shadow-[0_0_20px_rgba(143,25,55,0.4)] hover:shadow-[0_0_30px_rgba(143,25,55,0.6)] hover:scale-[1.02] active:scale-[0.98]"
+                    className="bg-primary-container hover:bg-primary-container/80 text-on-brand px-6 py-3 rounded-xl font-semibold flex items-center gap-2 transition-all shadow-[0_0_20px_rgba(143,25,55,0.4)] hover:shadow-[0_0_30px_rgba(143,25,55,0.6)] hover:scale-[1.02] active:scale-[0.98]"
                   >
                     <ContentIcon className="text-[20px]" name="download" />
                     Descargar
@@ -141,7 +141,7 @@ export default function Resources() {
               className={`px-4 py-2 rounded-full border text-sm flex items-center gap-1.5 transition-all ${
                 activeFilter === filter.id
                   ? 'border-primary text-primary bg-primary-container/10 shadow-[0_0_12px_rgba(143,25,55,0.2)]'
-                  : 'border-surface-border text-on-surface-variant hover:text-white hover:border-white/20 bg-surface-container/40'
+                  : 'border-surface-border text-on-surface-variant hover:text-on-surface hover:border-ink/20 bg-surface-container/40'
               }`}
             >
               <ContentIcon className="text-[16px]" name={filter.icon} />

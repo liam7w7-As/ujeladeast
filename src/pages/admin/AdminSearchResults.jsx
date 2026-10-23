@@ -34,7 +34,7 @@ export default function AdminSearchResults() {
   const loading = query && response.key !== key;
   const changePage = value => setParams(previous => { const next = new URLSearchParams(previous); next.set('page', String(value)); return next; });
   return <div className="space-y-6 min-w-0">
-    <header className="flex items-start justify-between gap-3"><div className="min-w-0"><h1 className="text-2xl font-bold">Resultados de búsqueda</h1><p className="text-sm text-on-surface-variant mt-2 break-words">{query ? `“${query}”` : 'Escribe una búsqueda.'}</p></div><button type="button" aria-label="Actualizar resultados" title="Actualizar resultados" disabled={loading || !query} onClick={() => setRetry(value => value + 1)} className="p-2 rounded-lg hover:bg-white/10 disabled:opacity-40"><RefreshCw size={18} /></button></header>
+    <header className="flex items-start justify-between gap-3"><div className="min-w-0"><h1 className="text-2xl font-bold">Resultados de búsqueda</h1><p className="text-sm text-on-surface-variant mt-2 break-words">{query ? `“${query}”` : 'Escribe una búsqueda.'}</p></div><button type="button" aria-label="Actualizar resultados" title="Actualizar resultados" disabled={loading || !query} onClick={() => setRetry(value => value + 1)} className="p-2 rounded-lg hover:bg-ink/10 disabled:opacity-40"><RefreshCw size={18} /></button></header>
     {loading ? <p role="status" className="py-10 text-on-surface-variant">Buscando...</p> : query && <>
       {response.groups.map(group => <section key={group.table} className="border-b border-surface-border pb-5">
         <h2 className="font-semibold mb-3">{group.label}{!group.error && <span className="ml-2 text-xs text-on-surface-variant">{group.count}</span>}</h2>

@@ -14,7 +14,7 @@ export default function ChurchCard({ name, pastor, zone, viewMode = 'grid' }) {
              </p>
            </div>
            <div className="flex gap-2">
-             <button className="px-4 py-2 bg-primary-container text-white font-label-sm text-label-sm rounded-lg flex items-center gap-2 hover:shadow-[0_0_15px_rgba(201,168,76,0.3)] transition-all">
+             <button className="px-4 py-2 bg-primary-container text-on-brand font-label-sm text-label-sm rounded-lg flex items-center gap-2 hover:shadow-[0_0_15px_rgba(201,168,76,0.3)] transition-all">
                 <span className="material-symbols-outlined text-sm">location_on</span>
              </button>
              <button className="px-4 py-2 border border-surface-border hover:border-secondary text-secondary font-label-sm text-label-sm rounded-lg transition-colors hidden sm:block">
@@ -40,7 +40,7 @@ export default function ChurchCard({ name, pastor, zone, viewMode = 'grid' }) {
         </p>
       </div>
       <div className="flex gap-3 mt-auto">
-        <button className="flex-1 bg-primary-container hover:bg-primary-container/80 text-white font-label-sm text-label-sm py-2 rounded-lg flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(201,168,76,0.3)]">
+        <button className="flex-1 bg-primary-container hover:bg-primary-container/80 text-on-brand font-label-sm text-label-sm py-2 rounded-lg flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(201,168,76,0.3)]">
           <span className="material-symbols-outlined text-sm">location_on</span> Ver ubicación
         </button>
         <button className="px-4 border border-surface-border hover:border-secondary text-secondary font-label-sm text-label-sm rounded-lg transition-colors">

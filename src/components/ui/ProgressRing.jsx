@@ -37,7 +37,7 @@ export default function ProgressRing({ percentage, size = 120, strokeWidth = 8 }
           initial={{ scale: 0.5, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="text-2xl font-black text-white"
+          className="text-2xl font-black text-on-surface"
         >
           {percentage}%
         </motion.span>

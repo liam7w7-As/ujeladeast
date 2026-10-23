@@ -65,6 +65,7 @@ try {
   await page.evaluate(async () => {
     localStorage.setItem('ujeladea:study-draft:v1:test:lesson', 'draft stays');
     localStorage.setItem('pwa-test-favorite', 'Juan 3:16');
+    localStorage.setItem('ujeladea:appearance:v1', 'light');
     await new Promise((resolve, reject) => {
       const request = indexedDB.open('pwa-test-downloads', 1);
       request.onupgradeneeded = () => request.result.createObjectStore('books');
@@ -143,9 +144,11 @@ try {
     return [localStorage.getItem('ujeladea:study-draft:v1:test:lesson'), localStorage.getItem('pwa-test-favorite'), book, await (await caches.match('/data/test-hymn.json')).json()];
   });
   assert.deepEqual(stored, ['draft stays', 'Juan 3:16', 'offline chapter', { preserved: true }]);
+  assert.equal(await page.evaluate(() => localStorage.getItem('ujeladea:appearance:v1')), 'light');
   await context.setOffline(true);
   await page.reload();
   await page.waitForFunction(() => document.documentElement.dataset.appBuild === 'pwa-test-B');
+  assert.equal(await page.locator('html').getAttribute('data-theme'), 'light', 'the saved theme applies even on an offline launch');
   assert.equal(await popup.count(), 0, 'No false update prompt offline');
   await context.close();
   assert.deepEqual(errors, []);

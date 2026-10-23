@@ -33,7 +33,7 @@ function InputField({ value, onChange, placeholder, type = 'text', error }) {
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className={`w-full bg-surface-container border rounded-xl px-4 py-3 text-sm text-white placeholder:text-on-surface-variant/50 focus:outline-none transition-all ${
+        className={`w-full bg-surface-container border rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none transition-all ${
           error ? 'border-red-500/60 focus:border-red-500' : 'border-surface-border focus:border-primary/60'
         }`}
       />
@@ -216,12 +216,12 @@ export default function SocietiesAdmin({ onSuccess }) {
       {/* Header de sección */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-bold text-white">Gestión de Sociedades</h2>
+          <h2 className="text-xl font-bold text-on-surface">Gestión de Sociedades</h2>
           <p className="text-sm text-on-surface-variant mt-1">Agrega, edita o elimina las sociedades del distrito</p>
         </div>
         <button
           onClick={handleNew}
-          className="flex items-center gap-2 px-5 py-2.5 bg-primary-container hover:bg-primary-container/80 text-white rounded-xl text-sm font-medium transition-all shadow-[0_0_15px_rgba(143,25,55,0.3)]"
+          className="flex items-center gap-2 px-5 py-2.5 bg-primary-container hover:bg-primary-container/80 text-on-brand rounded-xl text-sm font-medium transition-all shadow-[0_0_15px_rgba(143,25,55,0.3)]"
         >
           <span className="material-symbols-outlined text-[18px]">add</span>
           Nueva Sociedad
@@ -232,12 +232,12 @@ export default function SocietiesAdmin({ onSuccess }) {
       {showForm && (
         <div className="glass-card rounded-2xl border-primary-container/30 bg-primary-container/5 p-6 md:p-8">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="font-semibold text-white text-lg">
+            <h3 className="font-semibold text-on-surface text-lg">
               {editing ? `Editando: ${editing.name}` : 'Nueva Sociedad'}
             </h3>
             <button
               onClick={() => setShowForm(false)}
-              className="text-on-surface-variant hover:text-white transition-colors"
+              className="text-on-surface-variant hover:text-on-surface transition-colors"
             >
               <span className="material-symbols-outlined">close</span>
             </button>
@@ -266,7 +266,7 @@ export default function SocietiesAdmin({ onSuccess }) {
                   type="button"
                   onClick={() => { setPhotoMode('url'); setPhotoFile(null); setPhotoPreview(form.photo_url || null); }}
                   className={`flex-1 py-2 text-xs font-medium transition-colors flex items-center justify-center gap-1.5 ${
-                    photoMode === 'url' ? 'bg-primary-container/30 text-primary' : 'text-on-surface-variant hover:text-white'
+                    photoMode === 'url' ? 'bg-primary-container/30 text-primary' : 'text-on-surface-variant hover:text-on-surface'
                   }`}
                 >
                   <span className="material-symbols-outlined text-[16px]">link</span>
@@ -276,7 +276,7 @@ export default function SocietiesAdmin({ onSuccess }) {
                   type="button"
                   onClick={() => { setPhotoMode('file'); }}
                   className={`flex-1 py-2 text-xs font-medium transition-colors flex items-center justify-center gap-1.5 ${
-                    photoMode === 'file' ? 'bg-primary-container/30 text-primary' : 'text-on-surface-variant hover:text-white'
+                    photoMode === 'file' ? 'bg-primary-container/30 text-primary' : 'text-on-surface-variant hover:text-on-surface'
                   }`}
                 >
                   <span className="material-symbols-outlined text-[16px]">upload</span>
@@ -294,7 +294,7 @@ export default function SocietiesAdmin({ onSuccess }) {
                     setPhotoPreview(e.target.value);
                   }}
                   placeholder="https://..."
-                  className="w-full bg-surface-container border border-surface-border rounded-xl px-4 py-3 text-sm text-white placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary/60 transition-all"
+                  className="w-full bg-surface-container border border-surface-border rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary/60 transition-all"
                 />
               )}
 
@@ -316,7 +316,7 @@ export default function SocietiesAdmin({ onSuccess }) {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-full border-2 border-dashed border-surface-border hover:border-primary/50 rounded-xl py-6 flex flex-col items-center gap-2 text-on-surface-variant hover:text-white transition-colors"
+                    className="w-full border-2 border-dashed border-surface-border hover:border-primary/50 rounded-xl py-6 flex flex-col items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors"
                   >
                     <span className="material-symbols-outlined text-3xl">add_photo_alternate</span>
                     <span className="text-sm">{photoFile ? photoFile.name : 'Toca para elegir imagen'}</span>
@@ -336,11 +336,11 @@ export default function SocietiesAdmin({ onSuccess }) {
                       setPhotoFile(null);
                       setForm((f) => ({ ...f, photo_url: '' }));
                     }}
-                    className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-red-500/70 transition-colors"
+                    className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 flex items-center justify-center text-on-surface hover:bg-red-500/70 transition-colors"
                   >
                     <span className="material-symbols-outlined text-[16px]">close</span>
                   </button>
-                  <span className="absolute bottom-2 left-2 text-[10px] bg-black/60 px-2 py-0.5 rounded-full text-white/80">Vista previa</span>
+                  <span className="absolute bottom-2 left-2 text-[10px] bg-black/60 px-2 py-0.5 rounded-full text-on-surface">Vista previa</span>
                 </div>
               )}
             </FormField>
@@ -351,7 +351,7 @@ export default function SocietiesAdmin({ onSuccess }) {
                 onChange={(e) => setForm((f) => ({ ...f, schedule: e.target.value }))}
                 placeholder="Describe el horario de reuniones de la sociedad..."
                 rows={3}
-                className="w-full bg-surface-container border border-surface-border rounded-xl px-4 py-3 text-sm text-white placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary/60 transition-all resize-y"
+                className="w-full bg-surface-container border border-surface-border rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary/60 transition-all resize-y"
               />
             </FormField>
 
@@ -361,7 +361,7 @@ export default function SocietiesAdmin({ onSuccess }) {
                 onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
                 placeholder="Breve descripción de la sociedad..."
                 rows={3}
-                className="w-full bg-surface-container border border-surface-border rounded-xl px-4 py-3 text-sm text-white placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary/60 transition-all resize-y"
+                className="w-full bg-surface-container border border-surface-border rounded-xl px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:border-primary/60 transition-all resize-y"
               />
             </FormField>
 
@@ -378,7 +378,7 @@ export default function SocietiesAdmin({ onSuccess }) {
                     value={form.maps_link}
                     onChange={(e) => setForm((f) => ({ ...f, maps_link: e.target.value }))}
                     placeholder="https://maps.app.goo.gl/... o https://www.google.com/maps/place/..."
-                    className={`w-full bg-surface-container border rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder:text-on-surface-variant/50 focus:outline-none transition-all ${
+                    className={`w-full bg-surface-container border rounded-xl pl-10 pr-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none transition-all ${
                       errors.maps_link ? 'border-red-500/60' : 'border-surface-border focus:border-primary/60'
                     }`}
                   />
@@ -406,14 +406,14 @@ export default function SocietiesAdmin({ onSuccess }) {
           <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-surface-border">
             <button
               onClick={() => setShowForm(false)}
-              className="px-6 py-2.5 rounded-xl border border-surface-border text-on-surface-variant hover:text-white hover:border-white/20 transition-colors text-sm"
+              className="px-6 py-2.5 rounded-xl border border-surface-border text-on-surface-variant hover:text-on-surface hover:border-ink/20 transition-colors text-sm"
             >
               Cancelar
             </button>
             <button
               onClick={handleSave}
               disabled={saving || uploading}
-              className="flex items-center gap-2 px-8 py-2.5 bg-primary-container hover:bg-primary-container/80 disabled:opacity-50 text-white rounded-xl text-sm font-semibold transition-all shadow-[0_0_15px_rgba(143,25,55,0.3)]"
+              className="flex items-center gap-2 px-8 py-2.5 bg-primary-container hover:bg-primary-container/80 disabled:opacity-50 text-on-brand rounded-xl text-sm font-semibold transition-all shadow-[0_0_15px_rgba(143,25,55,0.3)]"
             >
               {(saving || uploading) ? (
                 <>
@@ -432,16 +432,16 @@ export default function SocietiesAdmin({ onSuccess }) {
       )}
 
       {/* Lista de sociedades */}
-      <label className="block text-sm text-on-surface-variant">Buscar sociedades<input type="search" value={searchQuery} onChange={event => setSearchQuery(event.target.value)} className="mt-1 block w-full bg-surface-container border border-surface-border rounded-lg px-3 py-2 text-white" /></label>
+      <label className="block text-sm text-on-surface-variant">Buscar sociedades<input type="search" value={searchQuery} onChange={event => setSearchQuery(event.target.value)} className="mt-1 block w-full bg-surface-container border border-surface-border rounded-lg px-3 py-2 text-on-surface" /></label>
       <div className="glass-card rounded-2xl overflow-hidden">
         <div className="p-5 border-b border-surface-border flex justify-between items-center">
-          <h3 className="font-semibold text-white flex items-center gap-2">
+          <h3 className="font-semibold text-on-surface flex items-center gap-2">
             <span className="material-symbols-outlined text-[18px] text-secondary">church</span>
             Sociedades registradas
           </h3>
           <button
             onClick={loadSocieties}
-            className="text-on-surface-variant hover:text-white transition-colors"
+            className="text-on-surface-variant hover:text-on-surface transition-colors"
             title="Recargar"
           >
             <span className="material-symbols-outlined text-[18px]">refresh</span>
@@ -460,7 +460,7 @@ export default function SocietiesAdmin({ onSuccess }) {
         ) : (
           <div className="divide-y divide-surface-border/50">
             {filteredSocieties.map((s) => (
-              <div key={s.id} className="flex items-center gap-4 p-4 hover:bg-white/3 transition-colors group">
+              <div key={s.id} className="flex items-center gap-4 p-4 hover:bg-ink/3 transition-colors group">
                 {/* Foto miniatura */}
                 <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 bg-surface-container flex items-center justify-center border border-surface-border">
                   {s.photo_url ? (
@@ -471,7 +471,7 @@ export default function SocietiesAdmin({ onSuccess }) {
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-white text-sm truncate">{s.name}</p>
+                  <p className="font-medium text-on-surface text-sm truncate">{s.name}</p>
                   <p className="text-xs text-on-surface-variant mt-0.5 flex flex-wrap gap-x-3">
                     {s.zone && <span className="flex items-center gap-0.5"><span className="material-symbols-outlined text-[12px]">location_on</span>{s.zone}</span>}
                     {s.president_name && <span className="flex items-center gap-0.5"><span className="material-symbols-outlined text-[12px]">person</span>{s.president_name}</span>}
@@ -482,7 +482,7 @@ export default function SocietiesAdmin({ onSuccess }) {
                 <div className="flex items-center gap-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
                     onClick={() => handleEdit(s)}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-white hover:bg-white/10 transition-colors"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-ink/10 transition-colors"
                     title="Editar"
                   >
                     <span className="material-symbols-outlined text-[18px]">edit</span>
@@ -507,14 +507,14 @@ export default function SocietiesAdmin({ onSuccess }) {
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setDeleteConfirm(null)} />
           <div className="relative z-10 glass-card rounded-2xl p-6 max-w-sm w-full border-red-500/20 bg-red-500/5">
             <span className="material-symbols-outlined text-4xl text-red-400 block mb-4">delete_forever</span>
-            <h3 className="font-bold text-white text-lg mb-2">¿Eliminar sociedad?</h3>
+            <h3 className="font-bold text-on-surface text-lg mb-2">¿Eliminar sociedad?</h3>
             <p className="text-on-surface-variant text-sm mb-6">
-              Estás a punto de eliminar <strong className="text-white">"{deleteConfirm.name}"</strong>. Esta acción no se puede deshacer.
+              Estás a punto de eliminar <strong className="text-on-surface">"{deleteConfirm.name}"</strong>. Esta acción no se puede deshacer.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setDeleteConfirm(null)}
-                className="flex-1 py-2.5 rounded-xl border border-surface-border text-on-surface-variant hover:text-white transition-colors text-sm"
+                className="flex-1 py-2.5 rounded-xl border border-surface-border text-on-surface-variant hover:text-on-surface transition-colors text-sm"
               >
                 Cancelar
               </button>

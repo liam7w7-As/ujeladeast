@@ -78,7 +78,7 @@ export default function AdminHymnal() {
   return (
     <div className="flex flex-col gap-6">
       <header>
-        <h1 className="text-2xl font-bold text-white mb-2">Gestión del Himnario</h1>
+        <h1 className="text-2xl font-bold text-on-surface mb-2">Gestión del Himnario</h1>
         <p className="text-on-surface-variant text-sm mb-4">Visualiza y exporta los cantos de la aplicación.</p>
         
         <div className="p-4 bg-primary/10 border border-primary/20 rounded-xl flex items-start gap-3">
@@ -98,13 +98,13 @@ export default function AdminHymnal() {
             placeholder="Buscar por título o número..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-surface-container border border-surface-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary/60 transition-all"
+            className="w-full bg-surface-container border border-surface-border rounded-xl pl-10 pr-4 py-2.5 text-sm text-on-surface focus:outline-none focus:border-primary/60 transition-all"
           />
         </div>
         <select
           value={selectedHymnal.id}
           onChange={(e) => setSelectedHymnal(HYMNALS.find(h => h.id === e.target.value))}
-          className="bg-surface-container border border-surface-border rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary/60 transition-all sm:w-48 cursor-pointer w-full sm:w-auto"
+          className="bg-surface-container border border-surface-border rounded-xl px-4 py-2.5 text-sm text-on-surface focus:outline-none focus:border-primary/60 transition-all sm:w-48 cursor-pointer w-full sm:w-auto"
         >
           {HYMNALS.map(h => (
             <option key={h.id} value={h.id}>{h.name}</option>
@@ -113,7 +113,7 @@ export default function AdminHymnal() {
         <button 
           onClick={handleExportCSV}
           disabled={hymns.length === 0}
-          className="px-4 py-2.5 bg-surface-container border border-surface-border rounded-xl text-on-surface-variant hover:text-white transition-colors flex items-center gap-2 w-full sm:w-auto justify-center disabled:opacity-50"
+          className="px-4 py-2.5 bg-surface-container border border-surface-border rounded-xl text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-2 w-full sm:w-auto justify-center disabled:opacity-50"
         >
           <span className="material-symbols-outlined text-[20px]">download</span>
           <span className="text-sm font-medium">Exportar CSV</span>
@@ -128,7 +128,7 @@ export default function AdminHymnal() {
       ) : (
         <div className="glass-card rounded-2xl overflow-hidden">
           <div className="p-4 border-b border-surface-border bg-surface-container-high/30 flex justify-between items-center">
-            <h2 className="font-semibold text-white">{selectedHymnal.name}</h2>
+            <h2 className="font-semibold text-on-surface">{selectedHymnal.name}</h2>
             <span className="text-xs text-on-surface-variant bg-surface-container px-2 py-1 rounded-md">
               {filteredHymns.length} cantos
             </span>
@@ -159,11 +159,11 @@ export default function AdminHymnal() {
                     if (!contentStr) contentStr = h.letra || h.contenido || 'No hay letra disponible';
 
                     return (
-                      <tr key={i} className="hover:bg-white/5 transition-colors">
+                      <tr key={i} className="hover:bg-ink/5 transition-colors">
                         <td className="p-4 text-center font-bold text-on-surface-variant">
                           {h.numero || h.id || i + 1}
                         </td>
-                        <td className="p-4 font-medium text-white">
+                        <td className="p-4 font-medium text-on-surface">
                           <p>{h.titulo_es || h.titulo || 'Sin título'}</p>
                           {h.titulo_ay && <p className="text-xs text-on-surface-variant mt-0.5 italic">{h.titulo_ay}</p>}
                         </td>

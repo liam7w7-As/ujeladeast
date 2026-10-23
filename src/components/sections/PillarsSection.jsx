@@ -33,10 +33,10 @@ function PillarsSection() {
         transition={{ duration: 0.6 }}
         className="mb-20 text-center"
       >
-        <h2 className="mb-4 font-sora text-[36px] font-bold leading-[44px] tracking-[-0.02em] text-white md:text-[56px] md:leading-[64px]">
+        <h2 className="mb-4 font-sora text-[36px] font-bold leading-[44px] tracking-[-0.02em] text-on-surface md:text-[56px] md:leading-[64px]">
           Nuestros Pilares
         </h2>
-        <p className="mx-auto max-w-2xl font-inter text-[17px] font-light leading-7 text-white/50">
+        <p className="mx-auto max-w-2xl font-inter text-[17px] font-light leading-7 text-muted">
           Fundamentos diseñados para el desarrollo integral del joven cristiano en el Distrito El Alto.
         </p>
       </motion.div>
@@ -56,7 +56,7 @@ function PillarsSection() {
             >
               <GlassCard>
                 <div className="flex size-12 items-center justify-start mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-[#8f1937]/20 border border-[#8f1937]/30 flex items-center justify-center text-[#d85d7c]">
+                  <div className="w-12 h-12 rounded-xl bg-[#8f1937]/20 border border-[#8f1937]/30 flex items-center justify-center text-primary">
                     <Icon
                       aria-hidden="true"
                       className="size-6 stroke-[1.75]"
@@ -64,10 +64,10 @@ function PillarsSection() {
                   </div>
                 </div>
                 <div>
-                  <h3 className="mb-3 font-sora text-xl font-bold tracking-wide text-white">
+                  <h3 className="mb-3 font-sora text-xl font-bold tracking-wide text-on-surface">
                     {pillar.title}
                   </h3>
-                  <p className="font-inter text-sm font-normal leading-relaxed text-white/60">
+                  <p className="font-inter text-sm font-normal leading-relaxed text-muted">
                     {pillar.description}
                   </p>
                 </div>

@@ -8,6 +8,7 @@ import ProfileAvatar from '../ui/ProfileAvatar';
 import AppDialog from '../ui/AppDialog';
 import InstallButton from '../ui/InstallButton';
 import MobileNavigation from './MobileNavigation';
+import { AppearanceSettings, AppearanceToggle } from '../ui/AppearanceControl';
 
 const links = [
   { to: '/', label: 'Inicio', Icon: Home },
@@ -40,6 +41,7 @@ export default function FeedNavigation({ onCreate }) {
         {createButton('feed-nav-link feed-nav-create')}
       </div>
       <div className="feed-rail-account">
+        <AppearanceToggle />
         <InstallButton className="feed-nav-link" />
         {user ? <>
           <div className="feed-nav-notifications"><NotificationBell /><span>Notificaciones</span></div>
@@ -50,9 +52,10 @@ export default function FeedNavigation({ onCreate }) {
     <MobileNavigation onCreate={onCreate} />
     <AppDialog open={menuOpen} onClose={() => setMenuOpen(false)} title={user ? 'Tu comunidad' : 'Explorar'}>
       <div className="overflow-y-auto p-4">
-        {user && <div className="flex items-center gap-3 border-b border-white/10 pb-4 mb-2"><ProfileAvatar profile={profile} metadata={user.user_metadata} /><div className="min-w-0"><p className="text-sm font-semibold break-words">{profile?.full_name || 'Tu cuenta'}</p><p className="text-xs text-white/50 break-words">{profile?.church_name}</p></div></div>}
-        {links.map(({ to, label, Icon }) => <Link key={to} to={to} onClick={() => setMenuOpen(false)} className="flex items-center gap-4 rounded-lg px-3 py-3 text-sm hover:bg-white/5"><Icon size={21} />{label}</Link>)}
-        {user && <Link to="/cuenta" onClick={() => setMenuOpen(false)} className="flex items-center gap-4 rounded-lg px-3 py-3 text-sm hover:bg-white/5"><UserRound size={21} />Mi cuenta</Link>}
+        <AppearanceSettings />
+        {user && <div className="flex items-center gap-3 border-b border-ink/10 pb-4 mb-2"><ProfileAvatar profile={profile} metadata={user.user_metadata} /><div className="min-w-0"><p className="text-sm font-semibold break-words">{profile?.full_name || 'Tu cuenta'}</p><p className="text-xs text-muted break-words">{profile?.church_name}</p></div></div>}
+        {links.map(({ to, label, Icon }) => <Link key={to} to={to} onClick={() => setMenuOpen(false)} className="flex items-center gap-4 rounded-lg px-3 py-3 text-sm hover:bg-ink/5"><Icon size={21} />{label}</Link>)}
+        {user && <Link to="/cuenta" onClick={() => setMenuOpen(false)} className="flex items-center gap-4 rounded-lg px-3 py-3 text-sm hover:bg-ink/5"><UserRound size={21} />Mi cuenta</Link>}
         {user ? <button type="button" onClick={signOut} className="flex items-center gap-4 px-3 py-3 text-sm text-rose-300"><LogOut size={21} />Cerrar sesión</button> : <Link to="/login" className="flex items-center gap-4 px-3 py-3 text-sm text-rose-300"><LogIn size={21} />Iniciar sesión</Link>}
         {error && <p role="alert" className="p-3 text-sm text-red-300">{error}</p>}
       </div>

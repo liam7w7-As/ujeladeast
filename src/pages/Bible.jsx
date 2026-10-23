@@ -12,6 +12,7 @@ import BibleComparison from '../components/ui/BibleComparison';
 import { chapterVerses, favoriteKey, passageBetween, verseCitation, verseClipboard } from '../lib/bibleVerses';
 import { useBibleFavorites } from '../hooks/useBibleFavorites';
 import { useBibleReadingResume } from '../hooks/useBibleReadingResume';
+import { useAppearance } from '../hooks/useAppearance';
 import { adjacentChapter, bibleBackgrounds, bookmarkKey, normalizeBook, readPreference, selection, versionBackgrounds, versions, writePreference } from '../lib/bibleModel';
 import { cancelBibleDownload, downloadBible, librarySnapshot, loadBibleBook, refreshLibrary, removeBible, subscribeLibrary } from '../lib/bibleLibrary';
 import './bible.css';
@@ -57,7 +58,12 @@ export default function Bible() {
   const [fontSize, setFontSize] = useState(() => readingSize(readPreference('fontSize', 19)));
   const [fontId, setFontId] = useState(() => readingFont(readPreference('fontFamily', 'jakarta')).id);
   const [shareTarget, setShareTarget] = useState(null);
-  const [theme, setTheme] = useState(() => readPreference('theme', 'dark') === 'light' ? 'light' : 'dark');
+  const { theme: appTheme } = useAppearance();
+  const [readingTheme, setTheme] = useState(() => {
+    const saved = readPreference('theme', null);
+    return saved === 'light' || saved === 'dark' ? saved : null;
+  });
+  const theme = readingTheme || appTheme;
   const [redLetters, setRedLetters] = useState(() => readPreference('redLetters', true) !== false);
   const [backgrounds, setBackgrounds] = useState(() => versionBackgrounds(readPreference('backgrounds', {})));
   const [confirmDelete, setConfirmDelete] = useState('');

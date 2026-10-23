@@ -44,8 +44,8 @@ export default function Sidebar({ mobileOpen = false, onNavigate }) {
               onClick={onNavigate}
               className={`w-full text-left rounded-lg flex items-center gap-3 px-4 py-3 transition-colors ${
                 isActive 
-                  ? 'bg-primary-container text-white font-bold scale-[0.98]' 
-                  : 'text-on-surface-variant hover:text-white hover:bg-surface-container-high'
+                  ? 'bg-primary-container text-on-brand font-bold scale-[0.98]'
+                  : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high'
               }`}>
               <Icon size={20} className="shrink-0" aria-hidden="true" />
               <span className="font-body-md text-body-md">{item.label}</span>

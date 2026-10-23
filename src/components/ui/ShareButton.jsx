@@ -3,7 +3,7 @@ import { Check, Copy, MessageCircle, Send, Share2, ThumbsUp } from 'lucide-react
 import { SITE_URL } from '../../lib/siteContent';
 import { postPath } from '../../lib/seo';
 
-export default function ShareButton({ post, className = 'flex items-center gap-2 text-white/60 hover:text-white', iconOnly = false }) {
+export default function ShareButton({ post, className = 'flex items-center gap-2 text-muted hover:text-on-surface', iconOnly = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState('');
@@ -83,11 +83,11 @@ export default function ShareButton({ post, className = 'flex items-center gap-2
       </button>
 
       {isOpen && (
-        <div className={`absolute ${iconOnly ? 'left-0' : 'right-0'} bottom-full mb-2 w-48 bg-[#25292c] border border-white/15 rounded-lg shadow-xl overflow-hidden z-20`}>
+        <div className={`absolute ${iconOnly ? 'left-0' : 'right-0'} bottom-full mb-2 w-48 bg-surface-container border border-ink/15 rounded-lg shadow-xl overflow-hidden z-20`}>
           <div className="p-1 flex flex-col">
             <button 
               onClick={copyToClipboard}
-              className="flex items-center gap-3 px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-colors text-left"
+              className="flex items-center gap-3 px-3 py-2 text-sm text-on-surface hover:text-on-surface hover:bg-ink/5 rounded-lg transition-colors text-left"
             >
               {copied ? <Check size={17} /> : <Copy size={17} />}
               {copied ? '¡Copiado!' : 'Copiar enlace'}

@@ -18,7 +18,7 @@ function HeroSection() {
         className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#8f1937]/40 bg-[#8f1937]/10 backdrop-blur-md shadow-[0_0_20px_rgba(143,25,55,0.2)]"
       >
         <span className="w-2 h-2 rounded-full bg-[#8f1937] animate-ping" />
-        <span className="text-xs font-semibold uppercase tracking-widest text-[#d85d7c]">
+        <span className="text-xs font-semibold uppercase tracking-widest text-primary">
           Distrito El Alto • INELA
         </span>
       </motion.div>
@@ -28,7 +28,7 @@ function HeroSection() {
         initial={{ opacity: 0, y: 25 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-        className="max-w-5xl font-sora text-[56px] font-extrabold leading-[64px] tracking-[-0.03em] text-white md:text-[96px] md:leading-[100px] md:tracking-[-0.04em] drop-shadow-2xl"
+        className="max-w-5xl font-sora text-[56px] font-extrabold leading-[64px] tracking-[-0.03em] text-on-surface md:text-[96px] md:leading-[100px] md:tracking-[-0.04em] drop-shadow-2xl"
       >
         UJELADEA
       </motion.h1>
@@ -38,7 +38,7 @@ function HeroSection() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
-        className="max-w-2xl font-inter text-[20px] md:text-[24px] font-semibold leading-8 text-[#d85d7c]"
+        className="max-w-2xl font-inter text-[20px] md:text-[24px] font-semibold leading-8 text-primary"
       >
         "Somos Uno en Cristo, unidos permaneceremos"
       </motion.p>
@@ -48,10 +48,10 @@ function HeroSection() {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.3, ease: 'easeOut' }}
-        className="max-w-3xl font-inter text-[15px] md:text-[17px] font-light leading-relaxed text-white/70 italic bg-white/[0.02] border border-white/5 rounded-2xl p-6 backdrop-blur-sm"
+        className="max-w-3xl font-inter text-[15px] md:text-[17px] font-light leading-relaxed text-on-surface italic bg-white/[0.02] border border-ink/5 rounded-2xl p-6 backdrop-blur-sm"
       >
         "Y ya no estoy en el mundo; mas estos están en el mundo, y yo voy a ti. Padre santo, a los que me has dado, guárdalos en tu nombre, para que sean uno, así como nosotros."
-        <span className="not-italic text-white/40 text-sm mt-3 block font-medium">— San Juan 17:11</span>
+        <span className="not-italic text-muted text-sm mt-3 block font-medium">— San Juan 17:11</span>
       </motion.p>
 
       {/* Action Buttons */}

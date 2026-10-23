@@ -5,9 +5,9 @@ const baseClasses =
 
 const variants = {
   primary:
-    'bg-primary-container text-white hover:bg-[#a61d40] hover:shadow-[0_0_24px_rgba(143,25,55,0.4)]',
+    'bg-primary-container text-on-brand hover:bg-[#a61d40] hover:shadow-[0_0_24px_rgba(143,25,55,0.4)]',
   glass:
-    'glass-button-outline text-white hover:glass-button-outline-hover',
+    'glass-button-outline text-on-surface hover:glass-button-outline-hover',
 }
 
 function Button({

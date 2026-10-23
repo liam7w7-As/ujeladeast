@@ -60,7 +60,7 @@ export default function SocietyDetailModal({ society, onClose }) {
                 onClick={onClose}
                 aria-label="Cerrar sociedad"
                 title="Cerrar sociedad"
-                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/50 backdrop-blur-md text-white hover:bg-black/70 transition-colors flex items-center justify-center"
+                className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/50 backdrop-blur-md text-on-surface hover:bg-black/70 transition-colors flex items-center justify-center"
               >
                 <ContentIcon className="text-[20px]" name="close" />
               </motion.button>
@@ -77,11 +77,11 @@ export default function SocietyDetailModal({ society, onClose }) {
             <div className="overflow-y-auto flex-1 p-6 flex flex-col gap-6 no-scrollbar">
               {/* Name & President */}
               <div>
-                <h2 className="text-2xl font-bold text-white mb-1">{society.name}</h2>
+                <h2 className="text-2xl font-bold text-on-surface mb-1">{society.name}</h2>
                 {society.president_name && (
                   <p className="text-secondary flex items-center gap-1.5 text-sm">
                     <ContentIcon className="text-[16px]" name="person" />
-                    Presidente de Jóvenes: <span className="font-medium text-white ml-1">{society.president_name}</span>
+                    Presidente de Jóvenes: <span className="font-medium text-on-surface ml-1">{society.president_name}</span>
                   </p>
                 )}
               </div>
@@ -139,7 +139,7 @@ export default function SocietyDetailModal({ society, onClose }) {
                   href={society.maps_link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3.5 rounded-xl bg-primary-container hover:bg-primary-container/80 text-white font-bold flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(143,25,55,0.3)] hover:shadow-[0_0_28px_rgba(143,25,55,0.5)]"
+                  className="w-full py-3.5 rounded-xl bg-primary-container hover:bg-primary-container/80 text-on-brand font-bold flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(143,25,55,0.3)] hover:shadow-[0_0_28px_rgba(143,25,55,0.5)]"
                 >
                   <ContentIcon className="" name="open_in_new" />
                   Abrir en Google Maps

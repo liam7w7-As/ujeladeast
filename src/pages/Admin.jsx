@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import AdminSearch from '../components/admin/AdminSearch';
 import NotificationBell from '../components/ui/NotificationBell';
+import { AppearanceToggle } from '../components/ui/AppearanceControl';
 
 export default function Admin() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -15,10 +16,11 @@ export default function Admin() {
         <div className="flex justify-between items-center w-full px-margin-mobile md:px-gutter h-20 max-w-container-max mx-auto">
           <div className="flex items-center gap-4">
             <Link to="/" className="font-display-lg-mobile text-display-lg-mobile font-extrabold text-primary dark:text-primary tracking-tight">UJELADEA</Link>
-            <span className="font-label-sm text-label-sm bg-primary-container text-white px-2 py-1 rounded border border-outline-variant uppercase tracking-wider ml-2 hidden md:inline-block">Admin</span>
+            <span className="font-label-sm text-label-sm bg-primary-container text-on-brand px-2 py-1 rounded border border-outline-variant uppercase tracking-wider ml-2 hidden md:inline-block">Admin</span>
           </div>
           <div className="flex items-center gap-1 sm:gap-3">
             <AdminSearch />
+            <AppearanceToggle />
             <NotificationBell admin />
           <button onClick={() => setMobileOpen(open => !open)} aria-expanded={mobileOpen} aria-label={mobileOpen ? 'Cerrar menú' : 'Abrir menú'} className="lg:hidden text-on-surface-variant p-2">
             {mobileOpen ? <X size={26} /> : <Menu size={26} />}

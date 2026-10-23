@@ -7,6 +7,7 @@ import ProfileAvatar from '../ui/ProfileAvatar';
 import NotificationBell from '../ui/NotificationBell';
 import AppDialog from '../ui/AppDialog';
 import InstallButton from '../ui/InstallButton';
+import { AppearanceSettings, AppearanceToggle } from '../ui/AppearanceControl';
 import { MIGRATION_REVIEW_PATH, migrationNoticeAvailable } from '../../lib/domainMigration';
 import './mobile-navigation.css';
 
@@ -46,8 +47,9 @@ export default function MobileNavigation({ onCreate }) {
       <Link to="/" aria-label="UJELADEA inicio" className="mobile-app-brand"><img src="/logo-ujeladea.png" alt="" /><span>UJELADEA<span>.</span></span></Link>
       <div className="mobile-app-actions">
         <InstallButton iconOnly />
+        <AppearanceToggle />
         {onCreate && <motion.button type="button" className="mobile-icon" title="Crear publicación" aria-label="Crear publicación" onClick={onCreate} whileTap={reduced ? undefined : { scale: 0.9 }}><PlusSquare size={23} /></motion.button>}
-        {user ? <NotificationBell /> : <Link to="/login" className="mobile-signin" aria-current={pathname === '/login' ? 'page' : undefined}>Entrar<LogIn size={17} /></Link>}
+        {user ? <NotificationBell /> : <Link to="/login" className="mobile-signin" aria-label="Entrar" title="Entrar" aria-current={pathname === '/login' ? 'page' : undefined}><span>Entrar</span><LogIn size={17} /></Link>}
       </div>
     </header>
     <nav className="mobile-tab-bar" aria-label="Navegación móvil">
@@ -59,6 +61,7 @@ export default function MobileNavigation({ onCreate }) {
     </nav>
     <AppDialog open={open} onClose={() => setOpen(false)} title="Tu comunidad" busy={busy}>
       <div className="mobile-more-content">
+        <AppearanceSettings />
         {user ? <div className="mobile-more-profile"><ProfileAvatar profile={profile} metadata={user.user_metadata} /><div><strong>{profile?.full_name || 'Tu cuenta'}</strong><p>{profile?.church_name || user.email}</p></div></div> : <div className="mobile-guest-actions"><Link to="/login" onClick={() => setOpen(false)}>Iniciar sesión<LogIn size={18} /></Link><Link to="/register" onClick={() => setOpen(false)}>Crear cuenta<PlusSquare size={18} /></Link></div>}
         <div className="mobile-more-links">{extraLinks.map(({ to, label, Icon, state }) => <Link key={label} to={to} state={state} onClick={() => setOpen(false)}><Icon size={23} /><span>{label}</span></Link>)}</div>
         {user && <Link className="mobile-account-action" to="/cuenta" onClick={() => setOpen(false)}><UserRound size={19} />Mi cuenta</Link>}

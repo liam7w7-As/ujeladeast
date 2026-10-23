@@ -1,6 +1,6 @@
 export default function StudyCard({ title, passage, author, date }) {
   return (
-    <div className="glass-card rounded-lg p-6 flex flex-col md:flex-row md:items-center justify-between hover:bg-white/5 transition-colors group">
+    <div className="glass-card rounded-lg p-6 flex flex-col md:flex-row md:items-center justify-between hover:bg-ink/5 transition-colors group">
       <div className="flex-grow pr-4">
         <h4 className="font-headline-md text-headline-md text-on-surface mb-1 group-hover:text-primary transition-colors">{title}</h4>
         <div className="flex flex-wrap items-center gap-4 mt-2">

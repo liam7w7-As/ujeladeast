@@ -185,9 +185,9 @@ function BibleStudyContent() {
         <div className="flex-grow flex items-center justify-center pt-32 pb-section-gap px-margin-mobile">
           <div className="py-10 text-center max-w-md">
             <BookOpen size={38} className="mx-auto text-emerald-200 mb-5" />
-            <h1 className="text-2xl font-bold text-white mb-3">Un momento con la Palabra</h1>
+            <h1 className="text-2xl font-bold text-on-surface mb-3">Un momento con la Palabra</h1>
             <p className="text-sm leading-7 text-on-surface-variant mb-6">Inicia sesión para continuar tus estudios y guardar tu progreso.</p>
-            <Link to="/login" state={{ from: '/estudios' }} className="inline-flex items-center gap-3 rounded-lg bg-primary-container px-6 py-3 text-sm text-white">Iniciar sesión<ArrowRight size={18} /></Link>
+            <Link to="/login" state={{ from: '/estudios' }} className="inline-flex items-center gap-3 rounded-lg bg-primary-container px-6 py-3 text-sm text-on-brand">Iniciar sesión<ArrowRight size={18} /></Link>
             <Link to="/register" className="block mt-5 text-sm text-primary">Crear una cuenta</Link>
           </div>
         </div>
@@ -229,7 +229,7 @@ function BibleStudyContent() {
           <div className="animate-in fade-in slide-in-from-right-8 duration-300">
             <button 
               onClick={() => setActiveView('plan')}
-              className="mb-6 flex items-center gap-2 text-on-surface-variant hover:text-white transition-colors text-sm"
+              className="mb-6 flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors text-sm"
             >
               <ContentIcon className="text-[18px]" name="arrow_back" />
               Volver al Plan
@@ -265,7 +265,7 @@ function BibleStudyContent() {
           <div className="animate-in fade-in duration-500 max-w-4xl mx-auto">
             <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
-                <h1 className="text-2xl font-bold text-white mb-2">Mi Diario Personal</h1>
+                <h1 className="text-2xl font-bold text-on-surface mb-2">Mi Diario Personal</h1>
                 <p className="text-on-surface-variant">Tus reflexiones y aprendizajes guardados.</p>
               </div>
               <div className="relative w-full md:w-64">
@@ -276,7 +276,7 @@ function BibleStudyContent() {
                   aria-label="Buscar en mi diario"
                   value={journalSearch}
                   onChange={event => setJournalSearch(event.target.value)}
-                  className="w-full bg-surface-container border border-surface-border rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:border-primary outline-none"
+                  className="w-full bg-surface-container border border-surface-border rounded-xl pl-10 pr-4 py-2 text-sm text-on-surface focus:border-primary outline-none"
                 />
               </div>
             </div>
@@ -305,12 +305,12 @@ function BibleStudyContent() {
         {/* ── VIEW: APOYO SOS ── */}
         {activeView === 'sos' && (
           <div className="animate-in fade-in duration-400 max-w-2xl mx-auto w-full">
-            <div className="flex flex-col rounded-2xl overflow-hidden border border-amber-500/20 bg-[#0d0d10]" style={{ height: '600px' }}>
+            <div className="flex flex-col rounded-2xl overflow-hidden border border-amber-500/20 bg-background" style={{ height: '600px' }}>
               {/* Header SOS */}
               <div className="shrink-0 flex items-center gap-3 px-5 py-4 bg-gradient-to-r from-amber-900/30 to-amber-700/10 border-b border-amber-500/20">
                 <img src={ujeladitoAvatar} alt="UJELADITO" className="w-10 h-10 rounded-full object-cover border-2 border-amber-400/30" />
                 <div className="flex-1">
-                  <p className="text-white font-bold text-sm">UJELADITO — Apoyo Espiritual</p>
+                  <p className="text-on-surface font-bold text-sm">UJELADITO — Apoyo Espiritual</p>
                   <p className="text-amber-300/70 text-xs">
                     {sosSending ? 'Escribiendo...' : 'Un espacio seguro para hablar sin juicio'}
                   </p>
@@ -337,7 +337,7 @@ function BibleStudyContent() {
                 {sosMessages.length === 0 && !sosSending && (
                   <div className="flex flex-col items-center justify-center h-full gap-3 opacity-50">
                     <img src={ujeladitoAvatar} alt="UJELADITO" className="w-12 h-12 rounded-full object-cover" />
-                    <p className="text-white/40 text-sm text-center">Iniciando sesión de apoyo...</p>
+                    <p className="text-muted text-sm text-center">Iniciando sesión de apoyo...</p>
                   </div>
                 )}
                 {sosMessages.filter(m => !m.content.startsWith('H\u00f3la, acabo de abrir')).map(msg => (
@@ -347,8 +347,8 @@ function BibleStudyContent() {
                     )}
                     <div className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
                       msg.role === 'assistant'
-                        ? 'bg-amber-950/40 border border-amber-500/15 text-white/90 rounded-bl-sm'
-                        : 'bg-[#8f1937] text-white rounded-br-sm'
+                        ? 'bg-amber-950/40 border border-amber-500/15 text-on-surface rounded-bl-sm'
+                        : 'bg-[#8f1937] text-on-brand rounded-br-sm'
                     }`}>
                       <p className="whitespace-pre-wrap">{msg.content}</p>
                     </div>
@@ -371,8 +371,8 @@ function BibleStudyContent() {
               </div>
 
               {/* Input SOS */}
-              <div className="shrink-0 p-4 border-t border-amber-500/15 bg-[#0a0a0d]">
-                <div className="flex items-end gap-2 bg-[#1a1a1f] border border-amber-500/15 rounded-xl px-4 py-2.5 focus-within:border-amber-500/40 transition-colors">
+              <div className="shrink-0 p-4 border-t border-amber-500/15 bg-background">
+                <div className="flex items-end gap-2 bg-surface border border-amber-500/15 rounded-xl px-4 py-2.5 focus-within:border-amber-500/40 transition-colors">
                   <textarea
                     ref={sosInputRef}
                     value={sosInput}
@@ -390,7 +390,7 @@ function BibleStudyContent() {
                     placeholder="Cuéntame cómo te sientes..."
                     rows={1}
                     disabled={sosSending}
-                    className="flex-1 bg-transparent text-white placeholder:text-amber-200/20 resize-none outline-none max-h-24 text-sm leading-relaxed disabled:opacity-50"
+                    className="flex-1 bg-transparent text-on-surface placeholder:text-amber-200/20 resize-none outline-none max-h-24 text-sm leading-relaxed disabled:opacity-50"
                     style={{ minHeight: '24px' }}
                   />
                   <button
@@ -412,7 +412,7 @@ function BibleStudyContent() {
                     )}
                   </button>
                 </div>
-                <p className="text-center text-white/15 text-[10px] mt-1.5">Este espacio es privado y confidencial</p>
+                <p className="text-center text-muted text-[10px] mt-1.5">Este espacio es privado y confidencial</p>
               </div>
             </div>
           </div>
