@@ -6,7 +6,13 @@
     <link rel="preload" href="/fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!--page-meta-->
-    <meta name="theme-color" content="#09090b" />
+    <meta name="theme-color" content="#8f1937" />
+    <style id="app-startup-style">
+      body { margin: 0; }
+      html:has(#root:empty), body:has(> #root:empty) { background: #8f1937; }
+      #root:empty { display: grid; place-items: center; min-height: 100vh; min-height: 100dvh; background: #8f1937; }
+      #root:empty::before { content: ''; width: 120px; height: 140px; background: url('/logo-ujeladea.png') center / contain no-repeat; }
+    </style>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="UJELADEA" />

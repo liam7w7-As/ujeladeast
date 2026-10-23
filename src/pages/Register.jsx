@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { AlertCircle, ArrowLeft, ArrowRight, Church, LoaderCircle, LockKeyhole, Mail, MailCheck, UserRound } from 'lucide-react';
+import { AlertCircle, ArrowLeft, ArrowRight, Check, Church, LoaderCircle, LockKeyhole, Mail, MailCheck, UserRound } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { authErrorMessage, authReturnPath } from '../lib/authMessages';
 import AuthLayout from '../components/layout/AuthLayout';
@@ -33,7 +33,10 @@ export default function Register() {
     catch (err) { setError(authErrorMessage(err)); }
     finally { lock.current = false; setGoogleBusy(false); }
   };
-  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, [step]);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    document.querySelector('.auth-main')?.scrollTo({ top: 0, behavior: 'instant' });
+  }, [step]);
   const submit = async event => {
     event.preventDefault(); setError('');
     if (step === 0) {
@@ -57,7 +60,11 @@ export default function Register() {
     </motion.section> : <>
       <GoogleButton onClick={google} busy={googleBusy} disabled={busy} />
       <div className="auth-divider"><span>o crea tu cuenta con correo</span></div>
-      <div className="auth-progress" aria-label={`Paso ${step + 1} de 2`}><span>{step === 0 ? '1. Tu perfil' : '2. Tu acceso'}</span><div aria-hidden="true"><i data-done="true" /><i data-done={step === 1} /></div></div>
+      <div className="auth-progress" aria-label={`Paso ${step + 1} de 2`}>
+        <span className="auth-progress-step" data-active={step === 0} data-done={step > 0}><i aria-hidden="true">{step > 0 ? <Check size={13} /> : '01'}</i>Tu perfil</span>
+        <span className="auth-progress-track" aria-hidden="true"><motion.i initial={false} animate={{ scaleX: step === 0 ? .2 : 1 }} transition={{ duration: reduced ? 0 : .3 }} /></span>
+        <span className="auth-progress-step" data-active={step === 1}><i aria-hidden="true">02</i>Tu acceso</span>
+      </div>
       <AnimatePresence mode="wait" initial={false}>
         <motion.form key={step} onSubmit={submit} className="auth-form" aria-label={step === 0 ? 'Tu perfil' : 'Datos de acceso'} initial={reduced ? false : { opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={reduced ? undefined : { opacity: 0, x: -10 }} transition={{ duration: 0.16 }}>
           <fieldset className="auth-fields" disabled={busy || googleBusy}>

@@ -1,6 +1,7 @@
 import { createRequire } from 'node:module';
 import { mkdir } from 'node:fs/promises';
 import assert from 'node:assert/strict';
+import sharp from 'sharp';
 
 const { chromium } = createRequire(import.meta.url)('playwright');
 const base = process.env.GOOGLE_AUTH_TEST_URL || 'http://127.0.0.1:5178';
@@ -17,8 +18,8 @@ const session = user => ({ access_token: 'test-access-token', refresh_token: 'te
 const errors = [];
 const contexts = [];
 
-async function setup({ authenticated = false, google = false, profile = original, provider = true, failProfile = false } = {}) {
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+async function setup({ authenticated = false, google = false, profile = original, provider = true, failProfile = false, reducedMotion = 'no-preference' } = {}) {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion });
   contexts.push(context);
   const state = { user: makeUser(google), profile: profile && { ...profile }, provider, failProfile, writes: [], oauth: [], signup: [], failSave: false, linkError: false, cancel: false, autoConfirm: false };
   if (authenticated) await context.addInitScript(session => localStorage.setItem('sb-placeholder-auth-token', JSON.stringify(session)), session(state.user));
@@ -77,13 +78,62 @@ async function layout(page, name, selector = '.auth-content') {
     await page.waitForFunction(selector => [...document.querySelectorAll(`${selector} img`)].every(image => image.complete && image.naturalWidth > 0), selector);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `${name}: overflow ${width}`);
     assert.equal(await page.locator(`${selector} img`).evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0)), true, `${name}: assets render ${width}`);
+    if (await page.locator('.auth-story').count()) {
+      await page.waitForFunction(() => [...document.querySelectorAll('.auth-story img')].every(image => image.complete && image.naturalWidth > 0));
+      assert.equal(await page.locator('.auth-story').count(), 1);
+    }
     if (width < 1280) assert.equal((await page.locator('.mobile-app-header').boundingBox()).y, 0, `${name}: header stays at viewport top`);
-    await page.screenshot({ path: `${output}/${name}-${width}.png`, fullPage: true });
+    await page.waitForFunction(() => [...document.querySelectorAll('.auth-content, .auth-story, .auth-story h2, .auth-story-kicker, .auth-story-media')].every(element => Number(getComputedStyle(element).opacity) === 1));
+    if (name === 'login-clean' && width === 390) {
+      const submit = await page.getByRole('button', { name: 'Iniciar sesión', exact: true }).boundingBox();
+      const main = await page.locator('.auth-main').boundingBox();
+      assert.ok(submit.y + submit.height <= main.y + main.height - 4, 'the login button is completely visible on a typical phone without scrolling');
+    }
+    await page.screenshot({ path: `${output}/${name}-${width}.png`, fullPage: true, animations: 'disabled' });
   }
   await page.setViewportSize({ width: 390, height: 844 });
 }
 
 try {
+  const startup = await browser.newContext({ viewport: { width: 390, height: 844 }, javaScriptEnabled: false });
+  contexts.push(startup);
+  const bootPage = await startup.newPage();
+  await bootPage.goto(`${base}/login`);
+  assert.equal(await bootPage.locator('meta[name="theme-color"]').getAttribute('content'), '#8f1937');
+  assert.equal(await bootPage.locator('#root').evaluate(root => getComputedStyle(root).backgroundColor), 'rgb(143, 25, 55)');
+  const startupImage = await bootPage.screenshot({ path: `${output}/startup-guinda.png` });
+  const { data: startupPixels, info: startupInfo } = await sharp(startupImage).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  assert.deepEqual([...startupPixels.subarray(0, 3)], [143, 25, 55], 'the first frame is burgundy, including its edges');
+  assert.equal(startupInfo.width, 390);
+  let logoPixels = 0;
+  for (let i = 0; i < startupPixels.length; i += 3) if (startupPixels[i] > 220 && startupPixels[i + 1] > 220 && startupPixels[i + 2] > 220) logoPixels++;
+  assert.ok(logoPixels > 200, 'the real startup logo is visible');
+
+  const quiet = await setup({ reducedMotion: 'reduce' });
+  await quiet.page.goto(`${base}/register`);
+  await quiet.page.getByRole('radio', { name: 'Personaje 2', exact: true }).check();
+  assert.equal(await quiet.page.locator('.auth-field').first().evaluate(field => getComputedStyle(field).animationName), 'none');
+  assert.equal(await quiet.page.locator('.auth-story h2 span').evaluate(span => getComputedStyle(span, '::after').animationName), 'none');
+  await quiet.page.locator('.auth-avatar-portrait img').waitFor();
+  assert.match(await quiet.page.locator('.auth-avatar-portrait img').getAttribute('src'), /personaje-2/);
+  await quiet.page.screenshot({ path: `${output}/register-reduced-motion.png`, fullPage: true });
+
+  const compact = await setup();
+  await compact.page.setViewportSize({ width: 320, height: 568 });
+  await compact.page.goto(`${base}/login`);
+  await compact.page.getByLabel('Correo electrónico').fill('ana@example.invalid');
+  await compact.page.getByLabel('Contraseña', { exact: true }).fill('valid-password');
+  await compact.page.getByRole('button', { name: 'Mostrar contraseña', exact: true }).click();
+  assert.equal(await compact.page.getByLabel('Contraseña', { exact: true }).getAttribute('type'), 'text');
+  await compact.page.getByRole('button', { name: 'Ocultar contraseña', exact: true }).click();
+  assert.equal(await compact.page.getByLabel('Contraseña', { exact: true }).getAttribute('type'), 'password');
+  await compact.page.getByRole('button', { name: 'Iniciar sesión', exact: true }).scrollIntoViewIfNeeded();
+  const compactButton = await compact.page.getByRole('button', { name: 'Iniciar sesión', exact: true }).boundingBox();
+  const compactNavigation = await compact.page.getByRole('navigation', { name: 'Navegación móvil' }).boundingBox();
+  const compactHeader = await compact.page.locator('.mobile-app-header').boundingBox();
+  assert.ok(compactButton.y >= compactHeader.y + compactHeader.height && compactButton.y + compactButton.height <= compactNavigation.y, 'short-phone login controls remain reachable between the fixed bars');
+  await compact.page.screenshot({ path: `${output}/login-compact.png`, fullPage: true });
+
   const privacy = await setup({ authenticated: true, google: true, profile: { ...original, church_name: '' } });
   await privacy.page.goto(`${base}/privacidad`);
   await privacy.page.getByRole('heading', { name: 'Política de privacidad', exact: true }).waitFor();
@@ -107,6 +157,7 @@ try {
 
   const existing = await setup();
   await existing.page.goto(`${base}/login`);
+  await layout(existing.page, 'login-clean');
   await existing.page.getByRole('button', { name: 'Continuar con Google' }).click();
   await existing.page.waitForURL('**/feed');
   assert.deepEqual(existing.state.writes, [], 'same-email existing account is not rewritten');
@@ -236,7 +287,7 @@ try {
   assert.equal(await immediate.page.getByLabel('Nombre completo').inputValue(), 'Nueva Cuenta');
   assert.equal(immediate.state.profile.avatar_url, '/avatars/mujer.webp');
   assert.deepEqual(errors, []);
-  console.log('PASS: password login, OAuth callback, cancel, disabled provider, existing account preservation, new Google onboarding, avatar save/retry, identity linking/conflict, profile read failure, registration and 16 responsive screenshots. No production writes.');
+  console.log('PASS: burgundy startup pixels and logo, reduced motion, compact-phone controls, password visibility, password login, OAuth callbacks and cancellation, existing account preservation, Google onboarding, avatar selection/save/retry, identity linking/conflict, profile failures and responsive screenshots. No production writes.');
 } catch (error) {
   for (const context of contexts) for (const page of context.pages()) console.log('Failure context:', page.url(), await page.getByRole('alert').allTextContents());
   throw error;

@@ -9,6 +9,7 @@ import InstallPrompt from './components/ui/InstallPrompt'
 import OfflineBanner from './components/ui/OfflineBanner'
 import UpdatePrompt from './components/ui/UpdatePrompt'
 import RouteMetadata from './components/seo/Metadata'
+import AppLoading from './components/ui/AppLoading'
 import About from './pages/About'
 import Privacy from './pages/Privacy'
 import Publication from './pages/Publication'
@@ -51,7 +52,7 @@ function App() {
         <OfflineBanner />
         <UpdatePrompt />
         <SpotlightBackground />
-        <AccountSetupGate><Suspense fallback={<div role="status" className="p-24 text-center">Cargando...</div>}><Routes>
+        <AccountSetupGate><Suspense fallback={<AppLoading />}><Routes>
           <Route path="/" element={<Home />} />
           <Route path="/nosotros" element={<About />} />
           <Route path="/privacidad" element={<Privacy />} />
@@ -65,7 +66,7 @@ function App() {
           <Route path="/completar-perfil" element={<Account onboarding />} />
           <Route path="/cuenta" element={<Account />} />
           <Route path="/himnario" element={<Hymnal />} />
-          <Route path="/biblia" element={<Suspense fallback={<div role="status" className="p-24 text-center">Abriendo Biblia...</div>}><Bible /></Suspense>} />
+          <Route path="/biblia" element={<Suspense fallback={<AppLoading label="Abriendo Biblia" />}><Bible /></Suspense>} />
           <Route path="/estudios" element={<BibleStudy />} />
           <Route path="/sociedades" element={<Societies />} />
           <Route path="/recursos" element={<Resources />} />

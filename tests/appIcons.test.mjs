@@ -45,3 +45,14 @@ test('installation references use the new icon URLs', async () => {
   assert.match(html, /href="\/favicon-v2.png"/);
   for (const [name] of variants.slice(0, 4)) assert.ok(config.includes(`src: '${name}'`));
 });
+
+test('Android startup uses the same burgundy as its existing icons without changing PWA identity', async () => {
+  const html = await readFile('index.html', 'utf8');
+  const config = await readFile('vite.config.js', 'utf8');
+  assert.match(config, /theme_color: '#8f1937'/);
+  assert.match(config, /background_color: '#8f1937'/);
+  assert.match(html, /name="theme-color" content="#8f1937"/);
+  assert.match(html, /#root:empty[^}]*background: #8f1937/);
+  assert.ok(html.includes('<div id="root"></div>'), 'the public HTML rendering slot is preserved');
+  for (const setting of ["id: '/'", "start_url: '/'", "scope: '/'", "registerType: 'prompt'", "skipWaiting: false"]) assert.ok(config.includes(setting), setting);
+});

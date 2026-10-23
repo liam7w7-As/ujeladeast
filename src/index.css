@@ -69,6 +69,13 @@
   background: radial-gradient(circle at center, rgba(143, 25, 55, 0.08) 0%, rgba(9, 9, 11, 0) 70%);
 }
 
+.app-loading { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px; width: 100%; min-height: 100vh; min-height: 100dvh; background: #8f1937; color: #fff; }
+.app-loading img { width: 120px; height: 140px; object-fit: contain; }
+.app-loading span { font-size: 13px; letter-spacing: 0; color: #f7dce5; }
+.app-loading i { display: block; width: 44px; height: 2px; background: #c2e4d2; animation: app-loading-pulse 1.4s ease-in-out infinite alternate; }
+@keyframes app-loading-pulse { from { opacity: .3; transform: scaleX(.55); } to { opacity: 1; transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .app-loading i { animation: none; } }
+
 @utility radial-glow-offset {
   background: radial-gradient(circle at top right, rgba(143, 25, 55, 0.05) 0%, rgba(9, 9, 11, 0) 60%);
 }
