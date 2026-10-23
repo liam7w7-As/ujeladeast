@@ -12,7 +12,7 @@
 - Public Auth settings are checked before redirecting, so a disabled Google provider
   produces a recoverable message instead of a broken external page.
 
-No database migration is needed for the current project. Read-only inspection on
+No schema change is needed for the OAuth profile fields. Read-only inspection on
 2026-10-23 confirmed nullable profile fields, a default `role = 'user'`, and no
 `auth.users` trigger requiring the old registration metadata. New profile inserts
 omit `role`; updates whitelist only the three profile fields above.
@@ -73,14 +73,25 @@ No new Vercel secret or OpenRouter setting is needed. Existing Supabase public
 client settings are reused. No provider configuration has been changed by this
 implementation; owner activation is still required.
 
-## Existing permission issue awaiting approval
+## Role protection applied
 
-Read-only inspection also found that existing profile policies allow owners to
-insert/update their own `role` column. The new UI never sends this field, but UI
-validation does not fix database authorization. This pre-existing permission
-needs a separate, approved SQL correction that preserves administrator role
-management. No permission, role, or production schema was changed here. Resolve
-this before a broad OAuth rollout; approval was requested separately.
+The owner authorized correction of the pre-existing profile role escalation.
+Migration `20261023181501_protect_profile_roles.sql` was applied to Supabase on
+2026-10-23. It adds a private, SECURITY INVOKER trigger that rejects client role
+changes unless the authenticated user's existing database profile is an admin.
+New member profiles must use the normal `user` role. Profile IDs are immutable
+from client requests. Editable user metadata never grants administrator access.
+
+Name/church/avatar edits, default-role inserts, and both old and new profile
+upserts remain compatible. Administrators keep the existing direct role-management
+API; trusted server/database maintenance is also preserved. No study, streak,
+favorite, or existing authorization data was rewritten.
+
+`supabase/tests/profile_role_guard.sql` verifies self-promotion, INSERT/UPSERT/NULL
+bypasses, metadata spoofing, profile ownership, ordinary profile editing, admin
+promotion/revocation, anonymous denial, and trusted maintenance. Its successful
+mutations run inside a subtransaction which is always rolled back. The migration
+is already applied; the owner does not need to run this SQL again.
 
 ## 3. Owner acceptance test before public rollout
 
